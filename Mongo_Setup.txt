@@ -1,3 +1,4 @@
+Follow these steps and everything should turn out to be pretty smooth.
 
 1) Download MongoDB from http://mongodb.org; one compatible with 64 bit windows.
 
@@ -27,6 +28,9 @@ for stopping/removing mongodb service
 net stop mongodb
 
 C:\mongodb248\bin\mongod.exe --remove
+
+---------------------------------------
+Also a good GUI tool for MongoDB is robomongo, it's opensource and free of charge; http://robomongo.org
 
 
 
