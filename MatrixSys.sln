@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixCore", "MatrixCore\MatrixCore.csproj", "{509D843C-2F26-4BDE-AE24-646A7C0F1C63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseCore", "EnterpriseCore\EnterpriseCore.csproj", "{46197D44-B816-4BCB-961C-D77039245EE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixWeb", "MatrixWeb\MatrixWeb.csproj", "{F7DABE49-ECC5-4FE8-8130-2BD35CA964EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{509D843C-2F26-4BDE-AE24-646A7C0F1C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509D843C-2F26-4BDE-AE24-646A7C0F1C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509D843C-2F26-4BDE-AE24-646A7C0F1C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509D843C-2F26-4BDE-AE24-646A7C0F1C63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46197D44-B816-4BCB-961C-D77039245EE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46197D44-B816-4BCB-961C-D77039245EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46197D44-B816-4BCB-961C-D77039245EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46197D44-B816-4BCB-961C-D77039245EE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7DABE49-ECC5-4FE8-8130-2BD35CA964EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7DABE49-ECC5-4FE8-8130-2BD35CA964EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7DABE49-ECC5-4FE8-8130-2BD35CA964EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7DABE49-ECC5-4FE8-8130-2BD35CA964EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

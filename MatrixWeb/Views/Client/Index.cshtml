@@ -1,0 +1,60 @@
+﻿@model IList<EnterpriseCore.Entities.Client>
+
+@{
+    //ViewBag.Title = "_Elements";
+    Layout = null; //"~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("_QueryTime")
+
+<h2>My Clients</h2>
+
+@Ajax.ActionLink("Add A New Client", "Create", "Client",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading"
+            }, new { @class="nav" })<br /><br />
+
+
+@if (Model != null && Model.Count > 0)
+{
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Code</th>     
+            <th>Type</th>         
+            <th>Phone</th>            
+            <th>Website</th>            
+        </tr>
+
+        @foreach (var item in Model)
+    {                  
+        <tr>           
+            <td>
+                @Ajax.ActionLink(item.Name, "CompleteDetails", "Client", 
+            new { 
+                    id = item.Id,
+            },
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading"
+            })</td>
+            <td>@item.Code</td>
+            <td>@item.ClientType.DenormalizedName</td>
+            <td>@item.PhoneNumber</td>
+            <td>@item.Website</td>
+        </tr>
+        }
+    
+    </table>
+}
+else
+{    
+    <br />
+    @Html.Label("NO DATA FOUND")
+}

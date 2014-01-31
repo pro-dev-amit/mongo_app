@@ -1,0 +1,12 @@
+﻿.leftMenu {
+    vertical-align: top; 
+    padding-top:2%; 
+    width:100px; 
+    border-right:1px solid orange;
+}
+
+.flatLookups {
+    font-size:13px; 
+    /*overflow-x:scroll;*/
+}
+

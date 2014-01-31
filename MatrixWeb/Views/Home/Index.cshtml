@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Matrix Inc.";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Welcome</h2>
+
+@using (Html.BeginForm("Index", "Home"))
+{
+    if (ViewBag.ShowSetMasterData != null && ViewBag.ShowSetMasterData == true)
+    { 
+        <span>Master Data has not been set yet. This is important because I need some lookup data to be set prior to moving forward.</span><br /><br />
+        <input id="btnSetMasterData" name="btnSetMasterData" value="Set Master Data" type="submit" /><br /><br />
+    }
+}

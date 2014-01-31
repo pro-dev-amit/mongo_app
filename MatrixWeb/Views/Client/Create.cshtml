@@ -1,0 +1,112 @@
+﻿@model EnterpriseCore.ViewModels.ClientViewModel
+@{
+    Layout = "~/Views/Shared/_MXClientValidation.cshtml";
+}
+@Html.Partial("_QueryTime")
+<h2>Create a new Client</h2>
+
+@using (Ajax.BeginForm("Create", "Client",
+    new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace
+            }))
+{   
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>@Html.EditorFor(x => x.Client.Name)
+            </td>
+
+            <td>Type:</td>
+            <td>
+                @Html.TextBoxFor(x => x.Client.ClientType.DenormalizedName, new { id = "txtClientTypeAutoComplete" })
+                @Html.HiddenFor(x => x.Client.ClientType.DenormalizedId, new { id = "hdnSelectedClientTypeId" })
+                <br />
+                @Html.ValidationMessageFor(x => x.Client.ClientType)
+                <span style="font-size: small">(Start typing for autocomplete such as 'info' or 'energy', this data is generated while setting up master data in the root page)
+                </span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Code:</td>
+            <td>@Html.EditorFor(x => x.Client.Code)
+            </td>
+
+            <td>Phone:</td>
+            <td>@Html.EditorFor(x => x.Client.PhoneNumber)
+            </td>
+        </tr>
+
+        <tr>
+            <td>Website:</td>
+            <td>@Html.EditorFor(x => x.Client.Website)
+            </td>
+
+            <td>Address:</td>
+            <td>@Html.TextAreaFor(x => x.Client.Address)
+            </td>
+        </tr>
+    </table>
+    <div>
+        <br />
+        <br />
+        <input id="btnSubmit" name="btnSubmit" value="Create" type="submit" />
+        @Ajax.ActionLink("<< Back", "Index", "Client", new { id = ViewContext.RouteData.Values["id"], productId = Request.QueryString["productId"] },
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading",
+            })
+
+
+    </div>
+}
+
+<script type="text/javascript">
+
+    $("#txtClientTypeAutoComplete").blur(function () {
+        $(this).valid();
+    });
+
+    $("#txtClientTypeAutoComplete").live('input', function () {
+        var content = $("#txtClientTypeAutoComplete").val();
+        if (content == "") {
+            $("#hdnSelectedClientTypeId").val(null);
+        }
+    })
+
+    $(function () {
+        $("#txtClientTypeAutoComplete").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Client/LoadDataForAutoComplete', type: "GET", dataType: "json",
+                    data: { term: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Text, value: item.Value, id: item.Value };
+                        }))
+                    }
+                })
+            },
+
+            focus: function (event, ui) {
+                $("#txtClientTypeAutoComplete").val(ui.item.label);
+                return false;
+            },
+
+            minLength: 3,
+            autofill: true,
+            select: function (event, ui) {
+                $("#txtClientTypeAutoComplete").val(ui.item.label);
+                $("#hdnSelectedClientTypeId").val(ui.item.value);
+                event.preventDefault();
+            }
+        });
+    });
+
+</script>

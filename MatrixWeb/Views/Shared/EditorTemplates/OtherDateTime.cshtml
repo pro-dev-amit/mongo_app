@@ -1,0 +1,35 @@
+﻿@model Nullable<System.DateTime>
+@if (Model.HasValue)
+{
+    //Date format: 1-May-2012, Wednesday
+    @*@Html.TextBox("", Model.Value.Date.ToString("d-MMM-yyyy, dddd"), new { @class = "textbox" })*@
+    @Html.TextBox("", Model.Value.Date.ToString("d-MMM-yyyy"), new { @class = "textbox" })
+}
+else
+{
+    @Html.TextBox("", null, new { @class = "textbox" })
+}
+@{
+    string name = ViewData.TemplateInfo.HtmlFieldPrefix;
+    string id = name.Replace(".", "_");
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@id").datepicker({
+            //dateFormat: "d-MM-yy, DD",
+            dateFormat: "d-M-yy",
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true, // will allow entering of numbers and dash only (chars in dateFormat)
+            yearRange: "-80:+20",
+            minDate: "-80y",
+            maxDate: "+20y",
+            showAnim: "blind",
+            showButtonPanel: true,
+            closeText: "X",
+            showOn: "button",
+            buttonImage: '@Url.Content("~/Content/themes/base/images/calendar.gif")',
+            buttonImageOnly: false
+        });
+    });
+</script>

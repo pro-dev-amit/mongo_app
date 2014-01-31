@@ -1,0 +1,49 @@
+﻿@model MatrixCore.Framework.DenormalizedReference
+
+@{ 
+    Layout = null; 
+}
+
+
+@Html.TextBoxFor(x => x.DenormalizedName, new { @class = "mxAutoCompleteName" })
+@Html.HiddenFor(x => x.DenormalizedId, new { @class = "mxAutoCompleteId" })
+
+<script type="text/javascript">
+    $(".mxAutoCompleteName").live('input', function () {
+        var content = $(".mxAutoCompleteName").val();
+        if (content == "") {
+            $(".mxAutoCompleteId").val(null);
+        }
+    })
+
+    $(function () {
+        $(".mxAutoCompleteName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Product/LoadDataForAutoComplete", type: "GET", dataType: "json",
+                    data: { term: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Text, value: item.Value, id: item.Value };
+                        }))
+                    }
+                })
+            },
+
+            focus: function (event, ui) {
+                $(".mxAutoCompleteName").val(ui.item.label);
+                return false;
+            },
+
+            minLength: 3,
+            autofill: true,
+            select: function (event, ui) {
+                $(".mxAutoCompleteName").val(ui.item.label);
+                $(".mxAutoCompleteId").val(ui.item.value);
+                event.preventDefault();
+            }
+
+        });
+
+    });
+</script>

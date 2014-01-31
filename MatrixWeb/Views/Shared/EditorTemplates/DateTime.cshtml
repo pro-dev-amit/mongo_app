@@ -1,0 +1,19 @@
+﻿@model DateTime?
+
+@{ 
+    Layout = null;    
+}
+
+@Html.TextBox("", Model,new { @class = "cssDate" }) <img src="~/Content/themes/base/images/calendarimage.png" class="cssDatePickerImage" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.cssDate').datepicker();
+        
+        //{ dateFormat: "MM-dd-yy" }
+        //$('.cssDatePickerImage').live("click", "img", function (e) {            
+        //    $('.cssDate').datepicker({ dateFormat: "dd-MMM-yy" });
+        //});
+
+    });
+</script>

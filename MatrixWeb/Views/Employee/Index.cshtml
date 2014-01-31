@@ -1,0 +1,72 @@
+﻿@{    
+    Layout = null;//"~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Employees</h2>
+
+@Ajax.ActionLink("Create A New Employee", "Create", "Element",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading"
+            }, new { @class="nav" })<br /><br />
+
+@using (Ajax.BeginForm("AddDummyEmployees",
+    new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace
+            }))
+{
+    if (ViewBag.ShowDummyButton != null && ViewBag.ShowDummyButton == true)
+    {
+        <span>There are no employees created yet</span><br />
+        <input id="btnAddElements" name="btnAddElements" value="Add some employees" type="submit" /><br /><br />
+    }
+}
+
+<div id="divEmployeeList">
+    @Html.Partial("_Employees")
+</div>
+
+
+<script type="text/javascript">
+
+    var page = 0;
+    var _inCallback = false;
+
+    function loadItems() {
+        if (page > -1 && !_inCallback) {
+            _inCallback = true;
+            page++;
+            //$('div#loading').html('<p><img src="/Content/Images/loading.gif"></p>');
+            $.get("/Employee/Index/" + page, function (data) {
+                //if (data != '') {
+                    if (data.length > 300) {
+                    //alert(data);
+                        $("#divEmployeeList").append(data);
+                }
+                else {
+                    page = -1;
+                }
+
+                _inCallback = false;
+                //$('div#loading').empty();
+            });
+        }
+    }
+
+    var dcList = true;
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+
+            loadItems();
+        }
+    });
+</script>
+
+
