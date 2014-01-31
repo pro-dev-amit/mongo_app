@@ -1,4 +1,4 @@
-ASP.Net MVC app using MongoDB
+ASP.Net MVC app with MongoDB
 ===========================
 
 NoSql is absolutely awesome, I love it. This sample ASP.Net MVC 4(.Net 4.5) app is using MongoDB repository pattern(built from scratch); a library that you can hook directly into you project. You can go through the code, it's concise and fairly simple to understand. I dedicate this work to CareerBuilder.com; the guys that taught me the art of programming years back. 
@@ -18,3 +18,4 @@ Project architecture and usage
 - This generic repository would suffice most of the operations, but we also know that a generalized solution cannot cater to the finer details of a system; so we need extensibility, go ahead and crate a new dataAccess repository class by just inheriting it from MXMongoRepository so that you get access to MongoContext object and other low level methods from mongoDbCSharp driver. One such class is already there in this sample code.
 - Also, all your mongo entities must inherit from MXEntity. 
 
+Note: I'll be adding more to this project as I move forward. Aim to showcase develoment with MongoDB. Also, right now the focus is not so much on the UI.
