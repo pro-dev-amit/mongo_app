@@ -93,7 +93,11 @@ namespace MatrixWeb.Controllers
         {
             try
             {
-                var results = new ClientRepository().GetClientTypesForAutoComplete(term);
+                var predicate = MXPredicate.True<ClientType>();
+
+                predicate = predicate.And(p => p.Name.ToLower().Contains(term));
+
+                var results = _mongoRepository.GetOptionSet<ClientType>(predicate);
 
                 var myData = results.Select(a => new SelectListItem()
                 {

@@ -28,7 +28,7 @@ namespace MatrixCore.DataAccess
 
         #region "Interface implementaions; generic CRUD repository"
 
-        public string Insert<T>(T entity) where T : MXEntity
+        public virtual string Insert<T>(T entity) where T : MXEntity
         {
             entity.IsActive = true;
 
@@ -45,7 +45,7 @@ namespace MatrixCore.DataAccess
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public bool Insert<T>(IList<T> entities) where T : MXEntity
+        public virtual bool Insert<T>(IList<T> entities) where T : MXEntity
         {
             foreach (var entity in entities) entity.IsActive = true;
 
@@ -56,7 +56,7 @@ namespace MatrixCore.DataAccess
             return result.All(c => c.Ok == true);
         }
 
-        public T GetOne<T>(string id)
+        public virtual T GetOne<T>(string id)
         {
             //ObjectId oId = new ObjectId(id);
 
@@ -76,7 +76,7 @@ namespace MatrixCore.DataAccess
         /// <param name="predicate">Use the MXPredicate object to build predicates</param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : MXEntity
+        public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : MXEntity
         {   
             var collection = db.GetCollection<T>(typeof(T).Name);
 
@@ -95,7 +95,7 @@ namespace MatrixCore.DataAccess
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public bool Update<T>(T entity, bool bMaintainHistory = false) where T : MXEntity            
+        public virtual bool Update<T>(T entity, bool bMaintainHistory = false) where T : MXEntity            
         {
             var collectionName = typeof(T).Name;
 
@@ -110,8 +110,8 @@ namespace MatrixCore.DataAccess
 
             return t.Ok;            
         }
-                        
-        public bool Delete<T>(string id) where T : MXEntity
+
+        public virtual bool Delete<T>(string id) where T : MXEntity
         {
             //ObjectId oId = new ObjectId(id);
             
@@ -123,7 +123,7 @@ namespace MatrixCore.DataAccess
             return result.Ok;
         }
 
-        public bool Delete<T>(IList<string> ids) where T : MXEntity
+        public virtual bool Delete<T>(IList<string> ids) where T : MXEntity
         {
             var collection = db.GetCollection<T>(typeof(T).Name);
 
@@ -137,35 +137,55 @@ namespace MatrixCore.DataAccess
 
         #region "Other methods; AlterStatus() etc"
 
-        public string GetNameById<T>(string Id) where T : MXEntity
+        public virtual string GetNameById<T>(string Id) where T : MXEntity
         {
             var collection = db.GetCollection<T>(typeof(T).Name);
 
             return collection.AsQueryable().Where(c => c.Id == Id).SingleOrDefault().Name;
         }
 
-        public DenormalizedReference GetSingleOptionById<T>(string Id) where T : MXEntity
+        public virtual DenormalizedReference GetSingleOptionById<T>(string Id) where T : MXEntity
         {
             var collection = db.GetCollection<T>(typeof(T).Name);
 
             return collection.AsQueryable().Where(c => c.Id == Id).Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name }).SingleOrDefault();
         }
 
-        public IList<DenormalizedReference> GetOptionSetByMultipleIds<T>(IList<string> ids) where T : MXEntity
+        public virtual IList<DenormalizedReference> GetOptionSetByMultipleIds<T>(IList<string> ids) where T : MXEntity
         {
             var collection = db.GetCollection<T>(typeof(T).Name);
 
             return collection.AsQueryable().Where(c => ids.Contains(c.Id)).Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name }).ToList();
         }
 
-        public IList<DenormalizedReference> GetOptionSet<T>() where T : MXEntity
+        /// <summary>
+        /// Get optionSets based on a predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">IsActive == true is by default. when null, this returns all items</param>
+        /// <param name="take">Effective only when there is a predicate</param>
+        /// <returns></returns>
+        public virtual IList<DenormalizedReference> GetOptionSet<T>(Expression<Func<T, bool>> predicate = null, int take = 15) where T : MXEntity
         {
             var collection = db.GetCollection<T>(typeof(T).Name);
 
-            return collection.AsQueryable().Where(c => c.IsActive == true).Select(c => new DenormalizedReference {DenormalizedId = c.Id, DenormalizedName = c.Name }).OrderBy(c => c.DenormalizedName).ToList();
+            if (predicate == null)
+                return collection.AsQueryable()
+                    .Where(c => c.IsActive == true)
+                    .Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
+                    .OrderBy(c => c.DenormalizedName)
+                    .ToList();
+            else
+            {
+                predicate = predicate.And(p => p.IsActive == true);
+                return collection.AsQueryable().Where(predicate)
+                    .Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
+                    .OrderBy(c => c.DenormalizedName).Take(take)
+                    .ToList();
+            }
         }
 
-        public bool AlterStatus<T>(string id , bool statusValue) where T : MXEntity
+        public virtual bool AlterStatus<T>(string id, bool statusValue) where T : MXEntity
         {
             var collection = db.GetCollection<T>(typeof(T).Name);
 
@@ -183,7 +203,7 @@ namespace MatrixCore.DataAccess
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public long GetCount<T>() where T : MXEntity
+        public virtual long GetCount<T>() where T : MXEntity
         {            
             var collection = db.GetCollection<T>(typeof(T).Name);
 
