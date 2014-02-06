@@ -1,4 +1,5 @@
 ﻿using EnterpriseCore.Entities;
+using MatrixCore.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,21 @@ using System.Web.Mvc;
 
 namespace MatrixWeb.Controllers
 {
-    public class HomeController : MXBaseController
+    public class HomeController : Controller
     {
         //
         // GET: /Home/
 
+        IRepository _repository;
+
+        public HomeController(IRepository repository)
+        {
+            this._repository = repository;
+        }
+
         public ActionResult Index()
         {
-            var results = _mongoRepository.GetCount<Gender>();
+            var results = _repository.GetCount<Gender>();
 
             if (results < 1)
             {
@@ -42,14 +50,14 @@ namespace MatrixWeb.Controllers
                 new ProgrammingRating { Name = "Hopeless", Code = "HL", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
 
             };
-            _mongoRepository.Insert<ProgrammingRating>(lstProgrammingRating);
+            _repository.Insert<ProgrammingRating>(lstProgrammingRating);
 
             List<Gender> lstGender = new List<Gender>() 
             {
                 new Gender { Name = "Male", Code = "M", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
                 new Gender { Name = "Female",  Code = "F", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
             };
-            _mongoRepository.Insert<Gender>(lstGender);
+            _repository.Insert<Gender>(lstGender);
 
             List<Skill> lstSkill = new List<Skill>() 
             {
@@ -59,7 +67,7 @@ namespace MatrixWeb.Controllers
                 new Skill { Name = ".Net Desktop Apps", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
                 new Skill { Name = "ASP.Net MVC", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
             };
-            _mongoRepository.Insert<Skill>(lstSkill);
+            _repository.Insert<Skill>(lstSkill);
 
             List<ClientType> lstClientType = new List<ClientType>() 
             {
@@ -72,7 +80,7 @@ namespace MatrixWeb.Controllers
                 new ClientType { Name = "Energy Sector-3",CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
                 
             };
-            _mongoRepository.Insert<ClientType>(lstClientType);
+            _repository.Insert<ClientType>(lstClientType);
         }
 
     }//End of Controller

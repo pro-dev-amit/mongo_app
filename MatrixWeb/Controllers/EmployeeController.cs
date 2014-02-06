@@ -1,6 +1,7 @@
 ﻿using EnterpriseCore.CommonHelpers;
 using EnterpriseCore.Entities;
 using EnterpriseCore.ViewModels;
+using MatrixCore.DataAccess;
 using MatrixCore.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,16 @@ using System.Web.Mvc;
 
 namespace MatrixWeb.Controllers
 {
-    public class EmployeeController : MXBaseController
+    public class EmployeeController : Controller
     {
         const int takeCount = 40;
+
+        IRepository _repository;
+
+        public EmployeeController(IRepository repository)
+        {
+            this._repository = repository;
+        }
 
         public ActionResult Index(int? id) //id - pageNo.
         {
@@ -25,7 +33,7 @@ namespace MatrixWeb.Controllers
 
             if (page == 0)
             {
-                model = _mongoRepository.GetMany<Employee>(take: takeCount);
+                model = _repository.GetMany<Employee>(take: takeCount);
 
                 model = model.OrderBy(c => c.Name).ToList();
 
@@ -48,7 +56,7 @@ namespace MatrixWeb.Controllers
 
             MXTiming timing = new MXTiming();
 
-            var model = _mongoRepository.GetMany<Employee>(skip: skipRecords, take: takeCount);
+            var model = _repository.GetMany<Employee>(skip: skipRecords, take: takeCount);
 
             ViewBag.QueryTime = timing.Finish();
 
@@ -66,15 +74,15 @@ namespace MatrixWeb.Controllers
 
             tasks[0] = Task.Factory.StartNew(
                     () =>
-                        model.LstGender = _mongoRepository.GetOptionSet<Gender>()
+                        model.LstGender = _repository.GetOptionSet<Gender>()
                     );
 
             tasks[1] = Task.Factory.StartNew(
                     () =>
-                        model.LstRating = _mongoRepository.GetOptionSet<ProgrammingRating>()
+                        model.LstRating = _repository.GetOptionSet<ProgrammingRating>()
                     );
 
-            model.LstSkill = _mongoRepository.GetOptionSet<Skill>().Select(c => new MXCheckBoxItem { DenormalizedReference = c }).ToList();
+            model.LstSkill = _repository.GetOptionSet<Skill>().Select(c => new MXCheckBoxItem { DenormalizedReference = c }).ToList();
 
             Task.WaitAll(tasks);
 
@@ -86,12 +94,12 @@ namespace MatrixWeb.Controllers
         [HttpPost]
         public ActionResult Create(EmployeeViewModel model)
         {
-            model.Employee.Gender = _mongoRepository.GetSingleOptionById<Gender>(model.Employee.Gender.DenormalizedId);
-            model.Employee.ProgrammingRating = _mongoRepository.GetSingleOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
+            model.Employee.Gender = _repository.GetSingleOptionById<Gender>(model.Employee.Gender.DenormalizedId);
+            model.Employee.ProgrammingRating = _repository.GetSingleOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
 
             model.Employee.Skills = model.LstSkill.Where(c => c.IsSelected == true).Select(c => c.DenormalizedReference).ToList();
 
-            _mongoRepository.Insert<Employee>(model.Employee);
+            _repository.Insert<Employee>(model.Employee);
                        
             return RedirectToAction("Index");
         }
@@ -102,7 +110,7 @@ namespace MatrixWeb.Controllers
 
             EmployeeViewModel model = new EmployeeViewModel
             {
-                Employee = _mongoRepository.GetOne<Employee>(id),
+                Employee = _repository.GetOne<Employee>(id),
             };
 
             //let's go parallel
@@ -110,15 +118,15 @@ namespace MatrixWeb.Controllers
 
             tasks[0] = Task.Factory.StartNew(
                     () =>
-                        model.LstGender = _mongoRepository.GetOptionSet<Gender>()
+                        model.LstGender = _repository.GetOptionSet<Gender>()
                     );
 
             tasks[1] = Task.Factory.StartNew(
                     () =>
-                        model.LstRating = _mongoRepository.GetOptionSet<ProgrammingRating>()
+                        model.LstRating = _repository.GetOptionSet<ProgrammingRating>()
                     );
 
-            model.LstSkill = _mongoRepository.GetOptionSet<Skill>().Select(c => new MXCheckBoxItem { DenormalizedReference = c }).ToList();
+            model.LstSkill = _repository.GetOptionSet<Skill>().Select(c => new MXCheckBoxItem { DenormalizedReference = c }).ToList();
 
             foreach (var item in model.LstSkill)
             {
@@ -136,12 +144,12 @@ namespace MatrixWeb.Controllers
         [HttpPost]
         public ActionResult Edit(EmployeeViewModel model)
         {
-            model.Employee.Gender = _mongoRepository.GetSingleOptionById<Gender>(model.Employee.Gender.DenormalizedId);
-            model.Employee.ProgrammingRating = _mongoRepository.GetSingleOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
+            model.Employee.Gender = _repository.GetSingleOptionById<Gender>(model.Employee.Gender.DenormalizedId);
+            model.Employee.ProgrammingRating = _repository.GetSingleOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
 
             model.Employee.Skills = model.LstSkill.Where(c => c.IsSelected == true).Select(c => c.DenormalizedReference).ToList();
 
-            _mongoRepository.Update<Employee>(model.Employee, true);
+            _repository.Update<Employee>(model.Employee, true);
 
             return RedirectToAction("Index");
         }
@@ -149,7 +157,7 @@ namespace MatrixWeb.Controllers
         
         public ActionResult Delete(string id) //id - employeeID
         {
-            _mongoRepository.AlterStatus<Employee>(id, false);
+            _repository.AlterStatus<Employee>(id, false);
 
             return RedirectToAction("Index");
         }
@@ -157,9 +165,9 @@ namespace MatrixWeb.Controllers
         [HttpPost]
         public ActionResult AddDummyEmployees()
         {
-            var genders = _mongoRepository.GetOptionSet<Gender>();
+            var genders = _repository.GetOptionSet<Gender>();
 
-            var rating = _mongoRepository.GetOptionSet<ProgrammingRating>().FirstOrDefault();
+            var rating = _repository.GetOptionSet<ProgrammingRating>().FirstOrDefault();
 
             List<Employee> lstEmployee = new List<Employee>();
 
@@ -176,7 +184,7 @@ namespace MatrixWeb.Controllers
                 lstEmployee.Add(employee);
             }
 
-            _mongoRepository.Insert<Employee>(lstEmployee);
+            _repository.Insert<Employee>(lstEmployee);
 
             return RedirectToAction("Index");
         }

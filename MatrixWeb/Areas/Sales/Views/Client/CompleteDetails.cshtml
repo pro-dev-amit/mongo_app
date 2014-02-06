@@ -1,0 +1,41 @@
+﻿@{
+    //ViewBag.Title = "CompleteDetails";
+    Layout = null;//"~/Views/Shared/_Layout.cshtml";
+}
+@Ajax.ActionLink("<< Back", "Index", "Client",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading",
+            })
+<h2>Complete Details of "@ViewBag.ParentItemName"</h2>
+
+<div id="divClientCompleteDetails" style="height: auto; width: auto">
+    <ul>
+        <li><a href="#divClientInfo"><span>Info</span></a></li>
+        <li><a href="#divClientContacts" id="hlClientContacts"><span>Contacts</span></a></li>        
+    </ul>
+
+    <div id="divClientInfo">
+    </div>
+
+    <div id="divClientContacts">
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#divClientCompleteDetails").tabs();
+
+        getContent('divClientInfo', '@Html.Raw(Url.Action("Edit", "Client", new { id = ViewContext.RouteData.Values["id"] }))', 'False');
+                
+
+        $("#hlClientContacts").click(function () {
+            getContent('divClientContacts', '@Html.Raw(Url.Action("Index", "ClientContact", new { id = ViewContext.RouteData.Values["id"] }))', 'False');
+        });
+    });
+</script>
+

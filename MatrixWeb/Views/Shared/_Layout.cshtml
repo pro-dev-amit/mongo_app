@@ -25,14 +25,14 @@
                 LoadingElementId = "divLoading",
             })
                 <br />
-                 @Ajax.ActionLink("My Clients", "Index", "Client",
+                 @Ajax.ActionLink("My Clients", "Index", "Client", new { area = "Sales" },
             new AjaxOptions
             {
                 UpdateTargetId = "divContent",
                 HttpMethod = "Get",
                 InsertionMode = InsertionMode.Replace,
                 LoadingElementId = "divLoading",
-            })
+            }, null)
                 <br />
                 <div id="divLoading" style="display: none;">
                         @*@Html.JQueryUI().Progressbar(null)*@

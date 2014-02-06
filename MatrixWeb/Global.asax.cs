@@ -22,6 +22,9 @@ namespace MatrixWeb
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //intializing the container
+            Bootstrapper.Initialise();
         }
     }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Unity.Mvc4</id>
+    <version>1.4.0.0</version>
+    <title>Unity.MVC4</title>
+    <authors>Brad Vincent,  Oliver Rivett-Carnac</authors>
+    <owners>Brad Vincent,  Oliver Rivett-Carnac</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Unity.Mvc4 is a library that allows simple Integration of Microsoft's Unity IoC container with ASP.NET MVC 4. Identical to Unity.MVC3 except it references MVC4</description>
+    <releaseNotes>Upgraded to Unity 3.*.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>MVC4 Unity</tags>
+    <dependencies>
+      <dependency id="CommonServiceLocator" version="1.0" />
+      <dependency id="Microsoft.AspNet.Mvc" version="4.0.20710.0" />
+      <dependency id="Microsoft.AspNet.WebApi.Core" version="4.0.30506.0" />
+      <dependency id="Unity" version="3.0.1304.1" />
+    </dependencies>
+  </metadata>
+</package>

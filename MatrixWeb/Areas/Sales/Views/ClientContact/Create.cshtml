@@ -1,0 +1,52 @@
+﻿@model EnterpriseCore.ViewModels.ClientViewModel
+@{
+    Layout = "~/Views/Shared/_MXClientValidation.cshtml";
+}
+@*@Html.Partial("_QueryTime")*@
+<h2>Create a new Contact</h2>
+
+@using (Ajax.BeginForm("Create", "ClientContact",
+    new AjaxOptions
+            {
+                UpdateTargetId = "divClientContacts",
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace
+            }))
+{   
+    @Html.HiddenFor(x => x.Client.Id)
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>@Html.EditorFor(x => x.Client.Contacts[0].Name)
+            </td>
+
+            <td>Phone:</td>
+            <td>@Html.EditorFor(x => x.Client.Contacts[0].PhoneNumber)
+            </td>
+        </tr>
+
+        <tr>
+            <td>Email:</td>
+            <td>@Html.EditorFor(x => x.Client.Contacts[0].Email)
+            </td>
+        </tr>
+        
+    </table>
+    <div>
+        <br />
+        <br />
+        <input id="btnClientContactSubmit" name="btnClientContactSubmit" value="Create" type="submit" />
+        @Ajax.ActionLink("<< Back", "Index", "ClientContact", new { id = ViewContext.RouteData.Values["id"] },
+            new AjaxOptions
+            {
+                UpdateTargetId = "divClientContacts",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading",
+            }, null)
+
+
+    </div>
+}
+
+
