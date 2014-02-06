@@ -32,7 +32,7 @@ namespace EnterpriseCore.DataAccessObjects
                 
             var result = collection.Update(query, update, WriteConcern.Acknowledged);
 
-            if (bMaintainHistory) InsertDocumentIntoHistory<Client>(entity.Id);
+            if (bMaintainHistory) base.InsertDocumentIntoHistory<Client>(entity.Id);
 
             return result.Ok;
         }
