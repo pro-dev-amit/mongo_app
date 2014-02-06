@@ -17,10 +17,11 @@ Some highlights of this app are
 Architecture and usage
 ----------------------
 
+- For setting up MongoDB; please go though the text in "Mongo_Setup.txt" file at the root folder.
 - The solution has three projects. The core of the project lies in MatrixCore, this is where all the heavylifting is done. The EnterpriseCore contains DBEntities, custom repositories and ViewModels. And the front end being asp.net MVC project; MatrixWeb.
 - This generic repository would suffice most of the operations, but we also know that a generalized solution cannot cater to the finer details of a system; so we need extensibility, go ahead and crate a new dataAccess repository class by just inheriting it from MXMongoRepository so that you get access to MongoContext object and other low level methods from mongoDbCSharp driver. One such class is already there in this sample code.
 - To induce a custom Repository, just register it with the container. Take a look at the "RegisterTypes()" method in Bootstrapper class.
-- Also, all your mongo entities must inherit from MXEntity. 
+- Also, all your mongo entities must inherit from "MXEntity". 
 - Database connection string is defined in web.config file, check out the appsettings section.
 
 Note: I'll be adding more to this project as I move forward. Aim is to showcase a ASP.Net MVC application using MongoDB. For me, right now the focus is not so much on the UI though.
