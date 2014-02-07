@@ -94,8 +94,8 @@ namespace MatrixWeb.Controllers
         [HttpPost]
         public ActionResult Create(EmployeeViewModel model)
         {
-            model.Employee.Gender = _repository.GetSingleOptionById<Gender>(model.Employee.Gender.DenormalizedId);
-            model.Employee.ProgrammingRating = _repository.GetSingleOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
+            model.Employee.Gender = _repository.GetOptionById<Gender>(model.Employee.Gender.DenormalizedId);
+            model.Employee.ProgrammingRating = _repository.GetOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
 
             model.Employee.Skills = model.LstSkill.Where(c => c.IsSelected == true).Select(c => c.DenormalizedReference).ToList();
 
@@ -144,8 +144,8 @@ namespace MatrixWeb.Controllers
         [HttpPost]
         public ActionResult Edit(EmployeeViewModel model)
         {
-            model.Employee.Gender = _repository.GetSingleOptionById<Gender>(model.Employee.Gender.DenormalizedId);
-            model.Employee.ProgrammingRating = _repository.GetSingleOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
+            model.Employee.Gender = _repository.GetOptionById<Gender>(model.Employee.Gender.DenormalizedId);
+            model.Employee.ProgrammingRating = _repository.GetOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
 
             model.Employee.Skills = model.LstSkill.Where(c => c.IsSelected == true).Select(c => c.DenormalizedReference).ToList();
 

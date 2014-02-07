@@ -34,6 +34,15 @@
                 LoadingElementId = "divLoading",
             }, null)
                 <br />
+            @Ajax.ActionLink("About Me", "About", "Home",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading",
+            })
+                <br />
                 <div id="divLoading" style="display: none;">
                         @*@Html.JQueryUI().Progressbar(null)*@
                         <img src="~/Content/themes/base/images/wait.gif" />

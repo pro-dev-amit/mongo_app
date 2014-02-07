@@ -25,10 +25,8 @@ namespace MatrixCore.DataAccess
         //other important ones
         string GetNameById<T>(string Id) where T : MXEntity;
 
-        DenormalizedReference GetSingleOptionById<T>(string Id) where T : MXEntity;
-
-        IList<DenormalizedReference> GetOptionSetByMultipleIds<T>(IList<string> ids) where T : MXEntity;
-
+        DenormalizedReference GetOptionById<T>(string Id) where T : MXEntity;
+        
         IList<DenormalizedReference> GetOptionSet<T>(Expression<Func<T, bool>> predicate = null, int take = 15) where T : MXEntity;
 
         bool AlterStatus<T>(string id , bool statusValue) where T : MXEntity;

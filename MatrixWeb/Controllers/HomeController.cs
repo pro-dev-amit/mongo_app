@@ -39,6 +39,12 @@ namespace MatrixWeb.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult About()
+        {
+            return View();
+        }
+
+        #region "Private helpers"
         void setMasterData()
         {
             List<ProgrammingRating> lstProgrammingRating = new List<ProgrammingRating>() 
@@ -82,6 +88,8 @@ namespace MatrixWeb.Controllers
             };
             _repository.Insert<ClientType>(lstClientType);
         }
+
+        #endregion
 
     }//End of Controller
 }

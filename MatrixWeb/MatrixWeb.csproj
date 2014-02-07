@@ -254,6 +254,7 @@
     <Content Include="Areas\Sales\Views\Client\Edit.cshtml" />
     <Content Include="Areas\Sales\Views\ClientContact\Index.cshtml" />
     <Content Include="Areas\Sales\Views\ClientContact\Create.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

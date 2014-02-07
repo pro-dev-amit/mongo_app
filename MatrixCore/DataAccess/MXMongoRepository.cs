@@ -17,12 +17,15 @@ namespace MatrixCore.DataAccess
     {
         #region "Initialization and attributes"
 
-        protected MongoDatabase db;
+        //lazy instantiation; do not create the context unless required. This would be useful in scenarios where database is not accessed, say static pages
+        Lazy<MongoDatabase> _db = new Lazy<MongoDatabase>(() => new MXMongoContext().GetSession);
 
-        public MXMongoRepository() 
+        protected MongoDatabase db
         {
-            db = new MXMongoContext().GetSession;            
+            get { return _db.Value; }
         }
+
+        public MXMongoRepository(){ }
 
         #endregion
 
@@ -144,18 +147,11 @@ namespace MatrixCore.DataAccess
             return collection.AsQueryable().Where(c => c.Id == Id).SingleOrDefault().Name;
         }
 
-        public virtual DenormalizedReference GetSingleOptionById<T>(string Id) where T : MXEntity
+        public virtual DenormalizedReference GetOptionById<T>(string Id) where T : MXEntity
         {
             var collection = db.GetCollection<T>(typeof(T).Name);
 
             return collection.AsQueryable().Where(c => c.Id == Id).Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name }).SingleOrDefault();
-        }
-
-        public virtual IList<DenormalizedReference> GetOptionSetByMultipleIds<T>(IList<string> ids) where T : MXEntity
-        {
-            var collection = db.GetCollection<T>(typeof(T).Name);
-
-            return collection.AsQueryable().Where(c => ids.Contains(c.Id)).Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name }).ToList();
         }
 
         /// <summary>

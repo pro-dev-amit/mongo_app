@@ -13,9 +13,15 @@ namespace MatrixCore.Framework
 {
     public class MXMongoContext
     {
-        public MXMongoContext() { }
+        static string connectionString, databaseName;
 
-        
+        static MXMongoContext()
+        {
+            connectionString = ConfigurationManager.AppSettings["mongoConnString"].ToString();
+            databaseName = ConfigurationManager.AppSettings["databaseName"].ToString();
+        }
+
+        public MXMongoContext() { }
 
         public MongoDatabase GetSession
         {
@@ -24,10 +30,9 @@ namespace MatrixCore.Framework
 
         MongoDatabase getSession()
         {
-            var connectionString = ConfigurationManager.AppSettings["mongoConnString"].ToString();
             var client = new MongoClient(connectionString);
             var server = client.GetServer();
-            var database = server.GetDatabase(ConfigurationManager.AppSettings["databaseName"].ToString());
+            var database = server.GetDatabase(databaseName);
 
             return database;
         }
