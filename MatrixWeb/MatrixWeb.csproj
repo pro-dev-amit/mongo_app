@@ -39,6 +39,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.1.0\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\packages\Autofac.Mvc4.3.1.0\lib\net40\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -133,7 +139,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Sales\SalesAreaRegistration.cs" />
-    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="IocBootstrappers\AutofacBootstrapper.cs" />
+    <Compile Include="IocBootstrappers\UnityBootstrapper.cs" />
     <Compile Include="Areas\Sales\Controllers\ClientContactController.cs" />
     <Compile Include="Areas\Sales\Controllers\ClientController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />

@@ -2,6 +2,7 @@
 using MatrixCore.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -22,6 +23,11 @@ namespace MatrixWeb.Controllers
 
         public ActionResult Index()
         {
+            if (ConfigurationManager.AppSettings["bUseAutofacIoc"].ToString() == "true")
+                ViewBag.IocContainer = "Autofac";
+            else
+                ViewBag.IocContainer = "Unity";
+
             var results = _repository.GetCount<Gender>();
 
             if (results < 1)

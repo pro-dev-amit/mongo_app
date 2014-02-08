@@ -16,7 +16,7 @@ namespace EnterpriseCore.DataAccessObjects
     {
         public override bool Update<T>(T entity, bool bMaintainHistory = false)
         {
-            var collection = db.GetCollection<Client>("Client");
+            var collection = dbContext.GetCollection<Client>("Client");
 
             var input = entity as Client;
 

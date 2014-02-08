@@ -18,11 +18,11 @@ namespace MatrixCore.DataAccess
         #region "Initialization and attributes"
 
         //lazy instantiation; do not create the context unless required. This would be useful in scenarios where database is not accessed, say static pages
-        Lazy<MongoDatabase> _db = new Lazy<MongoDatabase>(() => new MXMongoContext().GetSession);
+        Lazy<MongoDatabase> _dbContext = new Lazy<MongoDatabase>(() => new MXMongoContext().DbContext);
 
-        protected MongoDatabase db
+        protected MongoDatabase dbContext
         {
-            get { return _db.Value; }
+            get { return _dbContext.Value; }
         }
 
         public MXMongoRepository(){ }
@@ -35,7 +35,7 @@ namespace MatrixCore.DataAccess
         {
             entity.IsActive = true;
 
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             collection.Insert(entity, WriteConcern.Acknowledged);
 
@@ -52,7 +52,7 @@ namespace MatrixCore.DataAccess
         {
             foreach (var entity in entities) entity.IsActive = true;
 
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             var result = collection.InsertBatch(entities, WriteConcern.Acknowledged);
             
@@ -63,7 +63,7 @@ namespace MatrixCore.DataAccess
         {
             //ObjectId oId = new ObjectId(id);
 
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<MXEntity>.EQ(e => e.Id, id);
 
@@ -81,7 +81,7 @@ namespace MatrixCore.DataAccess
         /// <returns></returns>
         public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : MXEntity
         {   
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             if (predicate == null)
                 return collection.AsQueryable().Where(c => c.IsActive == bIsActive).Skip(skip).Take(take).ToList();
@@ -102,7 +102,7 @@ namespace MatrixCore.DataAccess
         {
             var collectionName = typeof(T).Name;
 
-            var collection = db.GetCollection<T>(collectionName);
+            var collection = dbContext.GetCollection<T>(collectionName);
 
             if (bMaintainHistory)
             {
@@ -118,7 +118,7 @@ namespace MatrixCore.DataAccess
         {
             //ObjectId oId = new ObjectId(id);
             
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.EQ(e => e.Id, id);
             var result = collection.Remove(query);
@@ -128,7 +128,7 @@ namespace MatrixCore.DataAccess
 
         public virtual bool Delete<T>(IList<string> ids) where T : MXEntity
         {
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.In<string>(e => e.Id, ids);
             var result = collection.Remove(query);
@@ -142,14 +142,14 @@ namespace MatrixCore.DataAccess
 
         public virtual string GetNameById<T>(string Id) where T : MXEntity
         {
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             return collection.AsQueryable().Where(c => c.Id == Id).SingleOrDefault().Name;
         }
 
         public virtual DenormalizedReference GetOptionById<T>(string Id) where T : MXEntity
         {
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             return collection.AsQueryable().Where(c => c.Id == Id).Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name }).SingleOrDefault();
         }
@@ -163,7 +163,7 @@ namespace MatrixCore.DataAccess
         /// <returns></returns>
         public virtual IList<DenormalizedReference> GetOptionSet<T>(Expression<Func<T, bool>> predicate = null, int take = 15) where T : MXEntity
         {
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             if (predicate == null)
                 return collection.AsQueryable()
@@ -183,7 +183,7 @@ namespace MatrixCore.DataAccess
 
         public virtual bool AlterStatus<T>(string id, bool statusValue) where T : MXEntity
         {
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.EQ(e => e.Id, id);
                         
@@ -201,7 +201,7 @@ namespace MatrixCore.DataAccess
         /// <returns></returns>
         public virtual long GetCount<T>() where T : MXEntity
         {            
-            var collection = db.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             var result = collection.AsQueryable().Where(c => c.IsActive == true).Count();
 
@@ -221,7 +221,7 @@ namespace MatrixCore.DataAccess
                 TXDocument = loadedDoc,
             };
 
-            var collectionX = db.GetCollection<T>(typeof(T).Name + 'X');
+            var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');
             collectionX.Insert(tX);
         }
 

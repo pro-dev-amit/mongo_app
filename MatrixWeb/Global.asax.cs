@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -24,7 +25,11 @@ namespace MatrixWeb
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             //intializing the container
-            Bootstrapper.Initialise();
+            if (ConfigurationManager.AppSettings["bUseAutofacIoc"].ToString() == "true")            
+                AutofacBootstrapper.Initialise();            
+            else            
+                UnityBootstrapper.Initialise();
         }
-    }
+        
+    }//End of class
 }

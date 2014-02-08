@@ -13,24 +13,24 @@ namespace MatrixCore.Framework
 {
     public class MXMongoContext
     {
-        static string connectionString, databaseName;
+        static string connectionUrl, databaseName;
 
         static MXMongoContext()
         {
-            connectionString = ConfigurationManager.AppSettings["mongoConnString"].ToString();
+            connectionUrl = ConfigurationManager.AppSettings["mongoConnUrl"].ToString();
             databaseName = ConfigurationManager.AppSettings["databaseName"].ToString();
         }
 
         public MXMongoContext() { }
 
-        public MongoDatabase GetSession
+        public MongoDatabase DbContext
         {
             get { return getSession(); }
         }
 
         MongoDatabase getSession()
         {
-            var client = new MongoClient(connectionString);
+            var client = new MongoClient(connectionUrl);
             var server = client.GetServer();
             var database = server.GetDatabase(databaseName);
 

@@ -8,7 +8,7 @@ using MatrixWeb.Areas.Sales.Controllers;
 
 namespace MatrixWeb
 {
-  public static class Bootstrapper
+  public static class UnityBootstrapper
   {
     public static IUnityContainer Initialise()
     {
@@ -39,8 +39,7 @@ namespace MatrixWeb
         container.RegisterType<IRepository, ClientRepository>("ClientRepository");
         
         container.RegisterType<ClientController>(
-            new InjectionConstructor(
-                new ResolvedParameter<IRepository>("ClientRepository")
+            new InjectionConstructor(new ResolvedParameter<IRepository>("ClientRepository")
             ));
     }
   }
