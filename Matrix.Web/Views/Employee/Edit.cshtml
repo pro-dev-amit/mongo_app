@@ -1,0 +1,86 @@
+﻿@model Matrix.DAL.ViewModels.EmployeeViewModel
+
+@{    
+    Layout = "~/Views/Shared/_MXClientValidation.cshtml";
+}
+
+@Html.Partial("_QueryTime")
+
+<h2>Edit</h2>
+
+@using (Ajax.BeginForm("Edit", new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace
+            }))
+{
+    @Html.HiddenFor(x => x.Employee.Id)   
+    @Html.HiddenFor(x => x.Employee.IsActive)   
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>@Html.EditorFor(x => x.Employee.Name)
+            </td>
+            <td>Salary:</td>
+            <td>@Html.TextBoxFor(x => x.Employee.Salary, new { @Value = "0.0" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>Gender:</td>
+            <td>
+                @Html.DropDownListFor(model => model.Employee.Gender.DenormalizedId, new SelectList(Model.LstGender, "DenormalizedId", "DenormalizedName"))
+            </td>
+            <td>Date of Birth:</td>
+            <td>@Html.EditorFor(x => x.Employee.DateOfBirth)
+            </td>
+        </tr>
+
+        <tr>
+            <td>Is Graduate:</td>
+            <td>@Html.EditorFor(x => x.Employee.IsGraduate)
+            </td>
+
+        </tr>
+        <tr>
+            <td>Programming Rating:</td>
+            <td>@Html.DropDownListFor(model => model.Employee.ProgrammingRating.DenormalizedId, new SelectList(Model.LstRating, "DenormalizedId", "DenormalizedName"))
+            </td>
+            <td>Email ID:</td>
+            <td>@Html.EditorFor(x => x.Employee.Email)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <br />
+                <div style="height: 150px; width: 100%; overflow-y: scroll;">
+                    Skills: <br />
+                    @for (int count = 0; count < Model.LstSkill.Count; count++)
+                    {   
+                        @Html.CheckBoxFor(x => x.LstSkill[count].IsSelected)
+                        @Html.DisplayFor(x => x.LstSkill[count].DenormalizedReference.DenormalizedName)
+                        @Html.HiddenFor(x => x.LstSkill[count].DenormalizedReference.DenormalizedId)
+                        @Html.HiddenFor(x => x.LstSkill[count].DenormalizedReference.DenormalizedName)
+                        <br />
+                    }
+                </div>
+            </td>
+        </tr>
+
+
+    </table>
+        
+    <div>
+        <br />
+        <input id="btnSubmit" name="btnSubmit" value="Save" type="submit" />
+        @Ajax.ActionLink("<< Back", "Index", "Employee",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace
+            })
+    </div>
+}

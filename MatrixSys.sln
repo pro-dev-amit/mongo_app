@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixCore", "MatrixCore\MatrixCore.csproj", "{509D843C-2F26-4BDE-AE24-646A7C0F1C63}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.Core", "Matrix.Core\Matrix.Core.csproj", "{509D843C-2F26-4BDE-AE24-646A7C0F1C63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseCore", "EnterpriseCore\EnterpriseCore.csproj", "{46197D44-B816-4BCB-961C-D77039245EE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.DAL", "Matrix.DAL\Matrix.DAL.csproj", "{46197D44-B816-4BCB-961C-D77039245EE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixWeb", "MatrixWeb\MatrixWeb.csproj", "{F7DABE49-ECC5-4FE8-8130-2BD35CA964EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.Web", "Matrix.Web\Matrix.Web.csproj", "{F7DABE49-ECC5-4FE8-8130-2BD35CA964EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
