@@ -115,9 +115,7 @@ namespace Matrix.Core.DataAccess
         }
 
         public virtual bool Delete<T>(string id) where T : MXEntity
-        {
-            //ObjectId oId = new ObjectId(id);
-            
+        {   
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.EQ(e => e.Id, id);

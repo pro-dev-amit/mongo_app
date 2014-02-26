@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver.Linq;
-using Matrix.DAL.Entities;
+using Matrix.Entities.MongoEntities;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver;
 

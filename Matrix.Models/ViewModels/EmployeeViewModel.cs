@@ -1,13 +1,13 @@
-﻿using Matrix.DAL.CommonHelpers;
-using Matrix.DAL.Entities;
+﻿using Matrix.Entities.MongoEntities;
 using Matrix.Core.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Matrix.Models.CommonHelpers;
 
-namespace Matrix.DAL.ViewModels
+namespace Matrix.Models.ViewModels
 {
     public class EmployeeViewModel
     {

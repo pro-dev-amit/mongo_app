@@ -1,5 +1,5 @@
-﻿using Matrix.DAL.Entities;
-using Matrix.DAL.ViewModels;
+﻿using Matrix.Entities.MongoEntities;
+using Matrix.Models.ViewModels;
 using Matrix.Core.DataAccess;
 using Matrix.Web.Controllers;
 using System;

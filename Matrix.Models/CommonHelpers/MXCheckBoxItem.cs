@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Matrix.DAL.CommonHelpers
+namespace Matrix.Models.CommonHelpers
 {
     public class MXCheckBoxItem
     {

@@ -1,6 +1,6 @@
-﻿using Matrix.DAL.CommonHelpers;
-using Matrix.DAL.Entities;
-using Matrix.DAL.ViewModels;
+﻿using Matrix.Models.CommonHelpers;
+using Matrix.Entities.MongoEntities;
+using Matrix.Models.ViewModels;
 using Matrix.Core.DataAccess;
 using Matrix.Core.Framework;
 using System;

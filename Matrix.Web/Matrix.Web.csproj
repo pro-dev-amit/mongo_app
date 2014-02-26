@@ -283,6 +283,14 @@
       <Project>{509d843c-2f26-4bde-ae24-646a7c0f1c63}</Project>
       <Name>Matrix.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Matrix.Entities\Matrix.Entities.csproj">
+      <Project>{8c07b53d-5bf1-44fb-a3da-8805f43229d7}</Project>
+      <Name>Matrix.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Matrix.Models\Matrix.Models.csproj">
+      <Project>{4c57ffa7-cad4-4f4f-a8d3-ea028d6bc6d5}</Project>
+      <Name>Matrix.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

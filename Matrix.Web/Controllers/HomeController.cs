@@ -1,4 +1,4 @@
-﻿using Matrix.DAL.Entities;
+﻿using Matrix.Entities.MongoEntities;
 using Matrix.Core.DataAccess;
 using System;
 using System.Collections.Generic;

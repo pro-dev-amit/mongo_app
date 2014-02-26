@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{46197D44-B816-4BCB-961C-D77039245EE0}</ProjectGuid>
+    <ProjectGuid>{8C07B53D-5BF1-44FB-A3DA-8805F43229D7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Matrix.DAL</RootNamespace>
-    <AssemblyName>Matrix.DAL</AssemblyName>
+    <RootNamespace>Matrix.Entities</RootNamespace>
+    <AssemblyName>Matrix.Entities</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,16 +33,10 @@
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Driver.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,17 +44,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repositories\ClientRepository.cs" />
+    <Compile Include="MongoEntities\Client.cs" />
+    <Compile Include="MongoEntities\Lookups\ClientType.cs" />
+    <Compile Include="MongoEntities\Lookups\Designation.cs" />
+    <Compile Include="MongoEntities\Employee.cs" />
+    <Compile Include="MongoEntities\Lookups\Gender.cs" />
+    <Compile Include="MongoEntities\Lookups\ProgrammingRating.cs" />
+    <Compile Include="MongoEntities\Lookups\Salutation.cs" />
+    <Compile Include="MongoEntities\Lookups\Skill.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Matrix.Core\Matrix.Core.csproj">
       <Project>{509d843c-2f26-4bde-ae24-646a7c0f1c63}</Project>
       <Name>Matrix.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Matrix.Entities\Matrix.Entities.csproj">
-      <Project>{8c07b53d-5bf1-44fb-a3da-8805f43229d7}</Project>
-      <Name>Matrix.Entities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

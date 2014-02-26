@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.DAL.Entities
+namespace Matrix.Entities.MongoEntities
 {
     [BsonIgnoreExtraElements]
-    public class Gender : MXEntity
+    public class Designation : MXEntity
     {
         [BsonElement("cd")]
         public string Code { get; set; }
