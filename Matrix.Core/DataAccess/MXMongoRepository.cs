@@ -106,9 +106,11 @@ namespace Matrix.Core.DataAccess
 
             if (bMaintainHistory)
             {
-                InsertDocumentIntoHistory<T>(entity.Id);
-            }
-            
+                Task.Run(() =>
+                    InsertDocumentIntoHistory<T>(entity.Id)
+                );
+            }            
+
             var t = collection.Save<T>(entity, WriteConcern.Acknowledged);
 
             return t.Ok;            
