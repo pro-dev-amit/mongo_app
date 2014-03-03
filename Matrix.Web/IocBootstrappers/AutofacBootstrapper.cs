@@ -14,6 +14,7 @@ using Matrix.DAL.DataAccessObjects;
 using Matrix.Web.Areas.Sales.Controllers;
 using Matrix.Core.MongoCore;
 using System.Configuration;
+using Matrix.Core.QueueCore;
 
 
 namespace Matrix.Web
@@ -41,6 +42,9 @@ namespace Matrix.Web
 
             //inject specific implementation of IRepository Interface
             builder.Register(c => new ClientController(c.ResolveNamed<IRepository>("ClientRepository")));
+
+            //register rabbitMQ client as a singleton
+            builder.RegisterType<MXRabbitClient>().As<IQueueClient>().SingleInstance();
 
             
             var container = builder.Build();

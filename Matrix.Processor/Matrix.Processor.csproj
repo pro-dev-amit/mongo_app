@@ -56,8 +56,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Matrix.Core\Matrix.Core.csproj">
+      <Project>{509d843c-2f26-4bde-ae24-646a7c0f1c63}</Project>
+      <Name>Matrix.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Matrix.Entities\Matrix.Entities.csproj">
+      <Project>{8c07b53d-5bf1-44fb-a3da-8805f43229d7}</Project>
+      <Name>Matrix.Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

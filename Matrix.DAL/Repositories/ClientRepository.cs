@@ -9,11 +9,27 @@ using MongoDB.Driver.Linq;
 using Matrix.Entities.MongoEntities;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver;
+using Matrix.Core.QueueCore;
 
 namespace Matrix.DAL.DataAccessObjects
 {
     public class ClientRepository : MXMongoRepository
     {
+        IQueueClient _queueClient;
+
+        public ClientRepository(IQueueClient queueClient)
+        {
+            _queueClient = queueClient;
+        }
+
+        //Storing client information is absolutely critical to me. Hence queuing it to RabbitMQ
+        public override string Insert<T>(T entity)
+        {
+            _queueClient.Bus.Publish<IMXEntity>(entity);
+
+            return "queued";
+        }
+
         public override bool Update<T>(T entity, bool bMaintainHistory = false)
         {
             var collection = dbContext.GetCollection<Client>("Client");

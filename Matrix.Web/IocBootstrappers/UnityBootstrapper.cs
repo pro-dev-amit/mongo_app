@@ -5,6 +5,7 @@ using Matrix.Core.FrameworkCore;
 using Matrix.DAL.DataAccessObjects;
 using Matrix.Web.Controllers;
 using Matrix.Web.Areas.Sales.Controllers;
+using Matrix.Core.QueueCore;
 
 namespace Matrix.Web
 {
@@ -41,6 +42,9 @@ namespace Matrix.Web
         container.RegisterType<ClientController>(
             new InjectionConstructor(new ResolvedParameter<IRepository>("ClientRepository")
             ));
+
+        //register rabbitMQ client as a singleton
+        container.RegisterType<IQueueClient, MXRabbitClient>(new ContainerControlledLifetimeManager());
     }
   }
 }

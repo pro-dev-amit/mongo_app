@@ -7,7 +7,21 @@
 @Html.Partial("_QueryTime")
 
 <h2>My Clients</h2>
-
+<div>
+<b>Note</b>: Saving a new client is critical to us. We cannot afford to loose out on potential business; hence creating a new client is queued to RabbitMQ. 
+    <br />
+    Do not forget to run the subscriber application at "..\Matrix.Processor\bin\Debug\Matrix.Processor.exe". You can run multiple instances of the subscriber as well.
+    If you do not see the just added client, please refresh the listing here  
+    @Ajax.ActionLink("Refresh", "Index", "Client", null,
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading",
+            })
+</div>
+<br />
 @Ajax.ActionLink("Add A New Client", "Create", "Client",
             new AjaxOptions
             {

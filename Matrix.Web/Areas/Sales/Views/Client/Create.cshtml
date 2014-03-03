@@ -4,6 +4,9 @@
 }
 @Html.Partial("_QueryTime")
 <h2>Create a new Client</h2>
+<div>
+<b>Note</b>: Saving a client is critical to us. We cannot afford to loose out on potential business; hence this is queued to RabbitMQ.
+</div>
 
 @using (Ajax.BeginForm("Create", "Client",
     new AjaxOptions
@@ -54,7 +57,7 @@
         <br />
         <br />
         <input id="btnSubmit" name="btnSubmit" value="Create" type="submit" />
-        @Ajax.ActionLink("<< Back", "Index", "Client", new { id = ViewContext.RouteData.Values["id"], productId = Request.QueryString["productId"] },
+        @Ajax.ActionLink("<< Back", "Index", "Client", null,
             new AjaxOptions
             {
                 UpdateTargetId = "divContent",
