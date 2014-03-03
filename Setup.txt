@@ -1,0 +1,47 @@
+The mongoDB version used here is 2.6rc0 64 bit.
+
+	Follow these steps and everything should turn out to be pretty smooth.
+
+	1) Download MongoDB from http://mongodb.org; one compatible with 64 bit windows.
+	
+	2) unzip the mongo binaries into a folder "C:\mongodb2.6rc0"
+
+	3) go to c: drive at the terminal and paste these commands	
+
+	md data\db
+
+	md C:\mongodb2.6rc0\log
+
+	echo logpath=C:\mongodb2.6rc0\log\mongo.log > C:\mongodb2.6rc0\mongod.cfg
+
+	C:\mongodb2.6rc0\bin\mongod.exe --config C:\mongodb2.6rc0\mongod.cfg --install
+
+	net start mongodb	
+
+	4) for stopping/removing mongodb service
+
+	net stop mongodb
+
+	C:\mongodb2.6rc0\bin\mongod.exe --remove
+	
+	5) Also a good GUI tool for MongoDB is robomongo, it's opensource and free of cost; http://robomongo.org
+
+-----------------------------------------------------------------------------------------------------------------
+For RabbitMQ installation:
+
+	1) First, install erlang compiler; http://erlang.org
+	2) Install RabbitMQ; http://rabbitmq.com
+	3) Then to enable RabbitMQ management UI, run this command in RabbitMQ command prompt(source: http://www.rabbitmq.com/management.html) -
+		rabbitmq-plugins enable rabbitmq_management
+	4) Access the admin console at http://localhost:16672 with username and password both as "guest".
+
+
+That's it. Happy coding.
+
+Note: Although I've been experimenting with both MongoDB and RabbitMQ on my personal windows machine with .Net, but for production purposes it's linux that's the home for these technologies.
+
+
+
+
+
+
