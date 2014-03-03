@@ -59,16 +59,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataAccess\MXMongoRepository.cs" />
-    <Compile Include="DataAccess\IRepository.cs" />
-    <Compile Include="Framework\DenormalizedReference.cs" />
-    <Compile Include="Framework\MXEntity.cs" />
-    <Compile Include="Framework\MXEntityX.cs" />
-    <Compile Include="Framework\MXMongoContext.cs" />
-    <Compile Include="Framework\MXPredicate.cs" />
-    <Compile Include="Framework\MXTiming.cs" />
-    <Compile Include="Framework\RequiredDenormalizedRefernce.cs" />
-    <Compile Include="Framework\VersionDetail.cs" />
+    <Compile Include="FrameworkCore\IDenormalizedReference.cs" />
+    <Compile Include="MongoCore\DenormalizedRefrenceMap.cs" />
+    <Compile Include="MongoCore\MXMongoRepository.cs" />
+    <Compile Include="FrameworkCore\IRepository.cs" />
+    <Compile Include="FrameworkCore\DenormalizedReference.cs" />
+    <Compile Include="FrameworkCore\IMXEntity.cs" />
+    <Compile Include="MongoCore\MXMongoEntity.cs" />
+    <Compile Include="MongoCore\MXMongoEntityX.cs" />
+    <Compile Include="MongoCore\MXMongoContext.cs" />
+    <Compile Include="FrameworkCore\MXPredicate.cs" />
+    <Compile Include="FrameworkCore\MXTiming.cs" />
+    <Compile Include="FrameworkCore\RequiredDenormalizedRefernce.cs" />
+    <Compile Include="FrameworkCore\VersionDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchCore\MXElasticClient.cs" />
     <Compile Include="SearchCore\MXElasticIndex.cs" />
@@ -79,6 +82,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

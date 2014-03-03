@@ -9,10 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
-using Matrix.Core.Framework;
+using Matrix.Core.MongoCore;
 
-namespace Matrix.Core.DataAccess
-{   
+namespace Matrix.Core.FrameworkCore
+{
+    /// <summary>
+    /// Generic repository class for accessing MongoDB.
+    /// </summary>
     public class MXMongoRepository : IRepository
     {
         #region "Initialization and attributes"
@@ -31,7 +34,7 @@ namespace Matrix.Core.DataAccess
 
         #region "Interface implementaions; generic CRUD repository"
 
-        public virtual string Insert<T>(T entity) where T : MXEntity
+        public virtual string Insert<T>(T entity) where T : IMXEntity
         {
             entity.IsActive = true;
 
@@ -48,7 +51,7 @@ namespace Matrix.Core.DataAccess
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public virtual bool Insert<T>(IList<T> entities) where T : MXEntity
+        public virtual bool Insert<T>(IList<T> entities) where T : IMXEntity
         {
             foreach (var entity in entities) entity.IsActive = true;
 
@@ -59,13 +62,11 @@ namespace Matrix.Core.DataAccess
             return result.All(c => c.Ok == true);
         }
 
-        public virtual T GetOne<T>(string id)
+        public virtual T GetOne<T>(string id) where T : IMXEntity
         {
-            //ObjectId oId = new ObjectId(id);
-
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
-            var query = Query<MXEntity>.EQ(e => e.Id, id);
+            var query = Query<T>.EQ(e => e.Id, id);
 
             var result = collection.FindOne(query);
 
@@ -79,7 +80,7 @@ namespace Matrix.Core.DataAccess
         /// <param name="predicate">Use the MXPredicate object to build predicates</param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : MXEntity
+        public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : IMXEntity
         {   
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
@@ -98,7 +99,7 @@ namespace Matrix.Core.DataAccess
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual bool Update<T>(T entity, bool bMaintainHistory = false) where T : MXEntity            
+        public virtual bool Update<T>(T entity, bool bMaintainHistory = false) where T : IMXEntity            
         {
             var collectionName = typeof(T).Name;
 
@@ -116,7 +117,7 @@ namespace Matrix.Core.DataAccess
             return t.Ok;            
         }
 
-        public virtual bool Delete<T>(string id) where T : MXEntity
+        public virtual bool Delete<T>(string id) where T : IMXEntity
         {   
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
@@ -126,7 +127,7 @@ namespace Matrix.Core.DataAccess
             return result.Ok;
         }
 
-        public virtual bool Delete<T>(IList<string> ids) where T : MXEntity
+        public virtual bool Delete<T>(IList<string> ids) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
@@ -140,14 +141,14 @@ namespace Matrix.Core.DataAccess
 
         #region "Other methods; AlterStatus() etc"
 
-        public virtual string GetNameById<T>(string Id) where T : MXEntity
+        public virtual string GetNameById<T>(string Id) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             return collection.AsQueryable().Where(c => c.Id == Id).SingleOrDefault().Name;
         }
 
-        public virtual DenormalizedReference GetOptionById<T>(string Id) where T : MXEntity
+        public virtual DenormalizedReference GetOptionById<T>(string Id) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
@@ -161,7 +162,7 @@ namespace Matrix.Core.DataAccess
         /// <param name="predicate">IsActive == true is by default. when null, this returns all items</param>
         /// <param name="take">Effective only when there is a predicate</param>
         /// <returns></returns>
-        public virtual IList<DenormalizedReference> GetOptionSet<T>(Expression<Func<T, bool>> predicate = null, int take = 15) where T : MXEntity
+        public virtual IList<DenormalizedReference> GetOptionSet<T>(Expression<Func<T, bool>> predicate = null, int take = 15) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
@@ -181,7 +182,7 @@ namespace Matrix.Core.DataAccess
             }
         }
 
-        public virtual bool AlterStatus<T>(string id, bool statusValue) where T : MXEntity
+        public virtual bool AlterStatus<T>(string id, bool statusValue) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
@@ -199,7 +200,7 @@ namespace Matrix.Core.DataAccess
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public virtual long GetCount<T>() where T : MXEntity
+        public virtual long GetCount<T>() where T : IMXEntity
         {            
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
@@ -212,13 +213,12 @@ namespace Matrix.Core.DataAccess
 
         #region "protected Helpers"
 
-        protected void InsertDocumentIntoHistory<T>(string id) where T : MXEntity
+        protected void InsertDocumentIntoHistory<T>(string id) where T : IMXEntity
         {
             var loadedDoc = GetOne<T>(id);
-            MXEntityX<T> tX = new MXEntityX<T>
-            {
-                //Id = loadedDoc.Id,
-                TXDocument = loadedDoc,
+            MXMongoEntityX<T> tX = new MXMongoEntityX<T>
+            {                
+                XDocument = loadedDoc,
             };
 
             var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');

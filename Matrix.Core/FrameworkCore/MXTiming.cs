@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.Core.Framework
+namespace Matrix.Core.FrameworkCore
 {   
     /// <summary>
     /// purpose of this class is to get timings of executions of certain code. Need to have this for recording purposes in the furture.

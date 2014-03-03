@@ -1,4 +1,5 @@
-﻿using Matrix.Core.Framework;
+﻿using Matrix.Core.FrameworkCore;
+using Matrix.Core.MongoCore;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace Matrix.Entities.MongoEntities
 {    
     [BsonIgnoreExtraElements]
-    public class Employee : MXEntity
+    public class Employee : MXMongoEntity
     {
         [BsonElement("em")]
         [Required]
@@ -22,17 +23,17 @@ namespace Matrix.Entities.MongoEntities
         [BsonElement("sl")]
         public double Salary { get; set; }
 
-        [BsonElement("g")]
+        [BsonElement("g")]        
         public DenormalizedReference Gender { get; set; }
 
         [BsonElement("ig")]
         public bool IsGraduate { get; set; }
 
-        [BsonElement("r")]
+        [BsonElement("r")]        
         [Required]
         public DenormalizedReference ProgrammingRating { get; set; }
 
-        [BsonElement("sks")]
+        [BsonElement("sks")]        
         public IList<DenormalizedReference> Skills { get; set; }
 
         

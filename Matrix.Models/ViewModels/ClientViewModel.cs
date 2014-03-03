@@ -1,5 +1,5 @@
 ﻿using Matrix.Entities.MongoEntities;
-using Matrix.Core.Framework;
+using Matrix.Core.MongoCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

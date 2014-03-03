@@ -6,14 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace Matrix.Core.Framework
+namespace Matrix.Core.FrameworkCore
 {
 
     public class RequiredDenormalizedRefernceAttribute : ValidationAttribute, IClientValidatable
     {
         public override bool IsValid(object value)
         {
-            var obj = value as DenormalizedReference;
+            var obj = value as IDenormalizedReference;
             if (obj == null || string.IsNullOrEmpty(obj.DenormalizedId))
                 return false;
 

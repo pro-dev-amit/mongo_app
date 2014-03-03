@@ -1,11 +1,12 @@
 ﻿using Matrix.Entities.MongoEntities;
-using Matrix.Core.Framework;
+using Matrix.Core.MongoCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Matrix.Models.CommonHelpers;
+using Matrix.Core.FrameworkCore;
 
 namespace Matrix.Models.ViewModels
 {

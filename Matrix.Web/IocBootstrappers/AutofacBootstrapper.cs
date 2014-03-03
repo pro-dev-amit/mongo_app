@@ -9,10 +9,10 @@ using Matrix.Web.Controllers;
 using System.Web.Mvc;
 using Autofac.Integration.Mvc;
 using System.Reflection;
-using Matrix.Core.DataAccess;
+using Matrix.Core.FrameworkCore;
 using Matrix.DAL.DataAccessObjects;
 using Matrix.Web.Areas.Sales.Controllers;
-using Matrix.Core.Framework;
+using Matrix.Core.MongoCore;
 using System.Configuration;
 
 

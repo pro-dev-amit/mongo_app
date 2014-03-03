@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.Core.Framework
+namespace Matrix.Core.FrameworkCore
 {
     /// <summary>
     /// Enables the efficient, dynamic composition of query predicates.

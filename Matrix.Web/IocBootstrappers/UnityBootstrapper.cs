@@ -1,7 +1,7 @@
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using Unity.Mvc4;
-using Matrix.Core.DataAccess;
+using Matrix.Core.FrameworkCore;
 using Matrix.DAL.DataAccessObjects;
 using Matrix.Web.Controllers;
 using Matrix.Web.Areas.Sales.Controllers;

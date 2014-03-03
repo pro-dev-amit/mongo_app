@@ -1,8 +1,8 @@
 ﻿using Matrix.Models.CommonHelpers;
 using Matrix.Entities.MongoEntities;
 using Matrix.Models.ViewModels;
-using Matrix.Core.DataAccess;
-using Matrix.Core.Framework;
+using Matrix.Core.FrameworkCore;
+using Matrix.Core.MongoCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

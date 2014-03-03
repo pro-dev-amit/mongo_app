@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿using Matrix.Core.FrameworkCore;
+using Matrix.Core.MongoCore;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -9,28 +11,25 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Matrix.Core.Framework
+namespace Matrix.Core.MongoCore
 {
-    public class MXEntityBase
-    {        
+    public class MXMongoEntity : IMXEntity
+    {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-    }
 
-    public class MXEntity : MXEntityBase
-    {
         [BsonElement("nm")]
         [Required]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         [BsonElement("iA")]
-        public bool IsActive { get; set; }
+        public virtual bool IsActive { get; set; }
 
         [BsonElement("cBy")]
-        public string CreatedBy { get; set; }
+        public virtual string CreatedBy { get; set; }
 
         [BsonElement("cDt")]
-        public DateTime CreatedDate { get; set; }
+        public virtual DateTime CreatedDate { get; set; }
     }
 }

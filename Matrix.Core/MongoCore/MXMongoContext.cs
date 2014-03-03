@@ -9,7 +9,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 
-namespace Matrix.Core.Framework
+namespace Matrix.Core.MongoCore
 {
     public class MXMongoContext
     {

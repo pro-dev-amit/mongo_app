@@ -1,4 +1,4 @@
-﻿using Matrix.Core.Framework;
+﻿using Matrix.Core.MongoCore;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Matrix.Entities.MongoEntities
 {
     [BsonIgnoreExtraElements]
-    public class Designation : MXEntity
+    public class Designation : MXMongoEntity
     {
         [BsonElement("cd")]
         public string Code { get; set; }
