@@ -15,7 +15,7 @@ namespace Matrix.Core.QueueCore
     {
         static string _connectionString;
 
-        Lazy<IBus> _bus = new Lazy<IBus>(() => RabbitHutch.CreateBus(_connectionString));
+        static Lazy<IBus> _bus = new Lazy<IBus>(() => RabbitHutch.CreateBus(_connectionString));
 
         static MXRabbitClient()
         {

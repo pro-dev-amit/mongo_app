@@ -15,7 +15,7 @@ namespace Matrix.Processor
         {
             using (var bus = new MXRabbitClient().Bus)
             {
-                bus.Subscribe<IMXEntity>("ClientType", HandleMessage);
+                bus.Subscribe<IMXEntity>("IMXEntityType", HandleMessage);
 
                 Console.ForegroundColor = ConsoleColor.Red;
 
