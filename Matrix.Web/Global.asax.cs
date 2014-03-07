@@ -26,7 +26,7 @@ namespace Matrix.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             //map the special custom type DenormalizedRefrence; code based mapping so that our class could act as a real domain object
-            DenormalizedRefrenceMap.RegisterMappings();
+            //DenormalizedRefrenceMap.RegisterMappings();
 
             //intializing the IoC container
             if (ConfigurationManager.AppSettings["bUseAutofacIoc"].ToString() == "true")            

@@ -1,4 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
+using MongoDB.Bson.Serialization;
 using System;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,15 @@ namespace Matrix.Core.FrameworkCore
         public string DenormalizedId { get; set; }
                 
         public string DenormalizedName { get; set; }
+
+        public DenormalizedReference()
+        {
+            if (!BsonClassMap.IsClassMapRegistered(typeof(DenormalizedReference)))
+                BsonClassMap.RegisterClassMap<DenormalizedReference>(c =>
+                {
+                    c.MapProperty(p => p.DenormalizedId).SetElementName("id");
+                    c.MapProperty(p => p.DenormalizedName).SetElementName("nm");
+                });
+        }
     }
 }

@@ -107,8 +107,10 @@ namespace Matrix.Core.FrameworkCore
 
             if (bMaintainHistory)
             {
+                var historyDoc = GetOne<T>(entity.Id);
+
                 Task.Run(() =>
-                    InsertDocumentIntoHistory<T>(entity.Id)
+                    InsertDocumentIntoHistory<T>(historyDoc)
                 );
             }            
 
@@ -213,12 +215,29 @@ namespace Matrix.Core.FrameworkCore
 
         #region "protected Helpers"
 
+        protected void InsertDocumentIntoHistory<T>(T entity) where T : IMXEntity
+        {            
+            MXMongoEntityX<T> tX = new MXMongoEntityX<T>
+            {
+                XDocument = entity,
+            };
+
+            var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');
+            collectionX.Insert(tX);
+        }
+
+        /// <summary>
+        /// Insert into history. Call this before updating the document.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
         protected void InsertDocumentIntoHistory<T>(string id) where T : IMXEntity
         {
-            var loadedDoc = GetOne<T>(id);
+            var entity = GetOne<T>(id);
+
             MXMongoEntityX<T> tX = new MXMongoEntityX<T>
-            {                
-                XDocument = loadedDoc,
+            {
+                XDocument = entity,
             };
 
             var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');

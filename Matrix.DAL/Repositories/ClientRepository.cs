@@ -32,6 +32,8 @@ namespace Matrix.DAL.DataAccessObjects
 
         public override bool Update<T>(T entity, bool bMaintainHistory = false)
         {
+            if (bMaintainHistory) base.InsertDocumentIntoHistory<Client>(entity.Id);
+
             var collection = dbContext.GetCollection<Client>("Client");
 
             var input = entity as Client;
@@ -47,8 +49,6 @@ namespace Matrix.DAL.DataAccessObjects
                 .Set(c => c.Website, input.Website);
                 
             var result = collection.Update(query, update, WriteConcern.Acknowledged);
-
-            if (bMaintainHistory) base.InsertDocumentIntoHistory<Client>(entity.Id);
 
             return result.Ok;
         }
