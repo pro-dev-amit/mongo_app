@@ -39,6 +39,9 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="Nest">
+      <HintPath>..\packages\NEST.0.12.0.0\lib\NET4\Nest.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -81,8 +84,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueCore\IQueueClient.cs" />
     <Compile Include="QueueCore\MXRabbitClient.cs" />
-    <Compile Include="SearchCore\MXElasticClient.cs" />
-    <Compile Include="SearchCore\MXElasticIndex.cs" />
+    <Compile Include="SearchCore\ISearchClient.cs" />
+    <Compile Include="SearchCore\ISearchDocument.cs" />
+    <Compile Include="SearchCore\MXSearchClient.cs" />
+    <Compile Include="SearchCore\MXSearchDocument.cs" />
     <Compile Include="SearchCore\MXElasticRepository.cs" />
   </ItemGroup>
   <ItemGroup>
