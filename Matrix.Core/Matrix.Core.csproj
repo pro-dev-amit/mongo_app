@@ -88,6 +88,7 @@
     <Compile Include="QueueCore\MXRabbitClient.cs" />
     <Compile Include="SearchCore\ISearchClient.cs" />
     <Compile Include="SearchCore\ISearchDocument.cs" />
+    <Compile Include="SearchCore\ISearchRepository.cs" />
     <Compile Include="SearchCore\MXSearchClient.cs" />
     <Compile Include="SearchCore\MXSearchDocument.cs" />
   </ItemGroup>
