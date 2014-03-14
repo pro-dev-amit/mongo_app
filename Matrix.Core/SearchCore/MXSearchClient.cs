@@ -34,15 +34,6 @@ namespace Matrix.Core.SearchCore
             }
         }
 
-        ElasticClient getSearchClient()
-        {
-            var setting = new ConnectionSettings(new Uri(_connectionString));
-            setting.SetDefaultIndex(_defaultIndex);
-
-            return new ElasticClient(setting);
-        }
-
-
     }//End of class MXSearchClient
 
     //discarding this. I do not want to code more.
