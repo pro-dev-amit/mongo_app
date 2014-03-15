@@ -90,7 +90,9 @@
     <Compile Include="SearchCore\ISearchDocument.cs" />
     <Compile Include="SearchCore\ISearchRepository.cs" />
     <Compile Include="SearchCore\MXSearchClient.cs" />
+    <Compile Include="SearchCore\MXSearchDenormalizedRefrence.cs" />
     <Compile Include="SearchCore\MXSearchDocument.cs" />
+    <Compile Include="SearchCore\MXSearchRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using Matrix.Core.FrameworkCore;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Matrix.Core.SearchCore
 {
-    public class MXSearchDocument : ISearchDocument
+    public class MXSearchDenormalizedRefrence : IDenormalizedReference
     {
         [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.not_analyzed)]
-        public string Id { get; set; }
+        public string DenormalizedId { get; set; }
 
-        [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.not_analyzed)]
-        public bool IsActive { get; set; }
+        public string DenormalizedName { get; set; }
+        
     }
 }

@@ -9,5 +9,7 @@ namespace Matrix.Core.SearchCore
     public interface ISearchDocument
     {
         string Id { get; set; }
+
+        bool IsActive { get; set; }
     }
 }

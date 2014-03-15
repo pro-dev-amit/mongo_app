@@ -93,6 +93,25 @@ namespace Matrix.Web.Controllers
                 
             };
             _repository.Insert<ClientType>(lstClientType);
+
+            List<Author> lstAuthor = new List<Author>() 
+            {
+                new Author { Name = "Paulo Coelho"},
+                new Author { Name = "Amit Kumar"},
+                new Author { Name = "David Schwartz"},
+                new Author { Name = "Max Payne"},
+            };
+            _repository.Insert<Author>(lstAuthor);
+
+            List<BookCategory> lstBookCategory = new List<BookCategory>() 
+            {
+                new BookCategory { Name = ".Net"},
+                new BookCategory { Name = "Oh Java"},
+                new BookCategory { Name = "Inspiration, Motivation"},
+                new BookCategory { Name = "Fiction"},
+                new BookCategory { Name = "Ruby On Rails"},
+            };
+            _repository.Insert<BookCategory>(lstBookCategory);
         }
 
         #endregion

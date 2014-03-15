@@ -34,6 +34,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\mongocsharpdriver.1.9.0-rc1\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
+    <Reference Include="Nest, Version=0.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NEST.0.12.0.0\lib\NET4\Nest.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -46,7 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MongoEntities\Client.cs" />
+    <Compile Include="MongoEntities\Lookups\Book.cs" />
     <Compile Include="MongoEntities\Lookups\ClientType.cs" />
+    <Compile Include="MongoEntities\Lookups\Author.cs" />
+    <Compile Include="MongoEntities\Lookups\BookCategory.cs" />
     <Compile Include="MongoEntities\Lookups\Designation.cs" />
     <Compile Include="MongoEntities\Employee.cs" />
     <Compile Include="MongoEntities\Lookups\Gender.cs" />
@@ -54,6 +61,7 @@
     <Compile Include="MongoEntities\Lookups\Salutation.cs" />
     <Compile Include="MongoEntities\Lookups\Skill.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchDocuments\BookSearchDocument.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Matrix.Core\Matrix.Core.csproj">

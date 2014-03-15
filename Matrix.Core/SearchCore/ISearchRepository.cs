@@ -10,8 +10,16 @@ namespace Matrix.Core.SearchCore
     {
         string Index<T>(T document, string index = "") where T : MXSearchDocument;
 
-        int IndexMany<T>(IList<T> documents, string index = "") where T : MXSearchDocument;
+        bool Index<T>(IList<T> documents, string index = "") where T : MXSearchDocument;
 
-        T GetOne<T>(string id, string index = "") where T : MXSearchDocument;
+        T GetOne<T>(string id, string index = "", string documentType = "") where T : MXSearchDocument;
+
+        /// <summary>
+        /// Searching for a term on all fields
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="term"></param>
+        /// <returns></returns>
+        IList<T> GenericSearch<T>(string term) where T : MXSearchDocument;
     }
 }
