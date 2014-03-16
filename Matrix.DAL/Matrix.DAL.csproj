@@ -65,7 +65,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Repositories\ClientRepository.cs" />
+    <Compile Include="Repositories\BookRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IBookRepository.cs" />
+    <Compile Include="SearchRepositories\BookSearchRepository.cs" />
     <Compile Include="SearchRepositories\IBookSearchRepository.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;//"~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Product Catalog; we have books here</h3>
+<b>Note</b>: Saving a new book to MongoDB first and then to ElasticSearch. Both operations are queued(RPC way for saving into Mongo and pub/sub for ElasticSeacrh).
+<br />
+Do not forget to run the subscriber application at "..\Matrix.Processor\bin\Debug\Matrix.Processor.exe". If you do not see the just added book, please click the 
+search button again with a search criteria. 
+<br />
+@Ajax.ActionLink("Create A New Book", "Create", null,
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading"
+            }, new { @class="nav" })<br /><br />
+
+@using (Ajax.BeginForm("AddSampleData",
+    new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace
+            }))
+{
+    if (ViewBag.ShowDummyButton != null && ViewBag.ShowDummyButton == true)
+    {
+        <span>There are no books created yet</span><br />
+        <input id="btnAddSampleData" name="btnAddSampleData" value="Add some books" type="submit" /><br /><br />
+    }
+    else
+    {
+        <b>Searh Term : </b><input type="text" id="txtSearchTerm" />
+        <input type="button" id="btnSearch" value="Search" />
+    <br />
+        <span style="font-size:14px; color:darkorange;">
+            Term Query: Search by author name, category or title. Eg. for a search term could be "coelho", "Paulo Coelho", "alchemist", "java", 
+            "rails", "java, rails" etc.
+        </span>
+    }
+}
+
+<div id="divSearchResults">
+
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#divSearchResults").load("/Sales/Book/IndexSub/");
+
+        $("#btnSearch").click(function () {
+            //alert("Search term: " + $("#txtSearchTerm").val().trim());
+            $("#divSearchResults").load("/Sales/Book/IndexSub/?term=" + escape($("#txtSearchTerm").val().trim()));
+            
+        });
+
+        //Preventing the form to post back.
+        $("#txtSearchTerm").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#divSearchResults").load("/Sales/Book/IndexSub/?term=" + escape($("#txtSearchTerm").val().trim()));
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>

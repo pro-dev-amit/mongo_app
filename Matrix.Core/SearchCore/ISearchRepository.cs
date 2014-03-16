@@ -20,6 +20,8 @@ namespace Matrix.Core.SearchCore
         /// <typeparam name="T"></typeparam>
         /// <param name="term"></param>
         /// <returns></returns>
-        IList<T> GenericSearch<T>(string term) where T : MXSearchDocument;
+        IList<T> GenericSearch<T>(string term, int skip = 0, int take = 30) where T : MXSearchDocument;
+
+        bool Update<T>(T document, string index = "") where T : MXSearchDocument;
     }
 }

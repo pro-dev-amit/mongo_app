@@ -3,11 +3,12 @@ using Matrix.Core.MongoCore;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.Entities.MongoEntities.Lookups
+namespace Matrix.Entities.MongoEntities
 {
     [BsonIgnoreExtraElements]
     public class Book : MXMongoEntity
@@ -15,6 +16,7 @@ namespace Matrix.Entities.MongoEntities.Lookups
         [BsonElement("ds")]
         public string Description { get; set; }
 
+        [Required]
         [BsonElement("aC")]
         public int AvaliableCopies { get; set; }
 
@@ -23,5 +25,8 @@ namespace Matrix.Entities.MongoEntities.Lookups
 
         [BsonElement("ct")]
         public DenormalizedReference Category { get; set; }
+
+        //[BsonElement("iPS")]
+        //public bool IsPortedToSearchEngine { get; set; }
     }
 }

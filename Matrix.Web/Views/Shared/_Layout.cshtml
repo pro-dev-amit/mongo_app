@@ -34,6 +34,15 @@
                 LoadingElementId = "divLoading",
             }, null)
                 <br />
+            @Ajax.ActionLink("Product Catalog", "Index", "Book", new { area = "Sales" },
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading",
+            }, null)
+                <br />
             @Ajax.ActionLink("About Me", "About", "Home",
             new AjaxOptions
             {

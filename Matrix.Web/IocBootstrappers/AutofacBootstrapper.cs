@@ -10,11 +10,13 @@ using System.Web.Mvc;
 using Autofac.Integration.Mvc;
 using System.Reflection;
 using Matrix.Core.FrameworkCore;
-using Matrix.DAL.DataAccessObjects;
 using Matrix.Web.Areas.Sales.Controllers;
 using Matrix.Core.MongoCore;
 using System.Configuration;
 using Matrix.Core.QueueCore;
+using Matrix.DAL.Repositories;
+using Matrix.DAL.SearchRepositories;
+using Matrix.Core.SearchCore;
 
 
 namespace Matrix.Web
@@ -45,6 +47,12 @@ namespace Matrix.Web
 
             //register rabbitMQ client as a singleton
             builder.RegisterType<MXRabbitClient>().As<IQueueClient>().SingleInstance();
+
+            builder.RegisterType<BookRepository>().As<IBookRepository>();
+
+            //searh repos
+            builder.RegisterType<MXSearchRepository>().As<ISearchRepository>();
+            builder.RegisterType<BookSearchRepository>().As<IBookSearchRepository>();
 
             
             var container = builder.Build();

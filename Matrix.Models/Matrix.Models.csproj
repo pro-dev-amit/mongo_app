@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="CommonHelpers\MXCheckBoxItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\BookViewModel.cs" />
     <Compile Include="ViewModels\ClientViewModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
   </ItemGroup>

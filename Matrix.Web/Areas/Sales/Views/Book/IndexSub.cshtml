@@ -1,0 +1,27 @@
+﻿@model IList<Matrix.Entities.SearchDocuments.BookSearchDocument>
+
+@{
+    //ViewBag.Title = "IndexSub";
+    Layout = null; //"~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("_QueryTime")
+<h4 style="color:green;">Search Results(Coming from ElasticSearch server)</h4>
+
+@if (Model != null && Model.Count > 0)
+{    
+    foreach (var item in Model)
+    {                  
+          <div style="background-color:lightgray;">
+              <b>Title</b> : @item.Title<br />
+              <b>Author</b> : @item.Author.DenormalizedName<br />
+              <b>Category</b> : @item.Category.DenormalizedName<br />
+              <b>Avaliable Copies</b> : @item.AvaliableCopies<br />
+          </div> 
+    <br />
+    }
+}
+else
+{    
+    <br />
+    @Html.Label("NO DATA FOUND")
+}

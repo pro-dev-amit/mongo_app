@@ -11,7 +11,7 @@ using MongoDB.Driver.Builders;
 using MongoDB.Driver;
 using Matrix.Core.QueueCore;
 
-namespace Matrix.DAL.DataAccessObjects
+namespace Matrix.DAL.Repositories
 {
     public class ClientRepository : MXMongoRepository
     {

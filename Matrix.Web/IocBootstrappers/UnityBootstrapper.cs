@@ -2,10 +2,12 @@ using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using Unity.Mvc4;
 using Matrix.Core.FrameworkCore;
-using Matrix.DAL.DataAccessObjects;
 using Matrix.Web.Controllers;
 using Matrix.Web.Areas.Sales.Controllers;
 using Matrix.Core.QueueCore;
+using Matrix.DAL.Repositories;
+using Matrix.Core.SearchCore;
+using Matrix.DAL.SearchRepositories;
 
 namespace Matrix.Web
 {
@@ -45,6 +47,12 @@ namespace Matrix.Web
 
         //register rabbitMQ client as a singleton
         container.RegisterType<IQueueClient, MXRabbitClient>(new ContainerControlledLifetimeManager());
+
+        container.RegisterType<IBookRepository, BookRepository>();
+
+        //searh repos
+        container.RegisterType<ISearchRepository, MXSearchRepository>();
+        container.RegisterType<IBookSearchRepository, BookSearchRepository>();
     }
   }
 }

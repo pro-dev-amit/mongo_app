@@ -1,0 +1,58 @@
+﻿@model Matrix.Models.ViewModels.BookViewModel
+
+@{    
+    Layout = "~/Views/Shared/_MXClientValidation.cshtml";
+}
+
+@Html.Partial("_QueryTime")
+
+<h2>Create A New Book</h2>
+
+@using (Ajax.BeginForm("Create", new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace
+            }))
+{   
+    <table>
+        <tr>
+            <td>Title:</td>
+            <td>@Html.EditorFor(x => x.Book.Name)
+            </td>
+            <td>Description:</td>
+            <td>@Html.TextAreaFor(x => x.Book.Description)
+            </td>
+        </tr>
+
+        <tr>
+            <td>Author:</td>
+            <td>
+                @Html.DropDownListFor(model => model.Book.Author.DenormalizedId, new SelectList(Model.LstAuthor, "DenormalizedId", "DenormalizedName"))
+            </td>
+            <td>Category:</td>
+            <td>
+                @Html.DropDownListFor(model => model.Book.Category.DenormalizedId, new SelectList(Model.LstCategory, "DenormalizedId", "DenormalizedName"))
+            </td>
+        </tr>
+
+        <tr>
+            <td>Available Copies: </td>
+            <td>@Html.EditorFor(x => x.Book.AvaliableCopies)
+            </td>
+        </tr>
+
+    </table>
+        
+    <div>
+        <br />
+        <input id="btnSubmit" name="btnSubmit" value="Create" type="submit" />
+        @Ajax.ActionLink("<< Back", "Index", "Book",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace
+            })
+    </div>
+}

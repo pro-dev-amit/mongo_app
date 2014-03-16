@@ -106,7 +106,7 @@ namespace Matrix.Web.Controllers
             List<BookCategory> lstBookCategory = new List<BookCategory>() 
             {
                 new BookCategory { Name = ".Net"},
-                new BookCategory { Name = "Oh Java"},
+                new BookCategory { Name = "Java"},
                 new BookCategory { Name = "Inspiration, Motivation"},
                 new BookCategory { Name = "Fiction"},
                 new BookCategory { Name = "Ruby On Rails"},

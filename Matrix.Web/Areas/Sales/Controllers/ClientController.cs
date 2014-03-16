@@ -1,5 +1,4 @@
-﻿using Matrix.DAL.DataAccessObjects;
-using Matrix.Entities.MongoEntities;
+﻿using Matrix.Entities.MongoEntities;
 using Matrix.Models.ViewModels;
 using Matrix.Core.FrameworkCore;
 using Matrix.Core.MongoCore;

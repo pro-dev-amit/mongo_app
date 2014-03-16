@@ -138,6 +138,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Sales\Controllers\BookController.cs" />
     <Compile Include="Areas\Sales\SalesAreaRegistration.cs" />
     <Compile Include="IocBootstrappers\AutofacBootstrapper.cs" />
     <Compile Include="IocBootstrappers\UnityBootstrapper.cs" />
@@ -212,6 +213,9 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Areas\Sales\Views\Web.config" />
+    <Content Include="Areas\Sales\Views\Book\Index.cshtml" />
+    <Content Include="Areas\Sales\Views\Book\IndexSub.cshtml" />
+    <Content Include="Areas\Sales\Views\Book\Create.cshtml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
