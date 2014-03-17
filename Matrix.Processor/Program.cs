@@ -74,9 +74,16 @@ namespace Matrix.Processor
 
         static BookQueueResponse ProcessSingleBookForMongo(IMXEntity message)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("-----------------Start ProcessSingleBookForMongo() ...-----------------");
+
             var entity = message as Book;
 
             var id = _mongoRepository.Insert<Book>(entity);
+
+            Console.WriteLine("New Document inserted with Id : " + id);
+            Console.WriteLine("\n-----------------Processing Complete..-----------------");
+            Console.ResetColor();
 
             return new BookQueueResponse { Id = id };
         }
@@ -84,9 +91,15 @@ namespace Matrix.Processor
         //This is only for the first time sample data insertions. Better is to go for a bach process framewok that could constantly pump the new documents into search engine
         static BooksQueueResponse ProcessManyBooksForMongo(IList<Book> message)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("-----------------Start ProcessManyBooksForMongo() ...-----------------");
+
             _mongoRepository.Insert<Book>(message);
 
             var entities = _mongoRepository.GetMany<Book>();
+
+            Console.WriteLine("\n-----------------Processing Complete..-----------------");
+            Console.ResetColor();
 
             return new BooksQueueResponse { Books = entities };
         }
@@ -96,7 +109,7 @@ namespace Matrix.Processor
         static void HandleMessage(ISearchDocument message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("-----------------Processing now...-----------------");
+            Console.WriteLine("-----------------Processing Single SearchDoc now...-----------------");
 
             var searchDoc = message as BookSearchDocument;
 
@@ -113,7 +126,7 @@ namespace Matrix.Processor
         static void HandleMessage(IList<BookSearchDocument> message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("-----------------Processing now...-----------------");
+            Console.WriteLine("-----------------Processing Many SearchDocs now...-----------------");
 
             var searchDocs = message as IList<BookSearchDocument>;
 
