@@ -35,10 +35,22 @@ For RabbitMQ installation:
 		rabbitmq-plugins enable rabbitmq_management
 	4) Access the admin console at http://localhost:15672 with username and password both as "guest".
 
-
+-----------------------------------------------------------------------------------------------------------------
+For ElasticSearch installation - 
+	
+	1) ElasticSearch requires java runtime, so install latest JDK/JRE from Oracle website; http://www.oracle.com/technetwork/java/javase/downloads/index.html
+	2) Set "JAVA_HOME" environment variable with value; "C:\Progra~1\Java\jre7" for 64 bit machines. 
+	Follow more information about it here; https://confluence.atlassian.com/display/DOC/Setting+the+JAVA_HOME+Variable+in+Windows
+	3) Download the ElasticSearch package from http://elasticsearch.org/download, .zip one for windows.
+	4) Unzip the file and go to the "ElasticSearc\Bin" directory and say 
+		elasticsearch.bat install 
+	at the command prompt.
+	5) ElasticSearch server would be installed as a windows service. Confirm the set up by going to "http://localhost:9200".
+	
+	
 That's it. Happy coding.
 
-Note: Although I've been experimenting with both MongoDB and RabbitMQ on my personal windows machine with .Net, but for production purposes it's linux that's the home for these technologies.
+Note: Although I've been experimenting with MongoDB, ElasticSearch and RabbitMQ on my personal windows virtual machine hosted on Ubuntu, but for production purposes it's linux that's the first choice for all these technologies.
 
 
 
