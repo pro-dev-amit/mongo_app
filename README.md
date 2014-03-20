@@ -11,7 +11,7 @@ Some highlights of this app are
 - Full fledged dynamic predicate building, paging and a basic auditing support.
 - **Ioc containers** have been used for dependency injection. There is flexibility to switch between **Autofac** and **Microsoft Unity** though.
 - **ElasticSearch** engine has been used for search scenarios, such as implmenting search on product catalog.
-- Using **RabbitMQ** for queuing(polymorphic **pub/sub**, **RPC request/response** patterns) certain operations such as saving critical data into MongoDB and pumping searchDocs into searchEngine. The client used is EasyNetQ which runs on top of RabbitMQ .Net driver.
+- Using **RabbitMQ** for queuing(polymorphic **pub/sub**, **RPC request/response** patterns) certain operations such as saving critical data into MongoDB and pumping searchDocs into searchEngine. The client used is **EasyNetQ** which runs on top of RabbitMQ .Net driver. A sample app about the basic usage of RabbitMQ with .Net can be found **[here](https://github.com/amitstefen/RabbitMQSample)**
 - On front end, I've also added certain jQuery stuff; load data on scroll as it's done in facebook, some autocompletion, jQuery tabs layout loading on demand etc.
 
 Architecture and usage
@@ -22,7 +22,7 @@ Architecture and usage
 - you can switch the Ioc containers between Autofac and Unity by flipping the flag "bUseAutofacIoc" in web.config. Take a look at Bootstrapper classes for defining dependencies beforehand.
 - This generic repository would suffice most of the needs, but we also know that a generalized solution cannot cater to all the finer details of a system; so we need extensibility, go ahead and create a new dataAccess repository class by just inheriting it from **"MXMongoRepository"** so that you get access to MongoContext object and other low level methods from mongoDbCSharp driver. Couple of such classes are already there in this sample code.
 - All your mongo entities must inherit from **"MXMongoEntity"**. 
-- For processing messages queued to RabbitMQ; run the subscriber application at "..\Matrix.Processor\bin\Debug\Matrix.Processor.exe". You can run multiple instances of the subscriber as well. A sample app about the basic usage of RabbitMQ with .Net can be found [here](https://github.com/amitstefen/RabbitMQSample)
+- For processing messages queued to RabbitMQ; run the subscriber application at "..\Matrix.Processor\bin\Debug\Matrix.Processor.exe". You can run multiple instances of the subscriber as well.
 - For creating SearchDocuments, inherit from **"MXSearchDocument"** class. And for Creating SearchRepositories, just inherit from **"MXSearchRepository"** class.
 - Various settings such as database connection string, RabbitMQ port, ElasticSearch port etc. are defined in web.config file, please check out the appsettings section there.
 
