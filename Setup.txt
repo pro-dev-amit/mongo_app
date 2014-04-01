@@ -27,24 +27,31 @@ C:\mongodb_server\bin\mongod.exe --remove
 5) Also a good GUI tool for MongoDB is robomongo, it's opensource and free of cost; http://robomongo.org
 
 -----------------------------------------------------------------------------------------------------------------
-For RabbitMQ installation:
+For RabbitMQ installation(version is 3.2.4 ):
 
 	1) First, install erlang compiler; http://erlang.org
+
 	2) Install RabbitMQ; http://rabbitmq.com
+
 	3) Then to enable RabbitMQ management UI, run this command in RabbitMQ command prompt(source: http://www.rabbitmq.com/management.html) -
 		rabbitmq-plugins enable rabbitmq_management
+
 	4) Access the admin console at http://localhost:15672 with username and password both as "guest".
 
 -----------------------------------------------------------------------------------------------------------------
-For ElasticSearch installation - 
+For ElasticSearch installation(latest version 1.1.0) - 
 	
 	1) ElasticSearch requires java runtime, so install latest JDK/JRE from Oracle website; http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
 	2) Set "JAVA_HOME" environment variable with value; "C:\Progra~1\Java\jre7" for 64 bit machines. 
 	Follow more information about it here; https://confluence.atlassian.com/display/DOC/Setting+the+JAVA_HOME+Variable+in+Windows
+	
 	3) Download the ElasticSearch package from http://elasticsearch.org/download, .zip one for windows.
+	
 	4) Unzip the file and go to the "ElasticSearc\Bin" directory and say 
-		elasticsearch.bat install 
+		service.bat install 
 	at the command prompt.
+	
 	5) ElasticSearch server would be installed as a windows service. Confirm the set up by going to "http://localhost:9200".
 	
 	

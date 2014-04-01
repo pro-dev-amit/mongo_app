@@ -10,9 +10,10 @@ namespace Matrix.Core.SearchCore
 {
     public class MXSearchDenormalizedRefrence : IDenormalizedReference
     {
-        [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.not_analyzed)]
+        [ElasticProperty(Name = "id", OmitNorms = true, Index = FieldIndexOption.no, Store = true)]
         public string DenormalizedId { get; set; }
 
+        [ElasticProperty(Name = "nm")]
         public string DenormalizedName { get; set; }
         
     }

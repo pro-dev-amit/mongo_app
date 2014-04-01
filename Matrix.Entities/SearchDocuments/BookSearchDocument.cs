@@ -12,11 +12,14 @@ namespace Matrix.Entities.SearchDocuments
     {
         public string Title { get; set; }
 
-        [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.not_analyzed)]
+        //store the field but do not index it.
+        [ElasticProperty(Name = "aC", OmitNorms = true, Index = FieldIndexOption.no, Store = true)]
         public int AvaliableCopies { get; set; }
-                
+        
+        [ElasticProperty(Name= "au")]        
         public MXSearchDenormalizedRefrence Author { get; set; }
-                
+
+        [ElasticProperty(Name = "ca")]  
         public MXSearchDenormalizedRefrence Category { get; set; }
     }
 }

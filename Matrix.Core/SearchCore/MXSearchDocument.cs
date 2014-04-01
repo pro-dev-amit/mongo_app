@@ -9,7 +9,7 @@ namespace Matrix.Core.SearchCore
 {
     public class MXSearchDocument : ISearchDocument
     {
-        [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.not_analyzed)]
+        [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.no, Store = true)]
         public string Id { get; set; }
 
         [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.not_analyzed)]
