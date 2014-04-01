@@ -4822,7 +4822,7 @@
             to set up an SSL connection, using the config options in an SslOption
             to make things cleaner</summary>
         </member>
-        <member name="M:RabbitMQ.Client.SslHelper.TcpUpgrade(System.IO.Stream,RabbitMQ.Client.SslOption)">
+        <member name="M:RabbitMQ.Client.SslHelper.TcpUpgrade(System.IO.Stream,RabbitMQ.Client.SslOption,System.Int32)">
             <summary>Upgrade a Tcp stream to an Ssl stream using the SSL options
             provided</summary>
         </member>

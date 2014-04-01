@@ -73,13 +73,14 @@
             <param name="getter"></param>
             <returns></returns>
         </member>
-        <member name="M:EasyNetQ.Consumer.ConsumerFactory.CreateConsumerInstance(EasyNetQ.Topology.IQueue,System.Func{System.Byte[],EasyNetQ.MessageProperties,EasyNetQ.MessageReceivedInfo,System.Threading.Tasks.Task},EasyNetQ.IPersistentConnection)">
+        <member name="M:EasyNetQ.Consumer.ConsumerFactory.CreateConsumerInstance(EasyNetQ.Topology.IQueue,System.Func{System.Byte[],EasyNetQ.MessageProperties,EasyNetQ.MessageReceivedInfo,System.Threading.Tasks.Task},EasyNetQ.IPersistentConnection,EasyNetQ.Consumer.IConsumerConfiguration)">
             <summary>
             Create the correct implementation of IConsumer based on queue properties
             </summary>
             <param name="queue"></param>
             <param name="onMessage"></param>
             <param name="connection"></param>
+            <param name="configuration"></param>
             <returns></returns>
         </member>
         <member name="M:EasyNetQ.Consumer.IHandlerRegistration.Add``1(System.Func{EasyNetQ.IMessage{``0},EasyNetQ.MessageReceivedInfo,System.Threading.Tasks.Task})">
@@ -258,6 +259,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:EasyNetQ.FluentConfiguration.ISubscriptionConfiguration.WithPriority(System.Int32)">
+            <summary>
+            Configures the consumer's priority
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:EasyNetQ.IAdvancedBus">
             <summary>
             IAdvancedBus is a lower level API than IBus which gives you fined grained control
@@ -274,6 +281,17 @@
             <param name="onMessage">The message handler</param>
             <returns>A disposable to cancel the consumer</returns>
         </member>
+        <member name="M:EasyNetQ.IAdvancedBus.Consume``1(EasyNetQ.Topology.IQueue,System.Action{EasyNetQ.IMessage{``0},EasyNetQ.MessageReceivedInfo},System.Action{EasyNetQ.Consumer.IConsumerConfiguration})">
+            <summary>
+            Consume a stream of messages
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="queue">The queue to take messages from</param>
+            <param name="onMessage">The message handler</param>
+            <param name="configure">
+            Fluent configuration e.g. x => x.WithPriority(10)</param>
+            <returns>A disposable to cancel the consumer</returns>
+        </member>
         <member name="M:EasyNetQ.IAdvancedBus.Consume``1(EasyNetQ.Topology.IQueue,System.Func{EasyNetQ.IMessage{``0},EasyNetQ.MessageReceivedInfo,System.Threading.Tasks.Task})">
             <summary>
             Consume a stream of messages asynchronously
@@ -283,12 +301,33 @@
             <param name="onMessage">The message handler</param>
             <returns>A disposable to cancel the consumer</returns>
         </member>
+        <member name="M:EasyNetQ.IAdvancedBus.Consume``1(EasyNetQ.Topology.IQueue,System.Func{EasyNetQ.IMessage{``0},EasyNetQ.MessageReceivedInfo,System.Threading.Tasks.Task},System.Action{EasyNetQ.Consumer.IConsumerConfiguration})">
+            <summary>
+            Consume a stream of messages asynchronously
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="queue">The queue to take messages from</param>
+            <param name="onMessage">The message handler</param>
+            <param name="configure">
+            Fluent configuration e.g. x => x.WithPriority(10)</param>
+            <returns>A disposable to cancel the consumer</returns>
+        </member>
         <member name="M:EasyNetQ.IAdvancedBus.Consume(EasyNetQ.Topology.IQueue,System.Action{EasyNetQ.Consumer.IHandlerRegistration})">
             <summary>
             Consume a stream of messages. Dispatch them to the given handlers
             </summary>
             <param name="queue">The queue to take messages from</param>
             <param name="addHandlers">A function to add handlers to the consumer</param>
+            <returns>A disposable to cancel the consumer</returns>
+        </member>
+        <member name="M:EasyNetQ.IAdvancedBus.Consume(EasyNetQ.Topology.IQueue,System.Action{EasyNetQ.Consumer.IHandlerRegistration},System.Action{EasyNetQ.Consumer.IConsumerConfiguration})">
+            <summary>
+            Consume a stream of messages. Dispatch them to the given handlers
+            </summary>
+            <param name="queue">The queue to take messages from</param>
+            <param name="addHandlers">A function to add handlers to the consumer</param>
+            <param name="configure">
+            Fluent configuration e.g. x => x.WithPriority(10)</param>
             <returns>A disposable to cancel the consumer</returns>
         </member>
         <member name="M:EasyNetQ.IAdvancedBus.Consume(EasyNetQ.Topology.IQueue,System.Func{System.Byte[],EasyNetQ.MessageProperties,EasyNetQ.MessageReceivedInfo,System.Threading.Tasks.Task})">
@@ -300,6 +339,19 @@
             The message handler. Takes the message body, message properties and some information about the 
             receive context. Returns a Task.
             </param>
+            <returns>A disposable to cancel the consumer</returns>
+        </member>
+        <member name="M:EasyNetQ.IAdvancedBus.Consume(EasyNetQ.Topology.IQueue,System.Func{System.Byte[],EasyNetQ.MessageProperties,EasyNetQ.MessageReceivedInfo,System.Threading.Tasks.Task},System.Action{EasyNetQ.Consumer.IConsumerConfiguration})">
+            <summary>
+            Consume raw bytes from the queue.
+            </summary>
+            <param name="queue">The queue to subscribe to</param>
+            <param name="onMessage">
+            The message handler. Takes the message body, message properties and some information about the 
+            receive context. Returns a Task.
+            </param>
+            <param name="configure">
+            Fluent configuration e.g. x => x.WithPriority(10)</param>
             <returns>A disposable to cancel the consumer</returns>
         </member>
         <member name="M:EasyNetQ.IAdvancedBus.Publish(EasyNetQ.Topology.IExchange,System.String,System.Boolean,System.Boolean,EasyNetQ.MessageProperties,System.Byte[])">
