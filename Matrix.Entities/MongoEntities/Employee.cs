@@ -18,6 +18,7 @@ namespace Matrix.Entities.MongoEntities
         public string Email { get; set; }
 
         [BsonElement("db")]
+        [BsonDateTimeOptions(DateOnly = true, Kind = DateTimeKind.Local)]        
         public DateTime DateOfBirth { get; set; }
 
         [BsonElement("sl")]

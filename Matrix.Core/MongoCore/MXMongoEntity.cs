@@ -30,6 +30,7 @@ namespace Matrix.Core.MongoCore
         public virtual string CreatedBy { get; set; }
 
         [BsonElement("cDt")]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public virtual DateTime CreatedDate { get; set; }
     }
 }
