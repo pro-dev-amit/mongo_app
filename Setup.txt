@@ -1,4 +1,4 @@
-The mongoDB version used here is 2.6rc1 64 bit.
+The mongoDB version used here is 2.6rc3 64 bit.
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -14,17 +14,21 @@ md C:\mongodb_server\log
 
 echo logpath=C:\mongodb_server\log\mongo.log > C:\mongodb_server\mongod.cfg
 
+After this, run the mongod executable at "C:\mongodb_server\bin\mongod.exe"
+
+4) To install as a service, run as
+
 C:\mongodb_server\bin\mongod.exe --config C:\mongodb_server\mongod.cfg --install
 
 net start mongodb	
 
-4) for stopping/removing mongodb service
+5) for stopping/removing mongodb service
 
 net stop mongodb
 
 C:\mongodb_server\bin\mongod.exe --remove
 	
-5) Also a good GUI tool for MongoDB is robomongo, it's opensource and free of cost; http://robomongo.org
+6) Also a good GUI tool for MongoDB is robomongo, it's opensource and free of cost; http://robomongo.org
 
 -----------------------------------------------------------------------------------------------------------------
 For RabbitMQ installation(version is 3.2.4 ):
@@ -53,6 +57,8 @@ For ElasticSearch installation(latest version 1.1.0) -
 	at the command prompt.
 	
 	5) ElasticSearch server would be installed as a windows service. Confirm the set up by going to "http://localhost:9200".
+	
+	6) A good admin/monitoring tool for ElasticSearch is ElasticHQ; http://www.elastichq.org, also you can use sense plugin in Chrome; a developer console for ElasticSearch.
 	
 	
 That's it. Happy coding.
