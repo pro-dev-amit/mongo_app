@@ -26,7 +26,7 @@ namespace Matrix.Core.SearchCore
             return new ElasticClient(setting);            
         });
         
-        public ElasticClient SearchClient
+        public ElasticClient Client
         {
             get
             {

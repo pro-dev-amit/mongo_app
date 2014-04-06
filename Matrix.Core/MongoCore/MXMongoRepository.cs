@@ -65,12 +65,8 @@ namespace Matrix.Core.FrameworkCore
         public virtual T GetOne<T>(string id) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
-
-            var query = Query<T>.EQ(e => e.Id, id);
-
-            var result = collection.FindOne(query);
-
-            return result;
+            
+            return collection.FindOneById(new ObjectId(id));
         }
 
         /// <summary>
@@ -202,13 +198,17 @@ namespace Matrix.Core.FrameworkCore
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public virtual long GetCount<T>() where T : IMXEntity
+        public virtual long GetCount<T>(Expression<Func<T, bool>> predicate = null) where T : IMXEntity
         {            
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
-
-            var result = collection.AsQueryable().Where(c => c.IsActive == true).Count();
-
-            return result;
+                        
+            if (predicate == null)
+                return collection.AsQueryable().Where(c => c.IsActive == true).Count();
+            else
+            {
+                predicate = predicate.And(p => p.IsActive == true);
+                return collection.AsQueryable().Where(predicate).Count();
+            }            
         }
 
         #endregion

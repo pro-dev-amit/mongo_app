@@ -9,6 +9,6 @@ namespace Matrix.Core.SearchCore
 {
     public interface ISearchClient
     {
-        ElasticClient SearchClient { get; }
+        ElasticClient Client { get; }
     }
 }

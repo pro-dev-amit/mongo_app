@@ -90,9 +90,9 @@ namespace Matrix.Web.Areas.Sales.Controllers
         {
             //extra code for checking if sample data is already there. No need for this in real applications.
 
-            var model = _mongoRepository.GetMany<Book>(take: 1);
+            var count = _mongoRepository.GetCount<Book>();
 
-            if (model.Count < 1)
+            if (count < 1)
             {
                 _mongoRepository.Insert<Book>(getSampleBooks());
             }
@@ -127,7 +127,15 @@ namespace Matrix.Web.Areas.Sales.Controllers
                 {
                     Name = "The Devil And Miss Prim",
                     Description = "a good one from Mr. Coelho",
-                    AvaliableCopies = 40,
+                    AvaliableCopies = 45,
+                    Author = authors.FirstOrDefault(c => c.DenormalizedName == "Paulo Coelho"),
+                    Category = bookCategories.FirstOrDefault(c => c.DenormalizedName == "Fiction"),                
+                },
+                new Book
+                {
+                    Name = "Magical Coelho",
+                    Description = "This should appear first in search results because of most boost factor",
+                    AvaliableCopies = 45,
                     Author = authors.FirstOrDefault(c => c.DenormalizedName == "Paulo Coelho"),
                     Category = bookCategories.FirstOrDefault(c => c.DenormalizedName == "Fiction"),                
                 },
@@ -151,7 +159,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
                 {
                     Name = "Gaining Ground In .Net",
                     Description = "",
-                    AvaliableCopies = 110,
+                    AvaliableCopies = 10,
                     Author = authors.FirstOrDefault(c => c.DenormalizedName == "Amit Kumar"),
                     Category = bookCategories.FirstOrDefault(c => c.DenormalizedName == ".Net"),
                 },
@@ -167,7 +175,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
                 {
                     Name = "Awesome Java",
                     Description = "",
-                    AvaliableCopies = 110,
+                    AvaliableCopies = 62,
                     Author = authors.FirstOrDefault(c => c.DenormalizedName == "Max Payne"),
                     Category = bookCategories.FirstOrDefault(c => c.DenormalizedName == "Java"),
                 },

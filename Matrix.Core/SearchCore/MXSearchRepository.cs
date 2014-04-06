@@ -15,7 +15,7 @@ namespace Matrix.Core.SearchCore
         {
             get 
             {
-                return _searchClient.Value.SearchClient;
+                return _searchClient.Value.Client;
             }
         }
 
@@ -57,9 +57,17 @@ namespace Matrix.Core.SearchCore
             return response;
         }
 
+        /// <summary>
+        /// Searching on all fields
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="term"></param>
+        /// <param name="skip"></param>
+        /// <param name="take"></param>
+        /// <returns></returns>
         public virtual IList<T> GenericSearch<T>(string term, int skip = 0, int take = 30) where T : MXSearchDocument
         {
-            var results = Client.Search<T>(s => s//.QueryString(term));
+            var results = Client.Search<T>(s => s
                 .From(skip)
                 .Take(take)
                 .Query(q => q
