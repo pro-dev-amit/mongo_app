@@ -56,10 +56,28 @@ namespace Matrix.Core.FrameworkCore
             foreach (var entity in entities) entity.IsActive = true;
 
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
-
+            
             var result = collection.InsertBatch(entities, WriteConcern.Acknowledged);
             
             return result.All(c => c.Ok == true);
+        }
+
+        /// <summary>
+        /// Bulk insert
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns>Inserted count</returns>
+        public virtual long BulkInsert<T>(IList<T> entities) where T : IMXEntity
+        {
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+
+            var bulk = collection.InitializeUnorderedBulkOperation();
+            
+            foreach (var entity in entities)
+                bulk.Insert<T>(entity);
+
+            return bulk.Execute(WriteConcern.Acknowledged).InsertedCount;
         }
 
         public virtual T GetOne<T>(string id) where T : IMXEntity
@@ -115,6 +133,28 @@ namespace Matrix.Core.FrameworkCore
             return t.Ok;            
         }
 
+        public virtual long BulkUpdate<T>(IMongoQuery query, IMongoUpdate update, bool bMaintainHistory = false) where T : IMXEntity
+        {
+            var collectionName = typeof(T).Name;
+
+            var collection = dbContext.GetCollection<T>(collectionName);
+
+            var bulk = collection.InitializeOrderedBulkOperation();
+
+            if (bMaintainHistory)
+            {
+                var historyDocs = collection.FindAs<T>(query).ToList();
+
+                Task.Run(() =>
+                    InsertMultipleDocumentsIntoHistory<T>(historyDocs)
+                );
+            }       
+
+            bulk.Find(query).Update(update);
+
+            return bulk.Execute(WriteConcern.Acknowledged).ModifiedCount;
+        }
+
         public virtual bool Delete<T>(string id) where T : IMXEntity
         {   
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
@@ -133,6 +173,28 @@ namespace Matrix.Core.FrameworkCore
             var result = collection.Remove(query);
 
             return result.Ok;
+        }
+
+        #endregion
+
+        #region "Full text search"
+
+        /// <summary>
+        /// Equivalent to a term query in lucene; a great feature. Wild card searches are not supported at the moment with a text index.
+        /// Also do not forget to create a text index on the collection referred; eg. db.Author.ensureIndex({nm : "text"})
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="term"></param>
+        /// <param name="take"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        public virtual IList<T> GetManyByTextSearch<T>(string term, int take = 128, int skip = 0) where T : IMXEntity
+        {
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+
+            var query = Query.And(Query.Text(term), Query<T>.EQ(e => e.IsActive, true));
+
+            return collection.FindAs<T>(query).Skip(skip).Take(take).ToList();
         }
 
         #endregion
@@ -242,6 +304,28 @@ namespace Matrix.Core.FrameworkCore
 
             var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');
             collectionX.Insert(tX);
+        }
+
+        protected void InsertMultipleDocumentsIntoHistory<T>(IList<T> entities) where T : IMXEntity
+        {
+            List<MXMongoEntityX<T>> xDocs = new List<MXMongoEntityX<T>>();
+
+            foreach (var doc in entities)
+            {
+                MXMongoEntityX<T> xDoc = new MXMongoEntityX<T> 
+                {
+                    XDocument = doc
+                };
+            }
+
+            var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');
+
+            var bulk = collectionX.InitializeUnorderedBulkOperation();
+
+            foreach (var doc in xDocs)
+                bulk.Insert(doc);
+
+            bulk.Execute(WriteConcern.Acknowledged);
         }
 
         #endregion

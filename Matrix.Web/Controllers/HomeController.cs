@@ -30,6 +30,8 @@ namespace Matrix.Web.Controllers
 
             var results = _repository.GetCount<Gender>();
 
+            //var textSearchResults = _repository.GetManyByTextSearch<Author>("paulo amit");
+
             if (results < 1)
             {
                 ViewBag.ShowSetMasterData = true;
