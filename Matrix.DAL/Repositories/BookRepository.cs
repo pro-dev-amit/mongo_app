@@ -28,7 +28,7 @@ namespace Matrix.DAL.Repositories
         }
 
         //Storing book information and then flowing it to search engine is absolutely critical to me. Hence queuing this to RabbitMQ
-        public override string Insert<T>(T entity)
+        public override string Insert<T>(T entity, bool isActive = true)
         {
             var mongoEntity = entity as Book;
 
@@ -50,7 +50,7 @@ namespace Matrix.DAL.Repositories
             return "queued";
         }
 
-        public override bool Insert<T>(IList<T> entities)
+        public override IList<string> Insert<T>(IList<T> entities, bool isActive = true)
         {
             var mongoEntities = (IList<Book>)entities;
 
@@ -76,7 +76,7 @@ namespace Matrix.DAL.Repositories
                 _queueClient.Bus.Publish<IList<BookSearchDocument>>(searchDocs);
             });
 
-            return true;
+            return entities.Select(c => c.Id).ToList();
         }
 
     }//End of Repository

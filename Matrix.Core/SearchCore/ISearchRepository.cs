@@ -12,6 +12,8 @@ namespace Matrix.Core.SearchCore
 
         bool Index<T>(IList<T> documents, string index = "") where T : MXSearchDocument;
 
+        bool BulkIndex<T>(IList<T> documents, string index = "") where T : MXSearchDocument;
+
         T GetOne<T>(string id, string index = "", string documentType = "") where T : MXSearchDocument;
 
         /// <summary>

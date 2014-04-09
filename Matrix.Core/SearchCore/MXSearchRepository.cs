@@ -45,6 +45,21 @@ namespace Matrix.Core.SearchCore
             return true;
         }
 
+        public virtual bool BulkIndex<T>(IList<T> documents, string index = "") where T : MXSearchDocument
+        {
+            //first set the status for all docs to be active
+            foreach (var doc in documents) doc.IsActive = true;
+
+            var descriptor = new BulkDescriptor();
+
+            foreach (var doc in documents)
+                descriptor.Index<T>(op => op.Object(doc));
+
+            var result = this.Client.Bulk(d => descriptor);
+
+            return true;
+        }
+
         public virtual T GetOne<T>(string id, string index = "", string documentType = "") where T : MXSearchDocument
         {
             T response;

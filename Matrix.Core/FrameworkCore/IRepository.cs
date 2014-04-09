@@ -8,24 +8,24 @@ using System.Linq.Expressions;
 namespace Matrix.Core.FrameworkCore
 {    
     public interface IRepository
-    {        
-        string Insert<T>(T entity) where T : IMXEntity;
+    {
+        string Insert<T>(T entity, bool isActive = true) where T : IMXEntity;
 
         /// <summary>
         /// Batch Insert; suitable for a batch of 100 or less docs
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
-        /// <returns>bool</returns>
-        bool Insert<T>(IList<T> entities) where T : IMXEntity;
+        /// <returns>List of IDs of the generated documents</returns>
+        IList<string> Insert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity;
 
         /// <summary>
         /// Bulk insert
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
-        /// <returns>Inserted count</returns>
-        long BulkInsert<T>(IList<T> entities) where T : IMXEntity;
+        /// <returns>List of IDs of the generated documents</returns>
+        IList<string> BulkInsert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity;
 
         /// <summary>
         /// Get one document by Id

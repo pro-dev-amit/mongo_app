@@ -34,7 +34,7 @@ namespace Matrix.Core.FrameworkCore
 
         #region "Interface implementaions; generic CRUD repository"
 
-        public virtual string Insert<T>(T entity) where T : IMXEntity
+        public virtual string Insert<T>(T entity, bool isActive = true) where T : IMXEntity
         {
             entity.IsActive = true;
 
@@ -50,8 +50,8 @@ namespace Matrix.Core.FrameworkCore
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
-        /// <returns></returns>
-        public virtual bool Insert<T>(IList<T> entities) where T : IMXEntity
+        /// <returns>List of IDs of the generated documents</returns>
+        public virtual IList<string> Insert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity
         {
             foreach (var entity in entities) entity.IsActive = true;
 
@@ -59,17 +59,20 @@ namespace Matrix.Core.FrameworkCore
             
             var result = collection.InsertBatch(entities, WriteConcern.Acknowledged);
             
-            return result.All(c => c.Ok == true);
+            //return result.All(c => c.Ok == true);
+            return entities.Select(c => c.Id).ToList();
         }
 
         /// <summary>
-        /// Bulk insert
+        /// Bulk insert, very useful in cases of data migration
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
-        /// <returns>Inserted count</returns>
-        public virtual long BulkInsert<T>(IList<T> entities) where T : IMXEntity
+        /// <returns>List of IDs of the generated documents</returns>
+        public virtual IList<string> BulkInsert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity
         {
+            foreach (var entity in entities) entity.IsActive = isActive;
+
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
             var bulk = collection.InitializeUnorderedBulkOperation();
@@ -77,9 +80,18 @@ namespace Matrix.Core.FrameworkCore
             foreach (var entity in entities)
                 bulk.Insert<T>(entity);
 
-            return bulk.Execute(WriteConcern.Acknowledged).InsertedCount;
+            //bulk.Execute(WriteConcern.Acknowledged).InsertedCount;
+            bulk.Execute(WriteConcern.Acknowledged);
+
+            return entities.Select(c => c.Id).ToList();
         }
 
+        /// <summary>
+        /// Find one by Id
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public virtual T GetOne<T>(string id) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);

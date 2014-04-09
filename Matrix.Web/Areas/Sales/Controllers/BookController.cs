@@ -1,4 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
+using Matrix.Core.QueueCore;
 using Matrix.DAL.Repositories;
 using Matrix.DAL.SearchRepositories;
 using Matrix.Entities.MongoEntities;
@@ -21,7 +22,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         public BookController(IBookRepository mongoRepository, IBookSearchRepository bookSearchRepository)
         {
             this._mongoRepository = mongoRepository;
-            this._bookSearchRepository = bookSearchRepository;
+            this._bookSearchRepository = bookSearchRepository;            
         }
 
         public ActionResult Index()
@@ -90,11 +91,35 @@ namespace Matrix.Web.Areas.Sales.Controllers
         {
             //extra code for checking if sample data is already there. No need for this in real applications.
 
-            var count = _mongoRepository.GetCount<Book>();
+            var countDocs = _mongoRepository.GetCount<Book>();
 
-            if (count < 1)
+            if (countDocs < 1)
             {
-                _mongoRepository.Insert<Book>(getSampleBooks());
+                var books = new List<Book>();
+                //let's insert some meaningful data first
+                books.AddRange(getSampleBooks());
+
+                var authors = _mongoRepository.GetOptionSet<Author>(); ;
+                var categories = _mongoRepository.GetOptionSet<BookCategory>();
+
+                //now let's add some 10K more documents
+                var randomValue = new Random();
+
+                for (int count = 0; count < 10000; count++)
+                {
+                    var book = new Book
+                    {
+                        Name = string.Format("RandomBook {0} {1}", randomValue.Next(10, 21), randomValue.Next(99, 1000)),
+                        Description = "Test Description",
+                        AvaliableCopies = randomValue.Next(30, 100),
+                        Author = authors[randomValue.Next(authors.Count)],
+                        Category = categories[randomValue.Next(categories.Count)],
+                    };
+
+                    books.Add(book);
+                }
+
+                _mongoRepository.Insert<Book>(books);
             }
 
             return RedirectToAction("Index");

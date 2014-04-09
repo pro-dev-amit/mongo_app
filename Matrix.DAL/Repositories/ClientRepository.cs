@@ -23,7 +23,7 @@ namespace Matrix.DAL.Repositories
         }
 
         //Storing client information is absolutely critical to me. Hence queuing it to RabbitMQ
-        public override string Insert<T>(T entity)
+        public override string Insert<T>(T entity, bool isActive = true)
         {
             _queueClient.Bus.Publish<IMXEntity>(entity);
 

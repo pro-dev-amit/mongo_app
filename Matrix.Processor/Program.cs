@@ -94,9 +94,12 @@ namespace Matrix.Processor
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("-----------------Start ProcessManyBooksForMongo() ...-----------------");
 
-            _mongoRepository.Insert<Book>(message);
+            var ids = _mongoRepository.BulkInsert<Book>(message);
 
-            var entities = _mongoRepository.GetMany<Book>();
+            var predicate = MXPredicate.True<Book>();
+            predicate = predicate.And(p => ids.Contains(p.Id));
+
+            var entities = _mongoRepository.GetMany<Book>(predicate, take: ids.Count);
 
             Console.WriteLine("\n-----------------Processing Complete..-----------------");
             Console.ResetColor();
@@ -132,7 +135,7 @@ namespace Matrix.Processor
 
             if (searchDocs != null)
             {
-                var result = _bookSearchRepository.Index<BookSearchDocument>(searchDocs);
+                var result = _bookSearchRepository.BulkIndex<BookSearchDocument>(searchDocs);
                 Console.WriteLine("Bulk of search docs indexed");
             }
 
