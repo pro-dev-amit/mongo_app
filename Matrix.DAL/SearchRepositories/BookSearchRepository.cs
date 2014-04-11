@@ -27,18 +27,37 @@ namespace Matrix.DAL.SearchRepositories
         /// <returns></returns>
         public IList<BookSearchDocument> Search(string term, int skip = 0, int take = 30)
         {
-            var query = Client.Search<BookSearchDocument>(s => s
-                .From(skip)
-                .Take(take)
-                .Query(q => (
-                    q.Term(t => t.Title, term, 2.0d) ||
-                    q.Term(t => t.Category.DenormalizedName, term, 1.0d) ||
-                    q.Term(t => t.Author.DenormalizedName, term, 1.5d)
-                    ) &&
-                    q.Term(c => c.IsActive, true)
-                ));
+            if (term.Length > 2 || term == string.Empty)
+            {
+                //            var query = Client.Search<BookSearchDocument>(s => s
+                //.From(skip)
+                //.Take(take)
+                //.Query(q => (
+                //    q.Term(t => t.Title, term, 2.0d) ||
+                //    q.Term(t => t.Category.DenormalizedName, term, 1.0d) ||
+                //    q.Term(t => t.Author.DenormalizedName, term, 1.5d)
+                //    ) &&
+                //    q.Term(c => c.IsActive, true)
+                //));
 
-            return query.Documents.ToList();
+                var query = Client.Search<BookSearchDocument>(s => s
+                    .From(skip)
+                    .Take(take)
+                    .Query(q => (
+                        //allow wild card searches on title only. Also, giving a higher boost to title
+                        q.QueryString(t => t.OnField(f => f.Title).Query(term + "*").Boost(2.0d)) ||
+                        q.QueryString(t => t.OnField(f => f.Category.DenormalizedName).Query(term)) ||
+                        q.QueryString(t => t.OnField(f => f.Author.DenormalizedName).Query(term).Boost(1.5d))
+                        ) &&
+                        q.Term(c => c.IsActive, true)
+                    ));
+
+                return query.Documents.ToList();
+            }
+            else
+            {
+                return null;
+            }
         }
 
     }//End of SearchRepository

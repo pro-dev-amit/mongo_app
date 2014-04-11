@@ -44,7 +44,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         {
             MXTiming timing = new MXTiming();
             
-            var results = _bookSearchRepository.GenericSearch<BookSearchDocument>(term);
+            var results = _bookSearchRepository.Search(term);
 
             ViewBag.QueryTime = timing.Finish();
 

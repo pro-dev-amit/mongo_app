@@ -8,37 +8,38 @@
 <br />
 Do not forget to run the subscriber application at "..\Matrix.Processor\bin\Debug\Matrix.Processor.exe". If you do not see the just added book, please click the 
 search button again with a search criteria. 
-<br />
-@Ajax.ActionLink("Create A New Book", "Create", null,
+<br /><br />
+
+@using (Ajax.BeginForm("AddSampleData",
+    new AjaxOptions
+    {
+        UpdateTargetId = "divContent",
+        HttpMethod = "POST",
+        InsertionMode = InsertionMode.Replace
+    }))
+{
+    if (ViewBag.ShowDummyButton != null && ViewBag.ShowDummyButton == true)
+    {        
+        <span>There are no books created yet</span><br />
+        <input id="btnAddSampleData" name="btnAddSampleData" value="Add some books" type="submit" /><br /><br />
+    }
+    else
+    {
+        @Ajax.ActionLink("Create A New Book", "Create", null,
             new AjaxOptions
             {
                 UpdateTargetId = "divContent",
                 HttpMethod = "Get",
                 InsertionMode = InsertionMode.Replace,
                 LoadingElementId = "divLoading"
-            }, new { @class="nav" })<br /><br />
-
-@using (Ajax.BeginForm("AddSampleData",
-    new AjaxOptions
-            {
-                UpdateTargetId = "divContent",
-                HttpMethod = "POST",
-                InsertionMode = InsertionMode.Replace
-            }))
-{
-    if (ViewBag.ShowDummyButton != null && ViewBag.ShowDummyButton == true)
-    {
-        <span>There are no books created yet</span><br />
-        <input id="btnAddSampleData" name="btnAddSampleData" value="Add some books" type="submit" /><br /><br />
-    }
-    else
-    {
+            }, new { @class = "nav" })<br /><br />
+    
         <b>Searh Term : </b><input type="text" id="txtSearchTerm" />
         <input type="button" id="btnSearch" value="Search" />
     <br />
-        <span style="font-size:14px; color:darkorange;">
+        <span style="font-size:14px; color:brown;">
             Term Query: Search by author name, category or title. Eg. for a search term could be "coelho", "Paulo Coelho", "alchemist", "java", 
-            "rails", "java, rails" etc.
+            "rails", "java, rails" etc. A minimum of 3 charaters is required to search.
         </span>
     }
 }
