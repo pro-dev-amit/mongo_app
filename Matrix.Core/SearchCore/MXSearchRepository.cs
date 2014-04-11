@@ -33,6 +33,20 @@ namespace Matrix.Core.SearchCore
             return response.Id;
         }
 
+        public virtual bool IndexAsync<T>(T document, string index = "") where T : MXSearchDocument
+        {
+            document.IsActive = true;
+
+            Task<IIndexResponse> response;
+
+            if (index == string.Empty)
+                response = Client.IndexAsync<T>(document);
+            else
+                response = Client.IndexAsync<T>(document, index);
+
+            return true;
+        }
+
         public virtual bool Index<T>(IList<T> documents, string index = "") where T : MXSearchDocument
         {
             foreach (var doc in documents) doc.IsActive = true;
@@ -41,6 +55,18 @@ namespace Matrix.Core.SearchCore
                 Client.IndexMany<T>(documents);
             else
                 Client.IndexMany<T>(documents, index);
+
+            return true;
+        }
+
+        public virtual bool IndexAsync<T>(IList<T> documents, string index = "") where T : MXSearchDocument
+        {
+            foreach (var doc in documents) doc.IsActive = true;
+
+            if (index == string.Empty)
+                Client.IndexManyAsync<T>(documents);
+            else
+                Client.IndexManyAsync<T>(documents, index);
 
             return true;
         }
@@ -56,6 +82,21 @@ namespace Matrix.Core.SearchCore
                 descriptor.Index<T>(op => op.Object(doc));
 
             var result = this.Client.Bulk(d => descriptor);
+
+            return true;
+        }
+
+        public virtual bool BulkIndexAsync<T>(IList<T> documents, string index = "") where T : MXSearchDocument
+        {
+            //first set the status for all docs to be active
+            foreach (var doc in documents) doc.IsActive = true;
+
+            var descriptor = new BulkDescriptor();
+
+            foreach (var doc in documents)
+                descriptor.Index<T>(op => op.Object(doc));
+
+            var result = this.Client.BulkAsync(descriptor);
 
             return true;
         }

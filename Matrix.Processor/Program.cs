@@ -135,8 +135,8 @@ namespace Matrix.Processor
 
             if (searchDocs != null)
             {
-                var result = _bookSearchRepository.BulkIndex<BookSearchDocument>(searchDocs);
-                Console.WriteLine("Bulk of search docs indexed");
+                var result = _bookSearchRepository.BulkIndexAsync<BookSearchDocument>(searchDocs);
+                Console.WriteLine("Bulk of search docs being indexed asynchronously");
             }
 
             Console.WriteLine("\n-----------------Processing Complete..-----------------");
