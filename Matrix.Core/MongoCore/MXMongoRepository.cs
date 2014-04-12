@@ -34,6 +34,8 @@ namespace Matrix.Core.FrameworkCore
 
         #region "Interface implementaions; generic CRUD repository"
 
+        #region "Insert"
+
         public virtual string Insert<T>(T entity, bool isActive = true) where T : IMXEntity
         {
             entity.IsActive = true;
@@ -86,6 +88,10 @@ namespace Matrix.Core.FrameworkCore
             return entities.Select(c => c.Id).ToList();
         }
 
+        #endregion
+
+        #region "Get"
+
         /// <summary>
         /// Find one by Id
         /// </summary>
@@ -119,6 +125,9 @@ namespace Matrix.Core.FrameworkCore
             }
         }
 
+        #endregion
+
+        #region "Update"
         /// <summary>
         /// Update while giving option for maintaining history
         /// </summary>
@@ -158,7 +167,7 @@ namespace Matrix.Core.FrameworkCore
                 var historyDocs = collection.FindAs<T>(query).ToList();
 
                 Task.Run(() =>
-                    InsertMultipleDocumentsIntoHistory<T>(historyDocs)
+                    InsertManyDocumentsIntoHistory<T>(historyDocs)
                 );
             }       
 
@@ -167,6 +176,16 @@ namespace Matrix.Core.FrameworkCore
             return bulk.Execute(WriteConcern.Acknowledged).ModifiedCount;
         }
 
+        #endregion
+
+        #region "Delete"
+
+        /// <summary>
+        /// Delete by Id
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id">Document Id</param>
+        /// <returns></returns>
         public virtual bool Delete<T>(string id) where T : IMXEntity
         {   
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
@@ -177,6 +196,12 @@ namespace Matrix.Core.FrameworkCore
             return result.Ok;
         }
 
+        /// <summary>
+        /// Delete by Ids for a smaller batch size; 100 or so.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public virtual bool Delete<T>(IList<string> ids) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
@@ -186,6 +211,26 @@ namespace Matrix.Core.FrameworkCore
 
             return result.Ok;
         }
+
+        /// <summary>
+        /// Bulk delete
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">MongoQuery: an example could be something like this; Query<T>.In<string>(e => e.Id, ids). 
+        /// To delete all documents, set Query as Query.Null</param>
+        /// <returns></returns>
+        public virtual long BulkDelete<T>(IMongoQuery query) where T : IMXEntity
+        {
+            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+
+            var bulk = collection.InitializeOrderedBulkOperation();
+                        
+            bulk.Find(query).Remove();
+
+            return bulk.Execute(WriteConcern.Acknowledged).ModifiedCount;
+        }
+
+        #endregion
 
         #endregion
 
@@ -200,7 +245,7 @@ namespace Matrix.Core.FrameworkCore
         /// <param name="take"></param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        public virtual IList<T> GetManyByTextSearch<T>(string term, int take = 128, int skip = 0) where T : IMXEntity
+        public virtual IList<T> GetManyByTextSearch<T>(string term, int skip = 0, int take = 30) where T : IMXEntity
         {
             var collection = dbContext.GetCollection<T>(typeof(T).Name);
 
@@ -318,7 +363,7 @@ namespace Matrix.Core.FrameworkCore
             collectionX.Insert(tX);
         }
 
-        protected void InsertMultipleDocumentsIntoHistory<T>(IList<T> entities) where T : IMXEntity
+        protected void InsertManyDocumentsIntoHistory<T>(IList<T> entities) where T : IMXEntity
         {
             List<MXMongoEntityX<T>> xDocs = new List<MXMongoEntityX<T>>();
 

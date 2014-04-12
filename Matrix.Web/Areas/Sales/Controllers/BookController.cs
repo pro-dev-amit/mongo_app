@@ -1,5 +1,6 @@
 ﻿using Matrix.Core.FrameworkCore;
 using Matrix.Core.QueueCore;
+using Matrix.Core.SearchCore;
 using Matrix.DAL.Repositories;
 using Matrix.DAL.SearchRepositories;
 using Matrix.Entities.MongoEntities;
@@ -25,29 +26,65 @@ namespace Matrix.Web.Areas.Sales.Controllers
             this._bookSearchRepository = bookSearchRepository;            
         }
 
-        public ActionResult Index()
+        public ActionResult Index(bool isUsingElasticSearch = true)
         {
-            IList<Book> model;
+            if (isUsingElasticSearch) ViewBag.IsUsingElasticSearch = true;
+            else ViewBag.IsUsingElasticSearch = false;
 
             //This is being used for checking if sample data is there. No need to do this in real scenarios.
-            model = _mongoRepository.GetMany<Book>(take: 1);
-            
-            if (model.Count < 1)
+            var count = _mongoRepository.GetCount<Book>();
+
+            if (count < 1)
             {
                 ViewBag.ShowDummyButton = true;
             }
 
             return View();
         }
-
-        public ActionResult IndexSub(string term = "")
+                
+        /// <summary>
+        /// the results here are coming from ElasticSearch server
+        /// </summary>
+        /// <param name="term"></param>
+        /// <returns></returns>
+        public ActionResult IndexSub(string term = "", bool isUsingElasticSearch = true)
         {
-            MXTiming timing = new MXTiming();
-            
-            var results = _bookSearchRepository.Search(term);
+            if (isUsingElasticSearch) ViewBag.IsUsingElasticSearch = true;
+            else ViewBag.IsUsingElasticSearch = false;
 
-            ViewBag.QueryTime = timing.Finish();
+            IList<BookSearchDocument> results;
 
+            if (isUsingElasticSearch)
+            {
+                MXTiming timing = new MXTiming();
+
+                results = _bookSearchRepository.Search(term);
+
+                ViewBag.QueryTime = timing.Finish();
+            }
+            else
+            {
+                MXTiming timing = new MXTiming();
+
+                var books = _mongoRepository.GetManyByTextSearch<Book>(term);
+
+                results = new List<BookSearchDocument>();
+
+                foreach (var book in books)
+                {
+                    results.Add(new BookSearchDocument
+                    {
+                        Id = book.Id,
+                        Title = book.Name,
+                        Author = new MXSearchDenormalizedRefrence { DenormalizedId = book.Author.DenormalizedId, DenormalizedName = book.Author.DenormalizedName },
+                        Category = new MXSearchDenormalizedRefrence { DenormalizedId = book.Category.DenormalizedId, DenormalizedName = book.Category.DenormalizedName },
+                        AvaliableCopies = book.AvaliableCopies,
+                    });
+                }
+
+                ViewBag.QueryTime = timing.Finish();
+            }
+                        
             return View(results);
         }
 
@@ -102,10 +139,10 @@ namespace Matrix.Web.Areas.Sales.Controllers
                 var authors = _mongoRepository.GetOptionSet<Author>(); ;
                 var categories = _mongoRepository.GetOptionSet<BookCategory>();
 
-                //now let's add some 10K more documents
+                //now let's add some 20K more documents
                 var randomValue = new Random();
 
-                for (int count = 0; count < 10000; count++)
+                for (int count = 0; count < 20000; count++)
                 {
                     var book = new Book
                     {
@@ -210,6 +247,14 @@ namespace Matrix.Web.Areas.Sales.Controllers
                     Description = "",
                     AvaliableCopies = 110,
                     Author = authors.FirstOrDefault(c => c.DenormalizedName == "Max Payne"),
+                    Category = bookCategories.FirstOrDefault(c => c.DenormalizedName == "Ruby On Rails"),
+                },
+                new Book
+                {
+                    Name = "Rails Tutorial",
+                    Description = "",
+                    AvaliableCopies = 110,
+                    Author = authors.FirstOrDefault(c => c.DenormalizedName == "Michael Hartl"),
                     Category = bookCategories.FirstOrDefault(c => c.DenormalizedName == "Ruby On Rails"),
                 }
 

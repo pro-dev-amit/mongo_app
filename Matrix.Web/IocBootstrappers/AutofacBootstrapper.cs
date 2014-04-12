@@ -42,7 +42,8 @@ namespace Matrix.Web
             builder.RegisterType<ClientRepository>().Named<IRepository>("ClientRepository");
 
 
-            //inject specific implementation of IRepository Interface
+            //inject specific implementation of IRepository Interface. A better approach though is to create a separate interface as it's done with Books and then inject.
+            //I'll keep this for reference purpose though.
             builder.Register(c => new ClientController(c.ResolveNamed<IRepository>("ClientRepository")));
 
             //register rabbitMQ client as a singleton

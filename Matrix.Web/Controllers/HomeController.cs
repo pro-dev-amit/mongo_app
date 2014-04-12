@@ -30,7 +30,7 @@ namespace Matrix.Web.Controllers
 
             var results = _repository.GetCount<Gender>();
 
-            //var textSearchResults = _repository.GetManyByTextSearch<Author>("paulo amit");
+            //var textSearchResults = _repository.GetManyByTextSearch<Book>("paulo, amit");
 
             if (results < 1)
             {
@@ -53,6 +53,7 @@ namespace Matrix.Web.Controllers
         }
 
         #region "Private helpers"
+
         void setMasterData()
         {
             List<ProgrammingRating> lstProgrammingRating = new List<ProgrammingRating>() 
@@ -102,6 +103,7 @@ namespace Matrix.Web.Controllers
                 new Author { Name = "Amit Kumar"},
                 new Author { Name = "David Schwartz"},
                 new Author { Name = "Max Payne"},
+                new Author { Name = "Michael Hartl"},
             };
             _repository.Insert<Author>(lstAuthor);
 

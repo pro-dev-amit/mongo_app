@@ -1,4 +1,5 @@
 ﻿using Matrix.Core.MongoCore;
+using Matrix.DAL.MongoIndexSettings;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -27,6 +28,9 @@ namespace Matrix.Web
 
             //map the special custom type DenormalizedRefrence; code based mapping so that our class could act as a real domain object
             //DenormalizedRefrenceMap.RegisterMappings();
+
+            //setting of indexes only once during the lifetime of the app. Though better approach is to create indexes directly in mongo shell.
+            new MXMongoIndexes().SetTextIndexOnBookCollection();
 
             //intializing the IoC container
             if (ConfigurationManager.AppSettings["bUseAutofacIoc"].ToString() == "true")            

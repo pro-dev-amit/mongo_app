@@ -5,7 +5,15 @@
     Layout = null; //"~/Views/Shared/_Layout.cshtml";
 }
 @Html.Partial("_QueryTime")
-<h4 style="color:green;">Search Results(Coming from ElasticSearch server)</h4>
+
+@if (ViewBag.IsUsingElasticSearch == true)
+{
+    <h4 style="color:green;">Search Results(Coming from ElasticSearch server)</h4>
+}
+else
+{
+    <h4 style="color:green;">Search Results(Coming from mongoDB free text search)</h4>
+}
 
 @if (Model != null && Model.Count > 0)
 {    

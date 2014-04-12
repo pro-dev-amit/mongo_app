@@ -40,7 +40,9 @@ namespace Matrix.Web
         container.RegisterType<IRepository, MXMongoRepository>();
 
         container.RegisterType<IRepository, ClientRepository>("ClientRepository");
-        
+
+        //inject specific implementation of IRepository Interface. A better approach though is to create a separate interface as it's done with Books and then inject.
+        //I'll keep this for reference purpose though.
         container.RegisterType<ClientController>(
             new InjectionConstructor(new ResolvedParameter<IRepository>("ClientRepository")
             ));

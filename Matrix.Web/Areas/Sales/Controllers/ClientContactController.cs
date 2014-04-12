@@ -22,7 +22,11 @@ namespace Matrix.Web.Areas.Sales.Controllers
 
         public ActionResult Index(string id) //id - clientID
         {
+            MXTiming timing = new MXTiming();
+
             var model = _repository.GetOne<Client>(id);
+
+            ViewBag.QueryTime = timing.Finish();
 
             return View(model); 
         }

@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Matrix.Core.SearchCore
 {
+    /// <summary>
+    /// An abstraction over the NEST ElasticSearch client. I'll evolve this in the coming days as there are going to be breaking changes in version 1.0
+    /// Diving deep into ElasticSearch engine is also one of my primary goals.
+    /// </summary>
     public class MXSearchRepository : ISearchRepository
     {
         Lazy<MXSearchClient> _searchClient = new Lazy<MXSearchClient>(() => new MXSearchClient());
@@ -143,6 +147,7 @@ namespace Matrix.Core.SearchCore
                 Client.Update<T>(c => c.Object(document).Document(document).Index(index));
 
             return true;
-        }
+        }               
+
     }//End of repository
 }

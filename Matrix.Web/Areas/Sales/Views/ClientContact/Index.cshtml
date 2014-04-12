@@ -5,34 +5,37 @@
     Layout = null;
 }
 
-@Ajax.ActionLink("Add A New Contact to this client", "Create", new {id = ViewContext.RouteData.Values["id"]},
+@Html.Partial("_QueryTime")
+
+@Ajax.ActionLink("Add A New Contact to this client", "Create", new { id = ViewContext.RouteData.Values["id"] },
             new AjaxOptions
             {
                 UpdateTargetId = "divClientContacts",
                 HttpMethod = "Get",
                 InsertionMode = InsertionMode.Replace,
                 LoadingElementId = "divLoading"
-            })<br /><br />
-
+            })
+<br />
+<br />
 
 @if (Model.Contacts != null && Model.Contacts.Count > 0)
 {
     <table border="1">
         <tr>
             <th>Name</th>
-            <th>Email</th>                   
-            <th>Phone</th>                                 
+            <th>Email</th>
+            <th>Phone</th>
         </tr>
 
         @foreach (var item in Model.Contacts)
-    {                  
-        <tr>           
-            <td>@item.Name</td>
-            <td>@item.Email</td>            
-            <td>@item.PhoneNumber</td>            
-        </tr>
+        {                  
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Email</td>
+                <td>@item.PhoneNumber</td>
+            </tr>
         }
-    
+
     </table>
 }
 else
@@ -40,3 +43,4 @@ else
     <br />
     @Html.Label("NO DATA FOUND")
 }
+
