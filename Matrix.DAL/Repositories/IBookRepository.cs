@@ -1,6 +1,7 @@
 ﻿using Matrix.Core.FrameworkCore;
 using Matrix.Entities.MongoEntities;
 using Matrix.Entities.SearchDocuments;
+using Matrix.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,13 @@ namespace Matrix.DAL.Repositories
 {
     public interface IBookRepository : IRepository
     {
-        //string UpdateBook(Book entity);
+        void CreateSampleData();
 
-        //IList<BookSearchDocument> Search(string term);
-        
+        BookViewModel GetBookViewModel();
+
+        string CreateBook(BookViewModel model);
+
+        //just mapping to the same SearchDoc objects so that the same view could be reused.
+        IList<BookSearchDocument> Search(string term);
     }
 }

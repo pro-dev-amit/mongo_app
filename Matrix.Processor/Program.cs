@@ -9,10 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Matrix.Processor
 {
+    //need to refactor this as it's not thread safe. Also, I'll put all this code into separate processing classes. But it's fine for experimental purpose now.
     class Program
     {
         static IRepository _mongoRepository;

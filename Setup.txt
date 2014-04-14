@@ -1,4 +1,4 @@
-The mongoDB version used here is 2.6rc3 64 bit.
+The mongoDB version used here is 2.6 64 bit.
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -9,9 +9,7 @@ Follow these steps and everything should turn out to be pretty smooth.
 3) go to c: drive at the terminal and paste these commands	
 
 md data\db
-
 md C:\mongodb_server\log
-
 echo logpath=C:\mongodb_server\log\mongo.log > C:\mongodb_server\mongod.cfg
 
 After this, run the mongod executable at "C:\mongodb_server\bin\mongod.exe"
