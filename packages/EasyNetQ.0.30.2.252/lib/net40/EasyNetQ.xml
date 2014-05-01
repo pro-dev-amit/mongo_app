@@ -58,6 +58,52 @@
             <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
             <param name="message">The message to response with</param>
         </member>
+        <member name="M:EasyNetQ.BusExtensions.FuturePublish``1(EasyNetQ.IBus,System.DateTime,System.String,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="cancellationKey">An identifier that can be used with CancelFuturePublish to cancel the sending of this message at a later time</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.BusExtensions.CancelFuturePublish(EasyNetQ.IBus,System.String)">
+            <summary>
+            Unschedule all messages matching the cancellationKey.
+            </summary>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="cancellationKey">The identifier that was used when originally scheduling the message with FuturePublish</param>
+        </member>
+        <member name="M:EasyNetQ.BusExtensions.FuturePublishAsync``1(EasyNetQ.IBus,System.DateTime,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.BusExtensions.FuturePublishAsync``1(EasyNetQ.IBus,System.DateTime,System.String,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="cancellationKey">An identifier that can be used with CancelFuturePublish to cancel the sending of this message at a later time</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.BusExtensions.CancelFuturePublishAsync(EasyNetQ.IBus,System.String)">
+            <summary>
+            Unschedule all messages matching the cancellationKey.
+            </summary>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="cancellationKey">The identifier that was used when originally scheduling the message with FuturePublish</param>
+        </member>
         <member name="T:EasyNetQ.ComponentRegistration">
             <summary>
             Registers the default EasyNetQ components in our internal super-simple IoC container.
@@ -538,6 +584,11 @@
             Event fires when the bus disconnects
             </summary>
         </member>
+        <member name="E:EasyNetQ.IAdvancedBus.MessageReturned">
+            <summary>
+            Event fires when a mandatory or immediate message is returned as un-routable
+            </summary>
+        </member>
         <member name="P:EasyNetQ.IAdvancedBus.Container">
             <summary>
             The IoC container that EasyNetQ uses to resolve it's services.
@@ -971,6 +1022,14 @@
             <param name="addHandlers">A function to add handlers</param>
             <returns>Consumer cancellation. Call Dispose to stop consuming</returns>
         </member>
+        <member name="T:EasyNetQ.Producer.PublisherBasic">
+             <summary>
+             Handles basic publish scenarios where publisher confirms and transactions are not required
+            
+             Note, this class is designed to be called sequentially from a single thread. It is NOT
+             thread safe.
+             </summary>
+        </member>
         <member name="T:EasyNetQ.Producer.PublisherConfirms">
             <summary>
             Handles publisher confirms.
@@ -979,6 +1038,11 @@
             
             Note, this class is designed to be called sequentially from a single thread. It is NOT
             thread safe.
+            </summary>
+        </member>
+        <member name="T:EasyNetQ.Producer.PublisherFactory">
+            <summary>
+            Creates the appropriate <see cref="T:EasyNetQ.Producer.IPublisher"/> for an <see cref="T:EasyNetQ.IConnectionConfiguration"/>
             </summary>
         </member>
         <member name="T:EasyNetQ.Producer.Rpc">

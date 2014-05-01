@@ -101,7 +101,12 @@ namespace Matrix.DAL.Repositories
         //just mapping to the same SearchDoc objects so that the same view could be reused.
         public IList<BookSearchDocument> Search(string term)
         {
-            var books = base.GetManyByTextSearch<Book>(term);
+            IList<Book> books;
+
+            if (term == string.Empty)
+                books = base.GetMany<Book>(take: 30);
+            else
+                books = base.GetManyByTextSearch<Book>(term);
 
             var results = new List<BookSearchDocument>();
 
