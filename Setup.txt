@@ -1,4 +1,4 @@
-The mongoDB version used here is 2.6 64 bit.
+The mongoDB version used here is 2.7.3(dev Windows 64 bit). Or else you can use the production ready 2.6 series ones.
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -12,7 +12,7 @@ md data\db
 md C:\mongodb_server\log
 echo logpath=C:\mongodb_server\log\mongo.log > C:\mongodb_server\mongod.cfg
 
-After this, run the mongod executable at "C:\mongodb_server\bin\mongod.exe"
+After this, run the mongod executable at "C:\mongodb_server\bin\mongod.exe". Or else run the batch file at the root folder of my solution.
 
 4) To install as a service, run as
 
@@ -29,7 +29,7 @@ C:\mongodb_server\bin\mongod.exe --remove
 6) Also a good GUI tool for MongoDB is robomongo, it's opensource and free of cost; http://robomongo.org
 
 -----------------------------------------------------------------------------------------------------------------
-For RabbitMQ installation(version is 3.3.1):
+For RabbitMQ installation(version is 3.3.4):
 
 	1) First, install erlang compiler; http://erlang.org
 
@@ -41,7 +41,7 @@ For RabbitMQ installation(version is 3.3.1):
 	4) Access the admin console at http://localhost:15672 with username and password both as "guest".
 
 -----------------------------------------------------------------------------------------------------------------
-For ElasticSearch installation(latest version 1.1.1) - 
+For ElasticSearch installation(latest version 1.2.1) - 
 	
 	1) ElasticSearch requires java runtime, so install latest JDK/JRE from Oracle website; http://www.oracle.com/technetwork/java/javase/downloads/index.html
 
@@ -50,7 +50,7 @@ For ElasticSearch installation(latest version 1.1.1) -
 	
 	3) Download the ElasticSearch package from http://elasticsearch.org/download, .zip one for windows.
 	
-	4) Unzip the file and go to the "ElasticSearc\Bin" directory and say 
+	4) Unzip the file and go to the "ElasticSearch_server\Bin" directory and say 
 		service.bat install 
 	at the command prompt.
 	
