@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nest.Resolvers;
 
 namespace Matrix.Core.SearchCore
 {
     /// <summary>
-    /// An abstraction over the NEST ElasticSearch client. I'll evolve this in the coming days as there are going to be breaking changes in version 1.0
-    /// Diving deep into ElasticSearch engine is also one of my primary goals.
+    /// An abstraction over the NEST ElasticSearch client. I'll evolve this in the coming days as 
+    /// diving deep into ElasticSearch engine is also one of my primary goals.
     /// </summary>
     public class MXSearchRepository : ISearchRepository
     {
@@ -29,10 +30,10 @@ namespace Matrix.Core.SearchCore
 
             IIndexResponse response;
 
-            if (index == string.Empty)
-                response = Client.Index<T>(document);
+            if (string.IsNullOrEmpty(index))
+                response = Client.Index<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create));
             else
-                response = Client.Index<T>(document, index);
+                response = Client.Index<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(index));
 
             return response.Id;
         }
@@ -43,34 +44,28 @@ namespace Matrix.Core.SearchCore
 
             Task<IIndexResponse> response;
 
-            if (index == string.Empty)
-                response = Client.IndexAsync<T>(document);
+            if (string.IsNullOrEmpty(index))
+                response = Client.IndexAsync<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create));
             else
-                response = Client.IndexAsync<T>(document, index);
+                response = Client.IndexAsync<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(index));
 
             return true;
         }
 
-        public virtual bool Index<T>(IList<T> documents, string index = "") where T : MXSearchDocument
+        public virtual bool Index<T>(IList<T> documents, string index = null) where T : MXSearchDocument
         {
             foreach (var doc in documents) doc.IsActive = true;
-
-            if (index == string.Empty)
-                Client.IndexMany<T>(documents);
-            else
-                Client.IndexMany<T>(documents, index);
+                        
+            Client.IndexMany<T>(documents, index);
 
             return true;
         }
 
-        public virtual bool IndexAsync<T>(IList<T> documents, string index = "") where T : MXSearchDocument
+        public virtual bool IndexAsync<T>(IList<T> documents, string index = null) where T : MXSearchDocument
         {
             foreach (var doc in documents) doc.IsActive = true;
 
-            if (index == string.Empty)
-                Client.IndexManyAsync<T>(documents);
-            else
-                Client.IndexManyAsync<T>(documents, index);
+            Client.IndexManyAsync<T>(documents, index);
 
             return true;
         }
@@ -82,8 +77,16 @@ namespace Matrix.Core.SearchCore
 
             var descriptor = new BulkDescriptor();
 
-            foreach (var doc in documents)
-                descriptor.Index<T>(op => op.Object(doc));
+            if (string.IsNullOrEmpty(index))
+            {
+                foreach (var doc in documents)
+                    descriptor.Index<T>(op => op.Document(doc));
+            }
+            else
+            {
+                foreach (var doc in documents)
+                    descriptor.Index<T>(op => op.Document(doc).Index(index));
+            }
 
             var result = this.Client.Bulk(d => descriptor);
 
@@ -97,22 +100,36 @@ namespace Matrix.Core.SearchCore
 
             var descriptor = new BulkDescriptor();
 
-            foreach (var doc in documents)
-                descriptor.Index<T>(op => op.Object(doc));
+            if (string.IsNullOrEmpty(index))
+            {
+                foreach (var doc in documents)
+                    descriptor.Index<T>(op => op.Document(doc));
+            }
+            else
+            {
+                foreach (var doc in documents)
+                    descriptor.Index<T>(op => op.Document(doc).Index(index));
+            }
 
             var result = this.Client.BulkAsync(descriptor);
 
             return true;
         }
 
-        public virtual T GetOne<T>(string id, string index = "", string documentType = "") where T : MXSearchDocument
+        public virtual T GetOne<T>(string id, string index = null, string documentType = null) where T : MXSearchDocument
         {
             T response;
 
-            if (index == string.Empty)
-                response = Client.Get<T>(id);
-            else
-                response = Client.Get<T>(index, documentType, id);
+            response = Client.Source<T>(id, index, documentType);
+
+            return response;
+        }
+
+        public virtual IList<T> GetMany<T>(IEnumerable<string> ids, string index = null, string documentType = null) where T : MXSearchDocument
+        {
+            IList<T> response;
+
+            response = Client.SourceMany<T>(ids, index, documentType).ToList();
 
             return response;
         }
@@ -142,9 +159,9 @@ namespace Matrix.Core.SearchCore
         public virtual bool Update<T>(T document, string index = "") where T : MXSearchDocument
         {
             if (index == string.Empty)
-                Client.Update<T>(c => c.Object(document).Document(document));
+                Client.Update<T>(c => c.Doc(document));
             else
-                Client.Update<T>(c => c.Object(document).Document(document).Index(index));
+                Client.Update<T>(c => c.Doc(document).Index(index));
 
             return true;
         }               

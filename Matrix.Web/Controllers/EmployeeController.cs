@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Matrix.Core.MongoDbBaseRepositories;
 
 namespace Matrix.Web.Controllers
 {
@@ -16,9 +17,9 @@ namespace Matrix.Web.Controllers
     {
         const int takeCount = 40;
 
-        IRepository _repository;
+        IMXBusinessMongoRepository _repository;
 
-        public EmployeeController(IRepository repository)
+        public EmployeeController(IMXBusinessMongoRepository repository)
         {
             this._repository = repository;
         }

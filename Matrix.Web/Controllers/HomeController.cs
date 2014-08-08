@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Matrix.Core.MongoDbBaseRepositories;
 
 namespace Matrix.Web.Controllers
 {
@@ -14,9 +15,9 @@ namespace Matrix.Web.Controllers
         //
         // GET: /Home/
 
-        IRepository _repository;
+        IMXBusinessMongoRepository _repository;
 
-        public HomeController(IRepository repository)
+        public HomeController(IMXBusinessMongoRepository repository)
         {
             this._repository = repository;
         }

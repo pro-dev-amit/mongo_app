@@ -35,32 +35,4 @@ namespace Matrix.Core.SearchCore
         }
 
     }//End of class MXSearchClient
-
-    //discarding this. I do not want to code more.
-    //public class MXElasticConnectionSetting
-    //{
-    //    static string _connectionString, _defaultIndex;
-
-    //    static MXElasticConnectionSetting()
-    //    {
-    //        _connectionString = ConfigurationManager.AppSettings["elasticSearchConnectionString"];
-    //        _defaultIndex = ConfigurationManager.AppSettings["elasticSearchDefaultIndex"];
-    //    }
-
-    //    public MXElasticConnectionSetting() { }
-
-    //    public ElasticClient Client
-    //    {
-    //        get { return getSearchClient(); } 
-    //    }
-
-    //    private ElasticClient getSearchClient()
-    //    {            
-    //        var setting = new ConnectionSettings(new Uri(_connectionString));
-    //        setting.SetDefaultIndex(_defaultIndex);
-
-    //        return new ElasticClient(setting);
-    //    }
-    //}
-
 }

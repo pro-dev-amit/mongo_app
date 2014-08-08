@@ -73,6 +73,16 @@ namespace Matrix.Core.SearchCore
         T GetOne<T>(string id, string index = "", string documentType = "") where T : MXSearchDocument;
 
         /// <summary>
+        /// This is a MultiGet based on the multiple IDs passed.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ids"></param>
+        /// <param name="index"></param>
+        /// <param name="documentType"></param>
+        /// <returns></returns>
+        IList<T> GetMany<T>(IEnumerable<string> ids, string index = "", string documentType = "") where T : MXSearchDocument;
+
+        /// <summary>
         /// This is lucene term query. Searching for a term on all fields.
         /// </summary>
         /// <typeparam name="T"></typeparam>

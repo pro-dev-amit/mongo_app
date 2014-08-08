@@ -1,4 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
+using Matrix.Core.MongoDbBaseRepositories;
 using Matrix.Entities.MongoEntities;
 using MongoDB.Driver.Builders;
 using System;
@@ -12,7 +13,7 @@ namespace Matrix.DAL.MongoIndexSettings
     /// <summary>
     /// call this setting of indexes only once during the lifetime of the app. Though better approach is to create indexes directly in mongo shell.
     /// </summary>
-    public class MXMongoIndexes : MXMongoRepository
+    public class MXMongoIndexes : MXBusinessMongoRepository
     {
         public void SetTextIndexOnBookCollection()
         {

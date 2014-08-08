@@ -7,15 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Matrix.Core.MongoDbBaseRepositories;
 
 namespace Matrix.Web.Areas.Sales.Controllers
 {
     public partial class ClientContactController : Controller
     {
 
-        IRepository _repository;
+        IMXBusinessMongoRepository _repository;
 
-        public ClientContactController(IRepository repository)
+        public ClientContactController(IMXBusinessMongoRepository repository)
         {
             this._repository = repository;
         }

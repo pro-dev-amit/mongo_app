@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Matrix.Core.FrameworkCore
-{    
+{
+    /// <summary>
+    /// This is a generic contract that defines most generic behavior 
+    /// </summary>
     public interface IRepository
     {
         string Insert<T>(T entity, bool isActive = true) where T : IMXEntity;
@@ -47,9 +50,7 @@ namespace Matrix.Core.FrameworkCore
         IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : IMXEntity;
 
         bool Update<T>(T entity, bool bMaintainHistory = false) where T : IMXEntity;
-
-        long BulkUpdate<T>(IMongoQuery query, IMongoUpdate update, bool bMaintainHistory = false) where T : IMXEntity;
-
+                
         /// <summary>
         /// Delete by Id
         /// </summary>
@@ -65,16 +66,7 @@ namespace Matrix.Core.FrameworkCore
         /// <param name="ids"></param>
         /// <returns></returns>
         bool Delete<T>(IList<string> ids) where T : IMXEntity;
-
-        /// <summary>
-        /// Bulk delete
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query">MongoQuery: an example could be something like this; Query<T>.In<string>(e => e.Id, ids). 
-        /// To delete all documents, set Query as Query.Null</param>
-        /// <returns></returns>
-        long BulkDelete<T>(IMongoQuery query) where T : IMXEntity;
-
+                
         //other important ones
         string GetNameById<T>(string Id) where T : IMXEntity;
 
@@ -85,16 +77,5 @@ namespace Matrix.Core.FrameworkCore
         bool AlterStatus<T>(string id, bool statusValue) where T : IMXEntity;
 
         long GetCount<T>(Expression<Func<T, bool>> predicate = null) where T : IMXEntity;
-
-        /// <summary>
-        /// Equivalent to a term query in lucene; a great feature. Wild card searches are not supported at the moment with a text index.
-        /// Also do not forget to create a text index on the mongo collection referred; eg. db.Author.ensureIndex({nm : "text"})
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="term"></param>
-        /// <param name="take"></param>
-        /// <param name="skip"></param>
-        /// <returns></returns>
-        IList<T> GetManyByTextSearch<T>(string term, int skip = 0, int take = 30) where T : IMXEntity;
     }
 }

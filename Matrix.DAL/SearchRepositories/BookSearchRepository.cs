@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nest;
+using Elasticsearch.Net;
+using Nest.Resolvers;
+
 
 namespace Matrix.DAL.SearchRepositories
 {
@@ -40,17 +44,17 @@ namespace Matrix.DAL.SearchRepositories
                 //    q.Term(c => c.IsActive, true)
                 //));
 
-                var query = Client.Search<BookSearchDocument>(s => s
+                var query = Client.Search<BookSearchDocument>(s => s                    
                     .From(skip)
                     .Take(take)
                     .Query(q => (
                         //allow wild card searches on title only. Also, giving a higher boost to title
-                        q.QueryString(t => t.OnField(f => f.Title).Query(term + "*").Boost(2.0d)) ||
-                        q.QueryString(t => t.OnField(f => f.Category.DenormalizedName).Query(term)) ||
-                        q.QueryString(t => t.OnField(f => f.Author.DenormalizedName).Query(term).Boost(1.5d))
+                        q.QueryString(t => t.OnFields(f => f.Title).Query(term + "*").Boost(2.0d)) ||
+                        q.QueryString(t => t.OnFields(f => f.Category.DenormalizedName).Query(term)) ||
+                        q.QueryString(t => t.OnFields(f => f.Author.DenormalizedName).Query(term).Boost(1.5d))
                         ) &&
                         q.Term(c => c.IsActive, true)
-                    ));
+                    ));                                
 
                 return query.Documents.ToList();
             }

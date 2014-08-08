@@ -5,9 +5,10 @@ using Matrix.Core.FrameworkCore;
 using Matrix.Web.Controllers;
 using Matrix.Web.Areas.Sales.Controllers;
 using Matrix.Core.QueueCore;
-using Matrix.DAL.Repositories;
+using Matrix.DAL.CustomRepositories;
 using Matrix.Core.SearchCore;
 using Matrix.DAL.SearchRepositories;
+using Matrix.Core.MongoDbBaseRepositories;
 
 namespace Matrix.Web
 {
@@ -37,14 +38,14 @@ namespace Matrix.Web
 
     public static void RegisterTypes(IUnityContainer container)
     {
-        container.RegisterType<IRepository, MXMongoRepository>();
+        container.RegisterType<IMXBusinessMongoRepository, MXBusinessMongoRepository>();
 
-        container.RegisterType<IRepository, ClientRepository>("ClientRepository");
+        container.RegisterType<IMXBusinessMongoRepository, ClientRepository>("ClientRepository");
 
         //inject specific implementation of IRepository Interface. A better approach though is to create a separate interface as it's done with Books and then inject.
         //I'll keep this for reference purpose though.
         container.RegisterType<ClientController>(
-            new InjectionConstructor(new ResolvedParameter<IRepository>("ClientRepository")
+            new InjectionConstructor(new ResolvedParameter<IMXBusinessMongoRepository>("ClientRepository")
             ));
 
         //register rabbitMQ client as a singleton

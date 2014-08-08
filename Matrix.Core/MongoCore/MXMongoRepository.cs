@@ -14,20 +14,24 @@ using Matrix.Core.MongoCore;
 namespace Matrix.Core.FrameworkCore
 {
     /// <summary>
-    /// Generic repository class for accessing MongoDB.
+    /// Generic repository class for Mongo operations. This is intentionlly marked abstract so that it cannot be instantiated 
+    /// without a concrete context(connectionUrl and databseName).
+    /// Please take a look at the "MXBusinessMongoRepository" class for having a separate context per database.
     /// </summary>
-    public class MXMongoRepository : IRepository
+    public abstract class MXMongoRepository : IMXMongoRepository
     {
+        protected static string connectionUrl, databaseName;
+
         #region "Initialization and attributes"
 
         //lazy instantiation; do not create the context unless required. This would be useful in scenarios where database is not accessed, say static pages
-        Lazy<MongoDatabase> _dbContext = new Lazy<MongoDatabase>(() => new MXMongoContext().DbContext);
+        Lazy<MongoDatabase> _dbContext = new Lazy<MongoDatabase>(() => new MXMongoContext(connectionUrl, databaseName).DbContext);
 
         protected MongoDatabase dbContext
         {
             get { return _dbContext.Value; }
         }
-
+        
         public MXMongoRepository(){ }
 
         #endregion

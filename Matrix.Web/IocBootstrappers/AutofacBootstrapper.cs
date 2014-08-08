@@ -14,9 +14,10 @@ using Matrix.Web.Areas.Sales.Controllers;
 using Matrix.Core.MongoCore;
 using System.Configuration;
 using Matrix.Core.QueueCore;
-using Matrix.DAL.Repositories;
+using Matrix.DAL.CustomRepositories;
 using Matrix.DAL.SearchRepositories;
 using Matrix.Core.SearchCore;
+using Matrix.Core.MongoDbBaseRepositories;
 
 
 namespace Matrix.Web
@@ -36,15 +37,15 @@ namespace Matrix.Web
             builder.RegisterControllers(Assembly.GetExecutingAssembly());
 
             //then the types
-            builder.RegisterType<MXMongoRepository>().As<IRepository>();
+            builder.RegisterType<MXBusinessMongoRepository>().As<IMXBusinessMongoRepository>();
 
             //Named types
-            builder.RegisterType<ClientRepository>().Named<IRepository>("ClientRepository");
+            builder.RegisterType<ClientRepository>().Named<IMXBusinessMongoRepository>("ClientRepository");
 
 
             //inject specific implementation of IRepository Interface. A better approach though is to create a separate interface as it's done with Books and then inject.
             //I'll keep this for reference purpose though.
-            builder.Register(c => new ClientController(c.ResolveNamed<IRepository>("ClientRepository")));
+            builder.Register(c => new ClientController(c.ResolveNamed<IMXBusinessMongoRepository>("ClientRepository")));
 
             //register rabbitMQ client as a singleton
             builder.RegisterType<MXRabbitClient>().As<IQueueClient>().SingleInstance();

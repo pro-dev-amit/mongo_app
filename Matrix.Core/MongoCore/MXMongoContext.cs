@@ -13,15 +13,13 @@ namespace Matrix.Core.MongoCore
 {
     public class MXMongoContext
     {
-        static string connectionUrl, databaseName;
+        string _connectionUrl, _databaseName;
 
-        static MXMongoContext()
+        public MXMongoContext(string connectionUrl, string databaseName) 
         {
-            connectionUrl = ConfigurationManager.AppSettings["mongoConnUrl"].ToString();
-            databaseName = ConfigurationManager.AppSettings["databaseName"].ToString();
+            this._connectionUrl = connectionUrl;
+            this._databaseName = databaseName;
         }
-
-        public MXMongoContext() { }
 
         public MongoDatabase DbContext
         {
@@ -30,9 +28,9 @@ namespace Matrix.Core.MongoCore
 
         MongoDatabase getSession()
         {
-            var client = new MongoClient(connectionUrl);
+            var client = new MongoClient(_connectionUrl);
             var server = client.GetServer();
-            var database = server.GetDatabase(databaseName);
+            var database = server.GetDatabase(_databaseName);
 
             return database;
         }

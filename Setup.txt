@@ -1,4 +1,4 @@
-The mongoDB version used here is 2.7.3(dev Windows 64 bit). Or else you can use the production ready 2.6 series ones.
+The mongoDB version used here is 2.7.4(dev Windows 64 bit).
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -12,7 +12,7 @@ md data\db
 md C:\mongodb_server\log
 echo logpath=C:\mongodb_server\log\mongo.log > C:\mongodb_server\mongod.cfg
 
-After this, run the mongod executable at "C:\mongodb_server\bin\mongod.exe". Or else run the batch file at the root folder of my solution.
+After this, run the mongod executable at "C:\mongodb_server\bin\mongod.exe". Or else run the batch file at the root folder of this solution.
 
 4) To install as a service, run as
 
@@ -41,7 +41,7 @@ For RabbitMQ installation(version is 3.3.4):
 	4) Access the admin console at http://localhost:15672 with username and password both as "guest".
 
 -----------------------------------------------------------------------------------------------------------------
-For ElasticSearch installation(latest version 1.2.1) - 
+For ElasticSearch installation(latest version 1.3.0) - 
 	
 	1) ElasticSearch requires java runtime, so install latest JDK/JRE from Oracle website; http://www.oracle.com/technetwork/java/javase/downloads/index.html
 

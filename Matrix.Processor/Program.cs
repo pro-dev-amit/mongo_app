@@ -1,4 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
+using Matrix.Core.MongoDbBaseRepositories;
 using Matrix.Core.QueueCore;
 using Matrix.Core.SearchCore;
 using Matrix.DAL.SearchRepositories;
@@ -22,7 +23,7 @@ namespace Matrix.Processor
         
         static void Main(string[] args)
         {
-            _mongoRepository = new MXMongoRepository();
+            _mongoRepository = new MXBusinessMongoRepository();
             _bookSearchRepository = new BookSearchRepository();
 
             using (var bus = new MXRabbitClient().Bus)
