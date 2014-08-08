@@ -76,6 +76,12 @@ namespace Matrix.Core.FrameworkCore
 
         bool AlterStatus<T>(string id, bool statusValue) where T : IMXEntity;
 
+        /// <summary>
+        /// Returns the count of records in a collection
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Optional value is null. If predicate is null, it counts only the active records</param>
+        /// <returns></returns>
         long GetCount<T>(Expression<Func<T, bool>> predicate = null) where T : IMXEntity;
     }
 }

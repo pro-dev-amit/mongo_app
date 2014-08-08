@@ -317,9 +317,10 @@ namespace Matrix.Core.FrameworkCore
         }
 
         /// <summary>
-        /// Return the count of Active Records only
+        /// Returns the count of records in a collection
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="predicate">Optional value is null. If predicate is null, it counts only the active records</param>
         /// <returns></returns>
         public virtual long GetCount<T>(Expression<Func<T, bool>> predicate = null) where T : IMXEntity
         {            
@@ -327,11 +328,8 @@ namespace Matrix.Core.FrameworkCore
                         
             if (predicate == null)
                 return collection.AsQueryable().Where(c => c.IsActive == true).Count();
-            else
-            {
-                predicate = predicate.And(p => p.IsActive == true);
-                return collection.AsQueryable().Where(predicate).Count();
-            }            
+            else                            
+                return collection.AsQueryable().Where(predicate).Count();            
         }
 
         #endregion
