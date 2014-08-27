@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyNetQ">
-      <HintPath>..\packages\EasyNetQ.0.35.3.294\lib\net40\EasyNetQ.dll</HintPath>
+      <HintPath>..\packages\EasyNetQ.0.35.6.302\lib\net40\EasyNetQ.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>

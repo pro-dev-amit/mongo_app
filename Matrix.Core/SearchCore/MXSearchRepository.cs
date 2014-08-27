@@ -24,6 +24,8 @@ namespace Matrix.Core.SearchCore
             }
         }
 
+        #region "SearchDoc ops"
+
         public virtual string Index<T>(T document, string index = "") where T : MXSearchDocument
         {
             document.IsActive = true;
@@ -164,7 +166,28 @@ namespace Matrix.Core.SearchCore
                 Client.Update<T>(c => c.Doc(document).Index(index));
 
             return true;
-        }               
+        }
 
+        #endregion
+
+        #region "Index level ops"
+        public virtual bool CreateIndex(string index, IndexSettings settings)
+        {
+            var response = Client.CreateIndex(index, i => i.InitializeUsing(settings));
+
+            return response.Acknowledged;
+        }
+
+        public virtual bool DeleteIndex(string index = "")
+        {
+            IIndicesResponse response = null;
+
+            if (Client.IndexExists(i => i.Index(index)).Exists)
+                response = Client.DeleteIndex(d => d.Index(index));
+
+            return response.Acknowledged;
+        }
+
+        #endregion
     }//End of repository
 }

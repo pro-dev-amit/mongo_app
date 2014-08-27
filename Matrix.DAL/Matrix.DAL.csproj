@@ -31,10 +31,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyNetQ">
-      <HintPath>..\packages\EasyNetQ.0.35.3.294\lib\net40\EasyNetQ.dll</HintPath>
+      <HintPath>..\packages\EasyNetQ.0.35.6.302\lib\net40\EasyNetQ.dll</HintPath>
     </Reference>
     <Reference Include="Elasticsearch.Net">
-      <HintPath>..\packages\Elasticsearch.Net.1.0.1\lib\Elasticsearch.Net.dll</HintPath>
+      <HintPath>..\packages\Elasticsearch.Net.1.0.2\lib\Elasticsearch.Net.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Bson, Version=1.9.0.200, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -45,10 +45,9 @@
       <HintPath>..\packages\mongocsharpdriver.1.9.2\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="Nest">
-      <HintPath>..\packages\NEST.1.0.1\lib\Nest.dll</HintPath>
+      <HintPath>..\packages\NEST.1.0.2\lib\Nest.dll</HintPath>
     </Reference>
-    <Reference Include="RabbitMQ.Client, Version=3.3.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="RabbitMQ.Client">
       <HintPath>..\packages\RabbitMQ.Client.3.3.2\lib\net30\RabbitMQ.Client.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -86,6 +85,11 @@
       <Project>{4c57ffa7-cad4-4f4f-a8d3-ea028d6bc6d5}</Project>
       <Name>Matrix.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

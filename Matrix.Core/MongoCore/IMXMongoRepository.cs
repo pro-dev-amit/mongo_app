@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,5 +36,10 @@ namespace Matrix.Core.MongoCore
         /// <param name="skip"></param>
         /// <returns></returns>
         IList<T> GetManyByTextSearch<T>(string term, int skip = 0, int take = 30) where T : IMXEntity;
+
+        //these ones are specific to mongoDB here as I use them to retrieve both Id and name properties in a single entity
+        DenormalizedReference GetOptionById<T>(string Id) where T : IMXEntity;
+
+        IList<DenormalizedReference> GetOptionSet<T>(Expression<Func<T, bool>> predicate = null, int take = 15) where T : IMXEntity;
     }
 }

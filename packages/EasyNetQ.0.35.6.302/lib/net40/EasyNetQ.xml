@@ -75,62 +75,6 @@
             attempting to access it.
             </summary>
         </member>
-        <member name="M:EasyNetQ.BusExtensions.FuturePublish``1(EasyNetQ.IBus,System.DateTime,``0)">
-            <summary>
-            Schedule a message to be published at some time in the future.
-            This required the EasyNetQ.Scheduler service to be running.
-            </summary>
-            <typeparam name="T">The message type</typeparam>
-            <param name="bus">The IBus instance to publish on</param>
-            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
-            <param name="message">The message to response with</param>
-        </member>
-        <member name="M:EasyNetQ.BusExtensions.FuturePublish``1(EasyNetQ.IBus,System.DateTime,System.String,``0)">
-            <summary>
-            Schedule a message to be published at some time in the future.
-            This required the EasyNetQ.Scheduler service to be running.
-            </summary>
-            <typeparam name="T">The message type</typeparam>
-            <param name="bus">The IBus instance to publish on</param>
-            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
-            <param name="cancellationKey">An identifier that can be used with CancelFuturePublish to cancel the sending of this message at a later time</param>
-            <param name="message">The message to response with</param>
-        </member>
-        <member name="M:EasyNetQ.BusExtensions.CancelFuturePublish(EasyNetQ.IBus,System.String)">
-            <summary>
-            Unschedule all messages matching the cancellationKey.
-            </summary>
-            <param name="bus">The IBus instance to publish on</param>
-            <param name="cancellationKey">The identifier that was used when originally scheduling the message with FuturePublish</param>
-        </member>
-        <member name="M:EasyNetQ.BusExtensions.FuturePublishAsync``1(EasyNetQ.IBus,System.DateTime,``0)">
-            <summary>
-            Schedule a message to be published at some time in the future.
-            This required the EasyNetQ.Scheduler service to be running.
-            </summary>
-            <typeparam name="T">The message type</typeparam>
-            <param name="bus">The IBus instance to publish on</param>
-            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
-            <param name="message">The message to response with</param>
-        </member>
-        <member name="M:EasyNetQ.BusExtensions.FuturePublishAsync``1(EasyNetQ.IBus,System.DateTime,System.String,``0)">
-            <summary>
-            Schedule a message to be published at some time in the future.
-            This required the EasyNetQ.Scheduler service to be running.
-            </summary>
-            <typeparam name="T">The message type</typeparam>
-            <param name="bus">The IBus instance to publish on</param>
-            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
-            <param name="cancellationKey">An identifier that can be used with CancelFuturePublish to cancel the sending of this message at a later time</param>
-            <param name="message">The message to response with</param>
-        </member>
-        <member name="M:EasyNetQ.BusExtensions.CancelFuturePublishAsync(EasyNetQ.IBus,System.String)">
-            <summary>
-            Unschedule all messages matching the cancellationKey.
-            </summary>
-            <param name="bus">The IBus instance to publish on</param>
-            <param name="cancellationKey">The identifier that was used when originally scheduling the message with FuturePublish</param>
-        </member>
         <member name="T:EasyNetQ.ComponentRegistration">
             <summary>
             Registers the default EasyNetQ components in our internal super-simple IoC container.
@@ -991,6 +935,77 @@
             </summary>
             <param name="bus"></param>
         </member>
+        <member name="T:EasyNetQ.IScheduler">
+            <summary>
+            Provides a simple Publish API to schedule a message to be published at some time in the future.
+            </summary>
+        </member>
+        <member name="M:EasyNetQ.IScheduler.FuturePublish``1(System.DateTime,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.IScheduler.FuturePublish``1(System.DateTime,System.String,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="cancellationKey">An identifier that can be used with CancelFuturePublish to cancel the sending of this message at a later time</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.IScheduler.FuturePublish``1(System.TimeSpan,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future, using bare RabbitMQ's capabilites (message time-to-live and dead letter exchange).
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="messageDelay">The delay time for message to publish in future</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.IScheduler.CancelFuturePublish(System.String)">
+            <summary>
+            Unschedule all messages matching the cancellationKey.
+            </summary>
+            <param name="cancellationKey">The identifier that was used when originally scheduling the message with FuturePublish</param>
+        </member>
+        <member name="M:EasyNetQ.IScheduler.FuturePublishAsync``1(System.DateTime,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.IScheduler.FuturePublishAsync``1(System.DateTime,System.String,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="cancellationKey">An identifier that can be used with CancelFuturePublish to cancel the sending of this message at a later time</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.IScheduler.FuturePublishAsync``1(System.TimeSpan,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future, using bare RabbitMQ's capabilites (message time-to-live and dead letter exchange).
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="messageDelay">The delay time for message to publish in future</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.IScheduler.CancelFuturePublishAsync(System.String)">
+            <summary>
+            Unschedule all messages matching the cancellationKey.
+            </summary>
+            <param name="cancellationKey">The identifier that was used when originally scheduling the message with FuturePublish</param>
+        </member>
         <member name="T:EasyNetQ.Loggers.NullLogger">
             <summary>
             noop logger
@@ -1297,23 +1312,79 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:EasyNetQ.RabbitBusExtensions.FuturePublish``1(EasyNetQ.IBus,System.TimeSpan,``0)">
+        <member name="M:EasyNetQ.RabbitBusExtensions.FuturePublish``1(EasyNetQ.IBus,System.DateTime,``0)">
             <summary>
             Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.RabbitBusExtensions.FuturePublish``1(EasyNetQ.IBus,System.DateTime,System.String,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="cancellationKey">An identifier that can be used with CancelFuturePublish to cancel the sending of this message at a later time</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.RabbitBusExtensions.FuturePublish``1(EasyNetQ.IBus,System.TimeSpan,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future, using bare RabbitMQ's capabilites (message time-to-live and dead letter exchange).
             </summary>
             <typeparam name="T">The message type</typeparam>
             <param name="bus">The IBus instance to publish on</param>
             <param name="messageDelay">The delay time for message to publish in future</param>
             <param name="message">The message to response with</param>
         </member>
-        <member name="M:EasyNetQ.RabbitBusExtensions.FuturePublishAsync``1(EasyNetQ.IBus,System.TimeSpan,``0)">
+        <member name="M:EasyNetQ.RabbitBusExtensions.CancelFuturePublish(EasyNetQ.IBus,System.String)">
+            <summary>
+            Unschedule all messages matching the cancellationKey.
+            </summary>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="cancellationKey">The identifier that was used when originally scheduling the message with FuturePublish</param>
+        </member>
+        <member name="M:EasyNetQ.RabbitBusExtensions.FuturePublishAsync``1(EasyNetQ.IBus,System.DateTime,``0)">
             <summary>
             Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.RabbitBusExtensions.FuturePublishAsync``1(EasyNetQ.IBus,System.DateTime,System.String,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future.
+            This required the EasyNetQ.Scheduler service to be running.
+            </summary>
+            <typeparam name="T">The message type</typeparam>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="futurePublishDate">The time at which the message should be sent (UTC)</param>
+            <param name="cancellationKey">An identifier that can be used with CancelFuturePublish to cancel the sending of this message at a later time</param>
+            <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.RabbitBusExtensions.FuturePublishAsync``1(EasyNetQ.IBus,System.TimeSpan,``0)">
+            <summary>
+            Schedule a message to be published at some time in the future, using bare RabbitMQ's capabilites (message time-to-live and dead letter exchange).
             </summary>
             <typeparam name="T">The message type</typeparam>
             <param name="bus">The IBus instance to publish on</param>
             <param name="messageDelay">The delay time for message to publish in future</param>
             <param name="message">The message to response with</param>
+        </member>
+        <member name="M:EasyNetQ.RabbitBusExtensions.CancelFuturePublishAsync(EasyNetQ.IBus,System.String)">
+            <summary>
+            Unschedule all messages matching the cancellationKey.
+            </summary>
+            <param name="bus">The IBus instance to publish on</param>
+            <param name="cancellationKey">The identifier that was used when originally scheduling the message with FuturePublish</param>
         </member>
         <member name="T:Sprache.Parse">
             <summary>

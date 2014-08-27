@@ -69,11 +69,7 @@ namespace Matrix.Core.FrameworkCore
                 
         //other important ones
         string GetNameById<T>(string Id) where T : IMXEntity;
-
-        DenormalizedReference GetOptionById<T>(string Id) where T : IMXEntity;
-
-        IList<DenormalizedReference> GetOptionSet<T>(Expression<Func<T, bool>> predicate = null, int take = 15) where T : IMXEntity;
-
+                
         bool AlterStatus<T>(string id, bool statusValue) where T : IMXEntity;
 
         /// <summary>
