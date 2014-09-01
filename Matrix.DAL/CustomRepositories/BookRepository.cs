@@ -85,15 +85,15 @@ namespace Matrix.DAL.CustomRepositories
         {
             return new BookViewModel
             {
-                LstAuthor = base.GetOptionSet<Author>(),
-                LstCategory = base.GetOptionSet<BookCategory>(),
+                LstAuthor = base.GetOptionSet<Author, DenormalizedReference>(),
+                LstCategory = base.GetOptionSet<BookCategory, DenormalizedReference>(),
             };
         }
 
         public string CreateBook(BookViewModel model)
         {
-            model.Book.Author = base.GetOptionById<Author>(model.Book.Author.DenormalizedId);
-            model.Book.Category = base.GetOptionById<BookCategory>(model.Book.Category.DenormalizedId);
+            model.Book.Author = base.GetOptionById<Author, DenormalizedReference>(model.Book.Author.DenormalizedId);
+            model.Book.Category = base.GetOptionById<BookCategory, DenormalizedReference>(model.Book.Category.DenormalizedId);
 
             //call the overriden Insert method as it uses queuing first into MongoDB and then to ElasticSearch
             return this.Insert<Book>(model.Book);
@@ -137,8 +137,8 @@ namespace Matrix.DAL.CustomRepositories
                 //let's insert some meaningful data first
                 books.AddRange(getSampleBooks());
 
-                var authors = base.GetOptionSet<Author>(); ;
-                var categories = base.GetOptionSet<BookCategory>();
+                var authors = base.GetOptionSet<Author, DenormalizedReference>(); ;
+                var categories = base.GetOptionSet<BookCategory, DenormalizedReference>();
 
                 //now let's add some 20K more documents
                 var randomValue = new Random();
@@ -165,9 +165,9 @@ namespace Matrix.DAL.CustomRepositories
 
         List<Book> getSampleBooks()
         {
-            var authors = base.GetOptionSet<Author>();
+            var authors = base.GetOptionSet<Author, DenormalizedReference>();
 
-            var bookCategories = base.GetOptionSet<BookCategory>();
+            var bookCategories = base.GetOptionSet<BookCategory, DenormalizedReference>();
 
             List<Book> lstBook = new List<Book>{
                 new Book

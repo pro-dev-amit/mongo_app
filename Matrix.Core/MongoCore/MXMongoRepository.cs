@@ -269,35 +269,48 @@ namespace Matrix.Core.FrameworkCore
             return collection.AsQueryable().Where(c => c.Id == Id).SingleOrDefault().Name;
         }
 
-        public virtual DenormalizedReference GetOptionById<T>(string Id) where T : IMXEntity
+        /// <summary>
+        /// This is a default implementation. Returns a single pair of DenormalizedReference type. 
+        /// This can be overridden for specific repositories for different databases.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TDenormalizedReference"></typeparam>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public virtual TDenormalizedReference GetOptionById<TEntity, TDenormalizedReference>(string Id) 
+            where TEntity : IMXEntity
+            where TDenormalizedReference : IDenormalizedReference, new()
         {
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
-
-            return collection.AsQueryable().Where(c => c.Id == Id).Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name }).SingleOrDefault();
+            var collection = dbContext.GetCollection<TEntity>(typeof(TEntity).Name);
+                        
+            return collection.AsQueryable().Where(c => c.Id == Id).Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name }).SingleOrDefault();            
         }
 
         /// <summary>
-        /// Get optionSets based on a predicate
+        /// Returns a list of DenormalizedReference types; Get optionSets based on a predicate.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">IsActive == true is by default. when null, this returns all items</param>
-        /// <param name="take">Effective only when there is a predicate</param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TDenormalizedReference"></typeparam>
+        /// <param name="predicate">the default predicate considered is the IsActive field to be true; (p => p.IsActive == true)</param>
+        /// <param name="take"></param>
         /// <returns></returns>
-        public virtual IList<DenormalizedReference> GetOptionSet<T>(Expression<Func<T, bool>> predicate = null, int take = 15) where T : IMXEntity
+        public virtual IList<TDenormalizedReference> GetOptionSet<TEntity, TDenormalizedReference>(Expression<Func<TEntity, bool>> predicate = null, int take = 15)
+            where TEntity : IMXEntity
+            where TDenormalizedReference : IDenormalizedReference, new()
         {
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = dbContext.GetCollection<TEntity>(typeof(TEntity).Name);
 
             if (predicate == null)
                 return collection.AsQueryable()
                     .Where(c => c.IsActive == true)
-                    .Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
+                    .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
                     .OrderBy(c => c.DenormalizedName)
                     .ToList();
             else
             {
                 predicate = predicate.And(p => p.IsActive == true);
                 return collection.AsQueryable().Where(predicate)
-                    .Select(c => new DenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
+                    .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
                     .OrderBy(c => c.DenormalizedName).Take(take)
                     .ToList();
             }

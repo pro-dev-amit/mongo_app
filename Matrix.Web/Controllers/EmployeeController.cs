@@ -75,15 +75,15 @@ namespace Matrix.Web.Controllers
 
             tasks[0] = Task.Factory.StartNew(
                     () =>
-                        model.LstGender = _repository.GetOptionSet<Gender>()
+                        model.LstGender = _repository.GetOptionSet<Gender, DenormalizedReference>()
                     );
 
             tasks[1] = Task.Factory.StartNew(
                     () =>
-                        model.LstRating = _repository.GetOptionSet<ProgrammingRating>()
+                        model.LstRating = _repository.GetOptionSet<ProgrammingRating, DenormalizedReference>()
                     );
 
-            model.LstSkill = _repository.GetOptionSet<Skill>().Select(c => new MXCheckBoxItem { DenormalizedReference = c }).ToList();
+            model.LstSkill = _repository.GetOptionSet<Skill, DenormalizedReference>().Select(c => new MXCheckBoxItem { DenormalizedReference = c }).ToList();
 
             Task.WaitAll(tasks);
 
@@ -95,8 +95,8 @@ namespace Matrix.Web.Controllers
         [HttpPost]
         public ActionResult Create(EmployeeViewModel model)
         {
-            model.Employee.Gender = _repository.GetOptionById<Gender>(model.Employee.Gender.DenormalizedId);
-            model.Employee.ProgrammingRating = _repository.GetOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
+            model.Employee.Gender = _repository.GetOptionById<Gender, DenormalizedReference>(model.Employee.Gender.DenormalizedId);
+            model.Employee.ProgrammingRating = _repository.GetOptionById<ProgrammingRating, DenormalizedReference>(model.Employee.ProgrammingRating.DenormalizedId);
 
             model.Employee.Skills = model.LstSkill.Where(c => c.IsSelected == true).Select(c => c.DenormalizedReference).ToList();
 
@@ -119,15 +119,15 @@ namespace Matrix.Web.Controllers
 
             tasks[0] = Task.Factory.StartNew(
                     () =>
-                        model.LstGender = _repository.GetOptionSet<Gender>()
+                        model.LstGender = _repository.GetOptionSet<Gender, DenormalizedReference>()
                     );
 
             tasks[1] = Task.Factory.StartNew(
                     () =>
-                        model.LstRating = _repository.GetOptionSet<ProgrammingRating>()
+                        model.LstRating = _repository.GetOptionSet<ProgrammingRating, DenormalizedReference>()
                     );
 
-            model.LstSkill = _repository.GetOptionSet<Skill>().Select(c => new MXCheckBoxItem { DenormalizedReference = c }).ToList();
+            model.LstSkill = _repository.GetOptionSet<Skill, DenormalizedReference>().Select(c => new MXCheckBoxItem { DenormalizedReference = c }).ToList();
 
             foreach (var item in model.LstSkill)
             {
@@ -145,8 +145,8 @@ namespace Matrix.Web.Controllers
         [HttpPost]
         public ActionResult Edit(EmployeeViewModel model)
         {
-            model.Employee.Gender = _repository.GetOptionById<Gender>(model.Employee.Gender.DenormalizedId);
-            model.Employee.ProgrammingRating = _repository.GetOptionById<ProgrammingRating>(model.Employee.ProgrammingRating.DenormalizedId);
+            model.Employee.Gender = _repository.GetOptionById<Gender, DenormalizedReference>(model.Employee.Gender.DenormalizedId);
+            model.Employee.ProgrammingRating = _repository.GetOptionById<ProgrammingRating, DenormalizedReference>(model.Employee.ProgrammingRating.DenormalizedId);
 
             model.Employee.Skills = model.LstSkill.Where(c => c.IsSelected == true).Select(c => c.DenormalizedReference).ToList();
 
@@ -166,9 +166,9 @@ namespace Matrix.Web.Controllers
         [HttpPost]
         public ActionResult AddDummyEmployees()
         {
-            var genders = _repository.GetOptionSet<Gender>();
+            var genders = _repository.GetOptionSet<Gender, DenormalizedReference>();
 
-            var rating = _repository.GetOptionSet<ProgrammingRating>().FirstOrDefault();
+            var rating = _repository.GetOptionSet<ProgrammingRating, DenormalizedReference>().FirstOrDefault();
 
             List<Employee> lstEmployee = new List<Employee>();
 

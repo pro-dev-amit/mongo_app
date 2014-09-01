@@ -103,7 +103,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
 
                 predicate = predicate.And(p => p.Name.ToLower().Contains(term));
 
-                var results = _repository.GetOptionSet<ClientType>(predicate);
+                var results = _repository.GetOptionSet<ClientType, DenormalizedReference>(predicate);
 
                 var myData = results.Select(a => new SelectListItem()
                 {

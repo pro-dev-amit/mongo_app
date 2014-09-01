@@ -79,5 +79,28 @@ namespace Matrix.Core.FrameworkCore
         /// <param name="predicate">Optional value is null. If predicate is null, it counts only the active records</param>
         /// <returns></returns>
         long GetCount<T>(Expression<Func<T, bool>> predicate = null) where T : IMXEntity;
+
+        /// <summary>
+        /// Returns a single pair of DenormalizedReference type.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TDenormalizedReference"></typeparam>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        TDenormalizedReference GetOptionById<TEntity, TDenormalizedReference>(string Id) 
+            where TEntity : IMXEntity
+            where TDenormalizedReference : IDenormalizedReference, new();
+
+        /// <summary>
+        /// Returns a list of DenormalizedReference types
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TDenormalizedReference"></typeparam>
+        /// <param name="predicate"></param>
+        /// <param name="take"></param>
+        /// <returns></returns>
+        IList<TDenormalizedReference> GetOptionSet<TEntity, TDenormalizedReference>(Expression<Func<TEntity, bool>> predicate = null, int take = 15)
+            where TEntity : IMXEntity
+            where TDenormalizedReference : IDenormalizedReference, new();
     }
 }
