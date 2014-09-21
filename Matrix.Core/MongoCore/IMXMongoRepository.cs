@@ -15,10 +15,18 @@ namespace Matrix.Core.MongoCore
     /// </summary>
     public interface IMXMongoRepository : IRepository
     {
+        /// <summary>
+        /// Bulk update based on the Query and Update commands.         
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="update"></param>
+        /// <param name="bMaintainHistory"></param>
+        /// <returns></returns>
         long BulkUpdate<T>(IMongoQuery query, IMongoUpdate update, bool bMaintainHistory = false) where T : IMXEntity;
 
         /// <summary>
-        /// Bulk delete
+        /// Bulk delete. Though IMongoQuery can be generalized using an adapter inteface, but it's fine for now.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query">MongoQuery: an example could be something like this; Query<T>.In<string>(e => e.Id, ids). 

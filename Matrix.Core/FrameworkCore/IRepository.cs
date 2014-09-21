@@ -102,5 +102,19 @@ namespace Matrix.Core.FrameworkCore
         IList<TDenormalizedReference> GetOptionSet<TEntity, TDenormalizedReference>(Expression<Func<TEntity, bool>> predicate = null, int take = 15)
             where TEntity : IMXEntity
             where TDenormalizedReference : IDenormalizedReference, new();
+
+        /// <summary>
+        /// drops the detabase
+        /// </summary>
+        /// <returns></returns>
+        bool DropDatabase();
+
+        /// <summary>
+        /// Drops the collection. This same concept is there in other databases such as arango, raven etc. 
+        /// Whereas couchbase and couchdb doesn't have explicit collections, but the same concept of clearing all documents of a particular types applies good.
+        /// </summary>
+        /// <param name="collectionName"></param>
+        /// <returns></returns>
+        bool DropCollection(string collectionName);
     }
 }

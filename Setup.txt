@@ -1,4 +1,4 @@
-The mongoDB version used here is 2.7.5(dev Windows 64 bit).
+The mongoDB version used here is 2.7.6(dev Windows 64 bit).
 
 Follow these steps and everything should turn out to be pretty smooth.
 

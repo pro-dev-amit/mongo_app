@@ -236,6 +236,21 @@ namespace Matrix.Core.FrameworkCore
 
         #endregion
 
+        public virtual bool DropDatabase()
+        {
+            dbContext.Drop();
+
+            return true;
+        }
+
+        public virtual bool DropCollection(string collectionName)
+        {
+            if (dbContext.CollectionExists(collectionName))
+                return dbContext.DropCollection(collectionName).Ok;
+
+            return false;
+        }
+
         #endregion
 
         #region "Full text search"
