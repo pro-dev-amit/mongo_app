@@ -20,7 +20,7 @@ using Matrix.Core.MongoDbBaseRepositories;
 
 namespace Matrix.DAL.CustomRepositories
 {
-    public class BookRepository : MXBusinessMongoRepository, IBookRepository
+    public class BookRepository : MXProductCatalogMongoRepository, IBookRepository
     {
         IQueueClient _queueClient;
         

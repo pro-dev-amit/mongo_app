@@ -15,11 +15,13 @@ namespace Matrix.Web.Controllers
         //
         // GET: /Home/
 
-        IMXBusinessMongoRepository _repository;
+        IMXBusinessMongoRepository _bRepository;
+        IMXProductCatalogMongoRepository _pcRepository;
 
-        public HomeController(IMXBusinessMongoRepository repository)
+        public HomeController(IMXBusinessMongoRepository bRepository, IMXProductCatalogMongoRepository pcRepository)
         {
-            this._repository = repository;
+            this._bRepository = bRepository;
+            this._pcRepository = pcRepository;
         }
 
         public ActionResult Index()
@@ -29,7 +31,7 @@ namespace Matrix.Web.Controllers
             else
                 ViewBag.IocContainer = "Unity";
 
-            var results = _repository.GetCount<Gender>();
+            var results = _bRepository.GetCount<Gender>();
 
             //var textSearchResults = _repository.GetManyByTextSearch<Book>("paulo, amit");
 
@@ -66,14 +68,14 @@ namespace Matrix.Web.Controllers
                 new ProgrammingRating { Name = "Hopeless", Code = "HL", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
 
             };
-            _repository.Insert<ProgrammingRating>(lstProgrammingRating);
+            _bRepository.Insert<ProgrammingRating>(lstProgrammingRating);
 
             List<Gender> lstGender = new List<Gender>() 
             {
                 new Gender { Name = "Male", Code = "M", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
                 new Gender { Name = "Female",  Code = "F", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
             };
-            _repository.Insert<Gender>(lstGender);
+            _bRepository.Insert<Gender>(lstGender);
 
             List<Skill> lstSkill = new List<Skill>() 
             {
@@ -83,7 +85,7 @@ namespace Matrix.Web.Controllers
                 new Skill { Name = ".Net Desktop Apps", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
                 new Skill { Name = "ASP.Net MVC", CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
             };
-            _repository.Insert<Skill>(lstSkill);
+            _bRepository.Insert<Skill>(lstSkill);
 
             List<ClientType> lstClientType = new List<ClientType>() 
             {
@@ -96,7 +98,7 @@ namespace Matrix.Web.Controllers
                 new ClientType { Name = "Energy Sector-3",CreatedBy = @"mx\amkumar", CreatedDate = DateTime.Now },
                 
             };
-            _repository.Insert<ClientType>(lstClientType);
+            _bRepository.Insert<ClientType>(lstClientType);
 
             List<Author> lstAuthor = new List<Author>() 
             {
@@ -106,7 +108,7 @@ namespace Matrix.Web.Controllers
                 new Author { Name = "Max Payne"},
                 new Author { Name = "Michael Hartl"},
             };
-            _repository.Insert<Author>(lstAuthor);
+            _pcRepository.Insert<Author>(lstAuthor);
 
             List<BookCategory> lstBookCategory = new List<BookCategory>() 
             {
@@ -116,7 +118,7 @@ namespace Matrix.Web.Controllers
                 new BookCategory { Name = "Fiction"},
                 new BookCategory { Name = "Ruby On Rails"},
             };
-            _repository.Insert<BookCategory>(lstBookCategory);
+            _pcRepository.Insert<BookCategory>(lstBookCategory);
         }
 
         #endregion

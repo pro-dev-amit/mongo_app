@@ -29,11 +29,11 @@ namespace Matrix.Web
             //map the special custom type DenormalizedRefrence; code based mapping so that our class could act as a real domain object
             //DenormalizedRefrenceMap.RegisterMappings();
 
-            //setting of indexes only once during the lifetime of the app. Though better approach is to create indexes directly in mongo shell.
-            new MXMongoIndexes().SetTextIndexOnBookCollection();
+            //setting of indexes only once during the lifetime of the app. Though a better approach is to create indexes directly in mongo shell.
+            new MXProductCatalogMongoIndexes().SetTextIndexOnBookCollection();
 
             //intializing the IoC container
-            if (ConfigurationManager.AppSettings["bUseAutofacIoc"].ToString() == "true")            
+            if (ConfigurationManager.AppSettings["bUseAutofacIoc"].ToString().ToLower() == "true")            
                 AutofacBootstrapper.Initialise();            
             else            
                 UnityBootstrapper.Initialise();

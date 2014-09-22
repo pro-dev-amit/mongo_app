@@ -9,12 +9,25 @@ using System.Threading.Tasks;
 using Nest;
 using Elasticsearch.Net;
 using Nest.Resolvers;
+using System.Configuration;
 
 
 namespace Matrix.DAL.SearchRepositories
 {
+    /// <summary>
+    /// In most cases for "Search", a single repository class is more than enough for a single index. 
+    /// Create similar search repositories for other indices.
+    /// But you can design it in whatever you like.
+    /// </summary>
     public class BookSearchRepository : MXSearchRepository, IBookSearchRepository
-    {        
+    {
+        //set your connection and indexNames in the default contructor.
+        public BookSearchRepository()
+        {
+            connectionString = ConfigurationManager.AppSettings["elasticSearchConnectionString"];
+            indexName = ConfigurationManager.AppSettings["bookIndex"];
+        }
+
         public bool IndexSampleDocuments(IList<BookSearchDocument> documents)
         {
             base.Index<BookSearchDocument>(documents);

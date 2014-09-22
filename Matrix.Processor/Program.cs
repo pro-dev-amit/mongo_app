@@ -18,12 +18,14 @@ namespace Matrix.Processor
     //need to refactor this as it's not thread safe. Also, I'll put all this code into separate processing classes. But it's fine for experimental purpose now.
     class Program
     {
-        static IRepository _mongoRepository;
+        static IMXBusinessMongoRepository _bRepository;
+        static IMXProductCatalogMongoRepository _pcRepository;
         static IBookSearchRepository _bookSearchRepository;
         
         static void Main(string[] args)
         {
-            _mongoRepository = new MXBusinessMongoRepository();
+            _bRepository = new MXBusinessMongoRepository();
+            _pcRepository = new MXProductCatalogMongoRepository();
             _bookSearchRepository = new BookSearchRepository();
 
             using (var bus = new MXRabbitClient().Bus)
@@ -67,7 +69,7 @@ namespace Matrix.Processor
             
             if (client != null)
             {
-                var result = _mongoRepository.Insert<Client>(client);
+                var result = _bRepository.Insert<Client>(client);
                 Console.WriteLine("New Client Created with Id : " + result);
             }
 
@@ -82,7 +84,7 @@ namespace Matrix.Processor
 
             var entity = message as Book;
 
-            var id = _mongoRepository.Insert<Book>(entity);
+            var id = _pcRepository.Insert<Book>(entity);
 
             Console.WriteLine("New Document inserted with Id : " + id);
             Console.WriteLine("\n-----------------Processing Complete..-----------------");
@@ -97,12 +99,12 @@ namespace Matrix.Processor
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("-----------------Start ProcessManyBooksForMongo() ...-----------------");
 
-            var ids = _mongoRepository.BulkInsert<Book>(message);
+            var ids = _pcRepository.BulkInsert<Book>(message);
 
             var predicate = MXPredicate.True<Book>();
             predicate = predicate.And(p => ids.Contains(p.Id));
 
-            var entities = _mongoRepository.GetMany<Book>(predicate, take: ids.Count);
+            var entities = _pcRepository.GetMany<Book>(predicate, take: ids.Count);
 
             Console.WriteLine("\n-----------------Processing Complete..-----------------");
             Console.ResetColor();

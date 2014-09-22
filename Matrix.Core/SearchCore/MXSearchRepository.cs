@@ -12,18 +12,8 @@ namespace Matrix.Core.SearchCore
     /// An abstraction over the NEST ElasticSearch client. I'll evolve this in the coming days as 
     /// diving deep into ElasticSearch engine is also one of my primary goals.
     /// </summary>
-    public class MXSearchRepository : ISearchRepository
+    public abstract class MXSearchRepository : MXSearchClient, ISearchRepository
     {
-        Lazy<MXSearchClient> _searchClient = new Lazy<MXSearchClient>(() => new MXSearchClient());
-
-        protected ElasticClient Client
-        {
-            get 
-            {
-                return _searchClient.Value.Client;
-            }
-        }
-
         #region "SearchDoc ops"
 
         public virtual string Index<T>(T document, string index = "") where T : MXSearchDocument

@@ -13,11 +13,11 @@ namespace Matrix.DAL.MongoIndexSettings
     /// <summary>
     /// call this setting of indexes only once during the lifetime of the app. Though better approach is to create indexes directly in mongo shell.
     /// </summary>
-    public class MXMongoIndexes : MXBusinessMongoRepository
+    public class MXProductCatalogMongoIndexes : MXProductCatalogMongoRepository
     {
         public void SetTextIndexOnBookCollection()
         {
-            var collection = dbContext.GetCollection<Book>("Book");
+            var collection = DbContext.GetCollection<Book>("Book");
             
             if (!collection.IndexExistsByName("book_text"))
             {

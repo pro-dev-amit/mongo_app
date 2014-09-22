@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Matrix.DAL.CustomRepositories
 {
-    public interface IBookRepository : IMXBusinessMongoRepository
+    public interface IBookRepository : IMXProductCatalogMongoRepository
     {
         void CreateSampleData();
 

@@ -11,28 +11,25 @@ using MongoDB.Bson.Serialization;
 
 namespace Matrix.Core.MongoCore
 {
-    public class MXMongoContext
+    public class MXMongoContext : IMongoContext
     {
-        string _connectionUrl, _databaseName;
+        protected string connectionUrl, databaseName;
 
-        public MXMongoContext(string connectionUrl, string databaseName) 
+        readonly Lazy<MongoDatabase> _dbContext;
+
+        public MXMongoContext() 
         {
-            this._connectionUrl = connectionUrl;
-            this._databaseName = databaseName;
+            _dbContext = new Lazy<MongoDatabase>(getSession);
         }
 
         public MongoDatabase DbContext
         {
-            get { return getSession(); }
+            get { return _dbContext.Value; }
         }
 
         MongoDatabase getSession()
-        {
-            var client = new MongoClient(_connectionUrl);
-            var server = client.GetServer();
-            var database = server.GetDatabase(_databaseName);
-
-            return database;
+        {            
+            return new MongoClient(connectionUrl).GetServer().GetDatabase(databaseName);
         }
     }
 }

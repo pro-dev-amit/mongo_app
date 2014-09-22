@@ -35,7 +35,7 @@ namespace Matrix.DAL.CustomRepositories
         {
             if (bMaintainHistory) base.InsertDocumentIntoHistory<Client>(entity.Id);
 
-            var collection = dbContext.GetCollection<Client>("Client");
+            var collection = DbContext.GetCollection<Client>("Client");
 
             var input = entity as Client;
 

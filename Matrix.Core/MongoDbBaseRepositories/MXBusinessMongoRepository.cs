@@ -10,15 +10,14 @@ namespace Matrix.Core.MongoDbBaseRepositories
 {
     /// <summary>
     /// This is specific for "MXBusiness" database/dataset. For a newer database; create a new class on similar lines.
+    /// Ideally, this should be in DAL as MatrixCore speaks only about core capabilities of the system. But it's ok for now.
     /// </summary>
     public class MXBusinessMongoRepository : MXMongoRepository, IMXBusinessMongoRepository
     {
-        static MXBusinessMongoRepository()
+        public MXBusinessMongoRepository()
         {
             connectionUrl = ConfigurationManager.AppSettings["mongoConnUrl"].ToString();
             databaseName = ConfigurationManager.AppSettings["MXBusinessDatabaseName"].ToString();
         }
-
-        public MXBusinessMongoRepository() { }
     }
 }

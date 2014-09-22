@@ -18,19 +18,9 @@ namespace Matrix.Core.FrameworkCore
     /// without a concrete context(connectionUrl and databseName).
     /// Please take a look at the "MXBusinessMongoRepository" class for having a separate context per database.
     /// </summary>
-    public abstract class MXMongoRepository : IMXMongoRepository
+    public abstract class MXMongoRepository : MXMongoContext, IMXMongoRepository
     {
-        protected static string connectionUrl, databaseName;
-
         #region "Initialization and attributes"
-
-        //lazy instantiation; do not create the context unless required. This would be useful in scenarios where database is not accessed, say static pages
-        Lazy<MongoDatabase> _dbContext = new Lazy<MongoDatabase>(() => new MXMongoContext(connectionUrl, databaseName).DbContext);
-
-        protected MongoDatabase dbContext
-        {
-            get { return _dbContext.Value; }
-        }
         
         public MXMongoRepository(){ }
 
@@ -44,7 +34,7 @@ namespace Matrix.Core.FrameworkCore
         {
             entity.IsActive = true;
 
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             collection.Insert(entity, WriteConcern.Acknowledged);
 
@@ -61,7 +51,7 @@ namespace Matrix.Core.FrameworkCore
         {
             foreach (var entity in entities) entity.IsActive = true;
 
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
             
             var result = collection.InsertBatch(entities, WriteConcern.Acknowledged);
             
@@ -79,7 +69,7 @@ namespace Matrix.Core.FrameworkCore
         {
             foreach (var entity in entities) entity.IsActive = isActive;
 
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var bulk = collection.InitializeUnorderedBulkOperation();
             
@@ -104,7 +94,7 @@ namespace Matrix.Core.FrameworkCore
         /// <returns></returns>
         public virtual T GetOne<T>(string id) where T : IMXEntity
         {
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
             
             return collection.FindOneById(new ObjectId(id));
         }
@@ -118,7 +108,7 @@ namespace Matrix.Core.FrameworkCore
         /// <returns></returns>
         public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : IMXEntity
         {   
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             if (predicate == null)
                 return collection.AsQueryable().Where(c => c.IsActive == bIsActive).Skip(skip).Take(take).ToList();
@@ -142,7 +132,7 @@ namespace Matrix.Core.FrameworkCore
         {
             var collectionName = typeof(T).Name;
 
-            var collection = dbContext.GetCollection<T>(collectionName);
+            var collection = DbContext.GetCollection<T>(collectionName);
 
             if (bMaintainHistory)
             {
@@ -162,7 +152,7 @@ namespace Matrix.Core.FrameworkCore
         {
             var collectionName = typeof(T).Name;
 
-            var collection = dbContext.GetCollection<T>(collectionName);
+            var collection = DbContext.GetCollection<T>(collectionName);
 
             var bulk = collection.InitializeOrderedBulkOperation();
 
@@ -192,7 +182,7 @@ namespace Matrix.Core.FrameworkCore
         /// <returns></returns>
         public virtual bool Delete<T>(string id) where T : IMXEntity
         {   
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.EQ(e => e.Id, id);
             var result = collection.Remove(query);
@@ -208,7 +198,7 @@ namespace Matrix.Core.FrameworkCore
         /// <returns></returns>
         public virtual bool Delete<T>(IList<string> ids) where T : IMXEntity
         {
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.In<string>(e => e.Id, ids);
             var result = collection.Remove(query);
@@ -225,7 +215,7 @@ namespace Matrix.Core.FrameworkCore
         /// <returns></returns>
         public virtual long BulkDelete<T>(IMongoQuery query) where T : IMXEntity
         {
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var bulk = collection.InitializeOrderedBulkOperation();
                         
@@ -238,15 +228,15 @@ namespace Matrix.Core.FrameworkCore
 
         public virtual bool DropDatabase()
         {
-            dbContext.Drop();
+            DbContext.Drop();
 
             return true;
         }
 
         public virtual bool DropCollection(string collectionName)
         {
-            if (dbContext.CollectionExists(collectionName))
-                return dbContext.DropCollection(collectionName).Ok;
+            if (DbContext.CollectionExists(collectionName))
+                return DbContext.DropCollection(collectionName).Ok;
 
             return false;
         }
@@ -266,7 +256,7 @@ namespace Matrix.Core.FrameworkCore
         /// <returns></returns>
         public virtual IList<T> GetManyByTextSearch<T>(string term, int skip = 0, int take = 30) where T : IMXEntity
         {
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query.And(Query.Text(term), Query<T>.EQ(e => e.IsActive, true));
 
@@ -279,7 +269,7 @@ namespace Matrix.Core.FrameworkCore
 
         public virtual string GetNameById<T>(string Id) where T : IMXEntity
         {
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             return collection.AsQueryable().Where(c => c.Id == Id).SingleOrDefault().Name;
         }
@@ -296,7 +286,7 @@ namespace Matrix.Core.FrameworkCore
             where TEntity : IMXEntity
             where TDenormalizedReference : IDenormalizedReference, new()
         {
-            var collection = dbContext.GetCollection<TEntity>(typeof(TEntity).Name);
+            var collection = DbContext.GetCollection<TEntity>(typeof(TEntity).Name);
                         
             return collection.AsQueryable().Where(c => c.Id == Id).Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name }).SingleOrDefault();            
         }
@@ -313,7 +303,7 @@ namespace Matrix.Core.FrameworkCore
             where TEntity : IMXEntity
             where TDenormalizedReference : IDenormalizedReference, new()
         {
-            var collection = dbContext.GetCollection<TEntity>(typeof(TEntity).Name);
+            var collection = DbContext.GetCollection<TEntity>(typeof(TEntity).Name);
 
             if (predicate == null)
                 return collection.AsQueryable()
@@ -333,7 +323,7 @@ namespace Matrix.Core.FrameworkCore
 
         public virtual bool AlterStatus<T>(string id, bool statusValue) where T : IMXEntity
         {
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.EQ(e => e.Id, id);
                         
@@ -352,7 +342,7 @@ namespace Matrix.Core.FrameworkCore
         /// <returns></returns>
         public virtual long GetCount<T>(Expression<Func<T, bool>> predicate = null) where T : IMXEntity
         {            
-            var collection = dbContext.GetCollection<T>(typeof(T).Name);
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
                         
             if (predicate == null)
                 return collection.AsQueryable().Where(c => c.IsActive == true).Count();
@@ -371,7 +361,7 @@ namespace Matrix.Core.FrameworkCore
                 XDocument = entity,
             };
 
-            var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');
+            var collectionX = DbContext.GetCollection<T>(typeof(T).Name + 'X');
             collectionX.Insert(tX);
         }
 
@@ -389,7 +379,7 @@ namespace Matrix.Core.FrameworkCore
                 XDocument = entity,
             };
 
-            var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');
+            var collectionX = DbContext.GetCollection<T>(typeof(T).Name + 'X');
             collectionX.Insert(tX);
         }
 
@@ -405,7 +395,7 @@ namespace Matrix.Core.FrameworkCore
                 };
             }
 
-            var collectionX = dbContext.GetCollection<T>(typeof(T).Name + 'X');
+            var collectionX = DbContext.GetCollection<T>(typeof(T).Name + 'X');
 
             var bulk = collectionX.InitializeUnorderedBulkOperation();
 

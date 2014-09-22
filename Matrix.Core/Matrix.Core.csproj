@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="FrameworkCore\IDenormalizedReference.cs" />
     <Compile Include="MongoCore\DenormalizedRefrenceMap.cs" />
+    <Compile Include="MongoCore\IMongoContext.cs" />
     <Compile Include="MongoCore\IMXMongoRepository.cs" />
     <Compile Include="MongoCore\MXMongoRepository.cs" />
     <Compile Include="FrameworkCore\IRepository.cs" />
@@ -86,6 +87,8 @@
     <Compile Include="FrameworkCore\MXTiming.cs" />
     <Compile Include="FrameworkCore\RequiredDenormalizedRefernce.cs" />
     <Compile Include="FrameworkCore\VersionDetail.cs" />
+    <Compile Include="MongoDbBaseRepositories\IMXProductCatalogMongoRepository.cs" />
+    <Compile Include="MongoDbBaseRepositories\MXProductCatalogMongoRepository.cs" />
     <Compile Include="MongoDbBaseRepositories\IMXBusinessMongoRepository.cs" />
     <Compile Include="MongoDbBaseRepositories\MXBusinessMongoRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +110,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

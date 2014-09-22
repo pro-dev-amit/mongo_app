@@ -39,6 +39,7 @@ namespace Matrix.Web
     public static void RegisterTypes(IUnityContainer container)
     {
         container.RegisterType<IMXBusinessMongoRepository, MXBusinessMongoRepository>();
+        container.RegisterType<IMXProductCatalogMongoRepository, MXProductCatalogMongoRepository>();
 
         container.RegisterType<IMXBusinessMongoRepository, ClientRepository>("ClientRepository");
 
@@ -53,8 +54,7 @@ namespace Matrix.Web
 
         container.RegisterType<IBookRepository, BookRepository>();
 
-        //searh repos
-        container.RegisterType<ISearchRepository, MXSearchRepository>();
+        //searh repos        
         container.RegisterType<IBookSearchRepository, BookSearchRepository>();
     }
   }

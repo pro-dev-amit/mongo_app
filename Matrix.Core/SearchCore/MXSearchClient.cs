@@ -10,21 +10,14 @@ namespace Matrix.Core.SearchCore
 {
     public class MXSearchClient : ISearchClient
     {
-        static string _connectionString, _defaultIndex;
+        protected string connectionString, indexName;
 
-        static MXSearchClient()
-        {
-            _connectionString = ConfigurationManager.AppSettings["elasticSearchConnectionString"];
-            _defaultIndex = ConfigurationManager.AppSettings["elasticSearchDefaultIndex"];
+        readonly Lazy<ElasticClient> _client;
+
+        public MXSearchClient()
+        {            
+            _client = new Lazy<ElasticClient>(getSession);
         }
-
-        Lazy<ElasticClient> _client = new Lazy<ElasticClient>(() =>
-        {
-            var setting = new ConnectionSettings(new Uri(_connectionString));
-            setting.SetDefaultIndex(_defaultIndex);
-
-            return new ElasticClient(setting);            
-        });
         
         public ElasticClient Client
         {
@@ -32,6 +25,14 @@ namespace Matrix.Core.SearchCore
             {
                 return _client.Value;   
             }
+        }
+
+        ElasticClient getSession()
+        {
+            var setting = new ConnectionSettings(new Uri(connectionString));
+            setting.SetDefaultIndex(indexName);
+
+            return new ElasticClient(setting);  
         }
 
     }//End of class MXSearchClient

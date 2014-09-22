@@ -38,6 +38,7 @@ namespace Matrix.Web
 
             //then the types
             builder.RegisterType<MXBusinessMongoRepository>().As<IMXBusinessMongoRepository>();
+            builder.RegisterType<MXProductCatalogMongoRepository>().As<IMXProductCatalogMongoRepository>();
 
             //Named types
             builder.RegisterType<ClientRepository>().Named<IMXBusinessMongoRepository>("ClientRepository");
@@ -52,8 +53,7 @@ namespace Matrix.Web
 
             builder.RegisterType<BookRepository>().As<IBookRepository>();
 
-            //searh repos
-            builder.RegisterType<MXSearchRepository>().As<ISearchRepository>();
+            //searh repos            
             builder.RegisterType<BookSearchRepository>().As<IBookSearchRepository>();
 
             
