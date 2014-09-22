@@ -10,15 +10,15 @@ using Matrix.Entities.MongoEntities;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver;
 using Matrix.Core.QueueCore;
-using Matrix.Core.MongoDbBaseRepositories;
+using Matrix.DAL.MongoBaseRepositories;
 
-namespace Matrix.DAL.CustomRepositories
+namespace Matrix.DAL.CustomMongoRepositories
 {
     public class ClientRepository : MXBusinessMongoRepository
     {
-        IQueueClient _queueClient;
+        IMXRabbitClient _queueClient;
 
-        public ClientRepository(IQueueClient queueClient)
+        public ClientRepository(IMXRabbitClient queueClient)
         {
             _queueClient = queueClient;
         }

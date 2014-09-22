@@ -6,14 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.Core.MongoDbBaseRepositories
+namespace Matrix.DAL.MongoBaseRepositories
 {
     /// <summary>
-    /// This is specific for "MXBusiness" database/dataset. For a newer database; create a new class on similar lines.
-    /// Ideally, this should be in DAL as MatrixCore speaks only about core capabilities of the system. But it's ok for now.
+    /// This is specific for "MXBusiness" database/dataset. For a new database; create a new class on similar lines.    
     /// </summary>
     public class MXBusinessMongoRepository : MXMongoRepository, IMXBusinessMongoRepository
     {
+        //well, we can have a parameterized constructor here and inject values by IoC containers. But it's ok for now.
         public MXBusinessMongoRepository()
         {
             connectionUrl = ConfigurationManager.AppSettings["mongoConnUrl"].ToString();

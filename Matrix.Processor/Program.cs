@@ -1,8 +1,8 @@
 ﻿using Matrix.Core.FrameworkCore;
-using Matrix.Core.MongoDbBaseRepositories;
+using Matrix.DAL.MongoBaseRepositories;
 using Matrix.Core.QueueCore;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.SearchRepositories;
+using Matrix.DAL.SearchBaseRepositories;
 using Matrix.Entities.MongoEntities;
 using Matrix.Entities.QueueRequestResponseObjects;
 using Matrix.Entities.SearchDocuments;
@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Matrix.Processor
 {
@@ -28,7 +29,7 @@ namespace Matrix.Processor
             _pcRepository = new MXProductCatalogMongoRepository();
             _bookSearchRepository = new BookSearchRepository();
 
-            using (var bus = new MXRabbitClient().Bus)
+            using (var bus = new MXRabbitClient(ConfigurationManager.AppSettings["rabbitMQConnectionString"]).Bus)
             {
                 bus.Subscribe<IMXEntity>("IMXEntityType", HandleMessage);
 

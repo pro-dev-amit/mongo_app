@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.DAL.SearchRepositories
+namespace Matrix.DAL.SearchBaseRepositories
 {
     public interface IBookSearchRepository : ISearchRepository
     {

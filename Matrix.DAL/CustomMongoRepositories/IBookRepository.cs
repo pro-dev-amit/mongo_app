@@ -1,5 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
-using Matrix.Core.MongoDbBaseRepositories;
+using Matrix.DAL.MongoBaseRepositories;
 using Matrix.Entities.MongoEntities;
 using Matrix.Entities.SearchDocuments;
 using Matrix.Models.ViewModels;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.DAL.CustomRepositories
+namespace Matrix.DAL.CustomMongoRepositories
 {
     public interface IBookRepository : IMXProductCatalogMongoRepository
     {

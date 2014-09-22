@@ -12,19 +12,19 @@ using MongoDB.Driver;
 using Matrix.Core.QueueCore;
 using Matrix.Entities.SearchDocuments;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.SearchRepositories;
-using Matrix.DAL.CustomRepositories;
+using Matrix.DAL.SearchBaseRepositories;
+using Matrix.DAL.CustomMongoRepositories;
 using Matrix.Entities.QueueRequestResponseObjects;
 using Matrix.Models.ViewModels;
-using Matrix.Core.MongoDbBaseRepositories;
+using Matrix.DAL.MongoBaseRepositories;
 
-namespace Matrix.DAL.CustomRepositories
+namespace Matrix.DAL.CustomMongoRepositories
 {
     public class BookRepository : MXProductCatalogMongoRepository, IBookRepository
     {
-        IQueueClient _queueClient;
+        IMXRabbitClient _queueClient;
         
-        public BookRepository(IQueueClient queueClient)
+        public BookRepository(IMXRabbitClient queueClient)
         {
             _queueClient = queueClient;            
         }

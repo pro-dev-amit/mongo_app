@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.Core.MongoDbBaseRepositories
+namespace Matrix.DAL.MongoBaseRepositories
 {
     /// <summary>
     /// This is specific for "MXProductCatalog" database/dataset. For a newer database; create a new class on similar lines.

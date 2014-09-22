@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Matrix.Core.QueueCore
 {
-    public interface IQueueClient : IDisposable
+    public interface IMXRabbitClient : IDisposable
     {
         IBus Bus { get; }
     }

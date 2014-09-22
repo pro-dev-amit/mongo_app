@@ -5,10 +5,11 @@ using Matrix.Core.FrameworkCore;
 using Matrix.Web.Controllers;
 using Matrix.Web.Areas.Sales.Controllers;
 using Matrix.Core.QueueCore;
-using Matrix.DAL.CustomRepositories;
+using Matrix.DAL.CustomMongoRepositories;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.SearchRepositories;
-using Matrix.Core.MongoDbBaseRepositories;
+using Matrix.DAL.SearchBaseRepositories;
+using Matrix.DAL.MongoBaseRepositories;
+using System.Configuration;
 
 namespace Matrix.Web
 {
@@ -50,7 +51,8 @@ namespace Matrix.Web
             ));
 
         //register rabbitMQ client as a singleton
-        container.RegisterType<IQueueClient, MXRabbitClient>(new ContainerControlledLifetimeManager());
+        container.RegisterType<IMXRabbitClient, MXRabbitClient>
+            (new ContainerControlledLifetimeManager(), new InjectionConstructor(ConfigurationManager.AppSettings["rabbitMQConnectionString"]));
 
         container.RegisterType<IBookRepository, BookRepository>();
 

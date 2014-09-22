@@ -87,12 +87,8 @@
     <Compile Include="FrameworkCore\MXTiming.cs" />
     <Compile Include="FrameworkCore\RequiredDenormalizedRefernce.cs" />
     <Compile Include="FrameworkCore\VersionDetail.cs" />
-    <Compile Include="MongoDbBaseRepositories\IMXProductCatalogMongoRepository.cs" />
-    <Compile Include="MongoDbBaseRepositories\MXProductCatalogMongoRepository.cs" />
-    <Compile Include="MongoDbBaseRepositories\IMXBusinessMongoRepository.cs" />
-    <Compile Include="MongoDbBaseRepositories\MXBusinessMongoRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueueCore\IQueueClient.cs" />
+    <Compile Include="QueueCore\IMXRabbitClient.cs" />
     <Compile Include="QueueCore\MXRabbitClient.cs" />
     <Compile Include="SearchCore\ISearchClient.cs" />
     <Compile Include="SearchCore\ISearchDocument.cs" />

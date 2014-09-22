@@ -1,8 +1,8 @@
 ﻿using Matrix.Core.FrameworkCore;
 using Matrix.Core.QueueCore;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.CustomRepositories;
-using Matrix.DAL.SearchRepositories;
+using Matrix.DAL.CustomMongoRepositories;
+using Matrix.DAL.SearchBaseRepositories;
 using Matrix.Entities.MongoEntities;
 using Matrix.Entities.SearchDocuments;
 using Matrix.Models.ViewModels;

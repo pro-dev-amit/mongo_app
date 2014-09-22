@@ -11,20 +11,16 @@ namespace Matrix.Core.QueueCore
     /// <summary>
     /// RabbitMQ client. This is a singleton; check out the IoC container registrations
     /// </summary>
-    public class MXRabbitClient : IQueueClient
+    public class MXRabbitClient : IMXRabbitClient
     {
         static string _connectionString;
 
         static Lazy<IBus> _bus = new Lazy<IBus>(() => RabbitHutch.CreateBus(_connectionString));
 
-        static MXRabbitClient()
-        {
-            _connectionString = ConfigurationManager.AppSettings["rabbitMQConnectionString"];
-        }
-                
-        public MXRabbitClient() 
-        { 
-        
+        //this connectionString is being injected by IoC containers
+        public MXRabbitClient(string connectionString) 
+        {            
+            _connectionString = connectionString;
         }
 
         public IBus Bus

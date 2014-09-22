@@ -1,5 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
-using Matrix.Core.MongoDbBaseRepositories;
+using Matrix.DAL.MongoBaseRepositories;
 using Matrix.Entities.MongoEntities;
 using MongoDB.Driver.Builders;
 using System;
