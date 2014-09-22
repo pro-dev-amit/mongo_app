@@ -21,10 +21,10 @@ Architecture and usage
 - For setting up MongoDB, ElasticSearch and RabbitMQ; please go through the instructions in "Setup.txt" file at the root folder.
 - The heart of the project lies in MatrixCore, this is where all the abstractions/generalisations are done. Focus has been on "Code to abstractions" principle throughout.
 - You can switch the Ioc containers between Autofac and Unity by flipping the flag "bUseAutofacIoc" in web.config. Take a look at Bootstrapper classes for defining dependencies beforehand.
-- This generic repository would suffice most of the needs, but we also know that a generalized solution cannot cater to all the finer details of a system; so we need extensibility, go ahead and create a new dataAccess base repository class(one per database) by just inheriting it from **"MXMongoRepository"** so that you get access to MongoContext object and other low level methods from mongoDbCSharp driver. Further, custom repositories can also be created by sub-classing the base repository.
+- This generic repository would suffice most of the needs, but we also know that a generalized solution cannot cater to all the finer details of a system; so we need extensibility; it's a must create a new dataAccess base repository class(one per database) by just inheriting it from **"MXMongoRepository"** abstract class so that you get access to MongoContext object and other low level methods from mongoDbCSharp driver. Further, custom repositories can also be created by sub-classing the then base repository.
 - All your mongo entities must inherit from **"MXMongoEntity"**. 
 - For processing messages queued to RabbitMQ; **run the subscriber application** at **"..\Matrix.Processor\bin\Debug\Matrix.Processor.exe"**. You can run multiple instances of the subscriber as well.
-- For creating SearchDocuments, inherit from **"MXSearchDocument"** class. And for Creating SearchRepositories, just inherit from **"MXSearchRepository"** class.
+- For creating SearchDocuments, inherit from **"MXSearchDocument"** class. And for Creating SearchRepositories, just inherit from **"MXSearchRepository"** class. I've enforced the idea of creating a separate repository for a new index.
 - Various settings such as database connection string, RabbitMQ port, ElasticSearch port etc. are defined in web.config file, please check out the appsettings section there.
 
 

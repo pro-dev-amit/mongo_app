@@ -11,10 +11,13 @@ using MongoDB.Bson.Serialization;
 
 namespace Matrix.Core.MongoCore
 {
-    public class MXMongoContext : IMongoContext
+    public class MXMongoContext : IMXMongoContext
     {
         protected string connectionUrl, databaseName;
 
+        /// <summary>
+        /// Lazy instantiation of "MongoDB.Driver.MongoDatabase" object.
+        /// </summary>
         readonly Lazy<MongoDatabase> _dbContext;
 
         public MXMongoContext() 

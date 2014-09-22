@@ -68,7 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MongoIndexSettings\MXMongoIndexes.cs" />
+    <Compile Include="MongoIndexSettings\MXProductCatalogMongoIndex.cs" />
     <Compile Include="CustomRepositories\ClientRepository.cs" />
     <Compile Include="CustomRepositories\BookRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

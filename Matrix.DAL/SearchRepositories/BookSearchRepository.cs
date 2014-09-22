@@ -16,7 +16,7 @@ namespace Matrix.DAL.SearchRepositories
 {
     /// <summary>
     /// In most cases for "Search", a single repository class is more than enough for a single index. 
-    /// Create similar search repositories for other indices.
+    /// Please create similar search repositories for other indices.
     /// But you can design it in whatever you like.
     /// </summary>
     public class BookSearchRepository : MXSearchRepository, IBookSearchRepository

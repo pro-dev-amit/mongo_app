@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Matrix.Core.MongoCore
 {
-    public interface IMongoContext
+    public interface IMXMongoContext
     {
         MongoDatabase DbContext { get; }
     }

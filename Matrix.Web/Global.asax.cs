@@ -30,7 +30,7 @@ namespace Matrix.Web
             //DenormalizedRefrenceMap.RegisterMappings();
 
             //setting of indexes only once during the lifetime of the app. Though a better approach is to create indexes directly in mongo shell.
-            new MXProductCatalogMongoIndexes().SetTextIndexOnBookCollection();
+            new MXProductCatalogMongoIndex().SetTextIndexOnBookCollection();
 
             //intializing the IoC container
             if (ConfigurationManager.AppSettings["bUseAutofacIoc"].ToString().ToLower() == "true")            

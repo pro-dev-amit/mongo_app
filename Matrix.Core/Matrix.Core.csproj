@@ -74,7 +74,7 @@
   <ItemGroup>
     <Compile Include="FrameworkCore\IDenormalizedReference.cs" />
     <Compile Include="MongoCore\DenormalizedRefrenceMap.cs" />
-    <Compile Include="MongoCore\IMongoContext.cs" />
+    <Compile Include="MongoCore\IMXMongoContext.cs" />
     <Compile Include="MongoCore\IMXMongoRepository.cs" />
     <Compile Include="MongoCore\MXMongoRepository.cs" />
     <Compile Include="FrameworkCore\IRepository.cs" />
