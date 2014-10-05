@@ -13,14 +13,14 @@ namespace Matrix.Core.MongoCore
 {
     public class MXMongoContext : IMXMongoContext
     {
-        protected string connectionUrl, databaseName;
+        protected Lazy<string> connectionUrl, databaseName;
 
         /// <summary>
         /// Lazy instantiation of "MongoDB.Driver.MongoDatabase" object.
         /// </summary>
         readonly Lazy<MongoDatabase> _dbContext;
 
-        public MXMongoContext() 
+        public MXMongoContext()
         {
             _dbContext = new Lazy<MongoDatabase>(getSession);
         }
@@ -31,8 +31,8 @@ namespace Matrix.Core.MongoCore
         }
 
         MongoDatabase getSession()
-        {            
-            return new MongoClient(connectionUrl).GetServer().GetDatabase(databaseName);
+        {
+            return new MongoClient(connectionUrl.Value).GetServer().GetDatabase(databaseName.Value);
         }
     }
 }

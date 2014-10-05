@@ -23,7 +23,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
 
         public ActionResult Index()
         {
-            MXTiming timing = new MXTiming();
+            MXTimer timing = new MXTimer();
 
             var model = _repository.GetMany<Client>();
 
@@ -34,7 +34,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
 
         public ActionResult CompleteDetails(string id) //id- ClientID
         {
-            MXTiming timing = new MXTiming();
+            MXTimer timing = new MXTimer();
                         
             ViewBag.ParentItemName = _repository.GetNameById<Client>(id);
 
@@ -65,7 +65,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
 
         public ActionResult Edit(string id)
         {
-            MXTiming timing = new MXTiming();
+            MXTimer timing = new MXTimer();
 
             ClientViewModel model = new ClientViewModel 
             {

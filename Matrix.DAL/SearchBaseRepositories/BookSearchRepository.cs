@@ -24,8 +24,8 @@ namespace Matrix.DAL.SearchBaseRepositories
         //set your connection and indexNames in the default contructor.
         public BookSearchRepository()
         {
-            connectionString = ConfigurationManager.AppSettings["elasticSearchConnectionString"];
-            indexName = ConfigurationManager.AppSettings["bookIndex"];
+            connectionString = new Lazy<string>(() => ConfigurationManager.AppSettings["elasticSearchConnectionString"]);
+            indexName = new Lazy<string>(() => ConfigurationManager.AppSettings["bookIndex"]);
         }
 
         public bool IndexSampleDocuments(IList<BookSearchDocument> documents)

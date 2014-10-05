@@ -84,7 +84,7 @@
     <Compile Include="MongoCore\MXMongoEntityX.cs" />
     <Compile Include="MongoCore\MXMongoContext.cs" />
     <Compile Include="FrameworkCore\MXPredicate.cs" />
-    <Compile Include="FrameworkCore\MXTiming.cs" />
+    <Compile Include="FrameworkCore\MXTimer.cs" />
     <Compile Include="FrameworkCore\RequiredDenormalizedRefernce.cs" />
     <Compile Include="FrameworkCore\VersionDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

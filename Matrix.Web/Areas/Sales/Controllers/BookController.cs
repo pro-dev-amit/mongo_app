@@ -56,7 +56,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
 
             if (isUsingElasticSearch)
             {
-                MXTiming timing = new MXTiming();
+                MXTimer timing = new MXTimer();
 
                 results = _bookSearchRepository.Search(term);
 
@@ -64,7 +64,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
             }
             else
             {
-                MXTiming timing = new MXTiming();
+                MXTimer timing = new MXTimer();
 
                 results = _mongoRepository.Search(term);
 
@@ -76,7 +76,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
 
         public ActionResult Create()
         {
-            MXTiming timing = new MXTiming();
+            MXTimer timing = new MXTimer();
 
             var model = _mongoRepository.GetBookViewModel();
             

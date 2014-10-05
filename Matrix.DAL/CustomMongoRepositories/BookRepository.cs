@@ -40,7 +40,7 @@ namespace Matrix.DAL.CustomMongoRepositories
                 var searchDoc = new BookSearchDocument
                 {
                     Id = response.Result.Id,
-                    Title = entity.Name,
+                    Title = mongoEntity.Name,
                     Author = new MXSearchDenormalizedRefrence { DenormalizedId = mongoEntity.Author.DenormalizedId, DenormalizedName = mongoEntity.Author.DenormalizedName },
                     Category = new MXSearchDenormalizedRefrence { DenormalizedId = mongoEntity.Category.DenormalizedId, DenormalizedName = mongoEntity.Category.DenormalizedName },
                     AvaliableCopies = mongoEntity.AvaliableCopies,

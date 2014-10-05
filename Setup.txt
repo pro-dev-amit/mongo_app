@@ -1,4 +1,4 @@
-The mongoDB version used here is 2.7.6(dev Windows 64 bit).
+The mongoDB version used here is 2.7.7(dev Windows 64 bit).
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -41,7 +41,7 @@ For RabbitMQ installation(version is 3.3.5):
 	4) Access the admin console at http://localhost:15672 with username and password both as "guest".
 
 -----------------------------------------------------------------------------------------------------------------
-For ElasticSearch installation(latest version 1.3.2) - 
+For ElasticSearch installation(latest version 1.3.4) - 
 	
 	1) ElasticSearch requires java runtime, so install latest JDK/JRE from Oracle website; http://www.oracle.com/technetwork/java/javase/downloads/index.html
 

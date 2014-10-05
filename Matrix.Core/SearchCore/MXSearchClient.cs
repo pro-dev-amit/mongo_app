@@ -10,7 +10,7 @@ namespace Matrix.Core.SearchCore
 {
     public class MXSearchClient : ISearchClient
     {
-        protected string connectionString, indexName;
+        protected new Lazy<string> connectionString, indexName;
 
         readonly Lazy<ElasticClient> _client;
 
@@ -29,8 +29,8 @@ namespace Matrix.Core.SearchCore
 
         ElasticClient getSession()
         {
-            var setting = new ConnectionSettings(new Uri(connectionString));
-            setting.SetDefaultIndex(indexName);
+            var setting = new ConnectionSettings(new Uri(connectionString.Value));
+            setting.SetDefaultIndex(indexName.Value);
 
             return new ElasticClient(setting);  
         }

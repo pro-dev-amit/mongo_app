@@ -15,8 +15,8 @@ namespace Matrix.DAL.MongoBaseRepositories
     {        
         public MXProductCatalogMongoRepository() 
         {
-            connectionUrl = ConfigurationManager.AppSettings["mongoConnUrl"].ToString();
-            databaseName = ConfigurationManager.AppSettings["MXProductCatalogDatabaseName"].ToString();
+            connectionUrl = new Lazy<string>(() => ConfigurationManager.AppSettings["mongoConnUrl"].ToString());
+            databaseName = new Lazy<string>(() => ConfigurationManager.AppSettings["MXProductCatalogDatabaseName"].ToString());
         }
     }
 }

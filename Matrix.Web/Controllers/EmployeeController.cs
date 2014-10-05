@@ -28,7 +28,7 @@ namespace Matrix.Web.Controllers
         {
             IList<Employee> model;
 
-            MXTiming timing = new MXTiming();
+            MXTimer timing = new MXTimer();
 
             var page = id ?? 0;
 
@@ -55,7 +55,7 @@ namespace Matrix.Web.Controllers
         {
             var skipRecords = page * takeCount;
 
-            MXTiming timing = new MXTiming();
+            MXTimer timing = new MXTimer();
 
             var model = _repository.GetMany<Employee>(skip: skipRecords, take: takeCount);
 
@@ -66,7 +66,7 @@ namespace Matrix.Web.Controllers
 
         public ActionResult Create()
         {
-            MXTiming timing = new MXTiming();
+            MXTimer timing = new MXTimer();
 
             EmployeeViewModel model = new EmployeeViewModel();
 
@@ -107,7 +107,7 @@ namespace Matrix.Web.Controllers
 
         public ActionResult Edit(string id)//employeeId
         {
-            MXTiming timing = new MXTiming();
+            MXTimer timing = new MXTimer();
 
             EmployeeViewModel model = new EmployeeViewModel
             {

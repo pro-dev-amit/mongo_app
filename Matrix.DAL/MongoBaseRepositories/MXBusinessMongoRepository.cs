@@ -16,8 +16,8 @@ namespace Matrix.DAL.MongoBaseRepositories
         //well, we can have a parameterized constructor here and inject values by IoC containers. But it's ok for now.
         public MXBusinessMongoRepository()
         {
-            connectionUrl = ConfigurationManager.AppSettings["mongoConnUrl"].ToString();
-            databaseName = ConfigurationManager.AppSettings["MXBusinessDatabaseName"].ToString();
+            connectionUrl = new Lazy<string>(() => ConfigurationManager.AppSettings["mongoConnUrl"].ToString());
+            databaseName = new Lazy<string>(() => ConfigurationManager.AppSettings["MXBusinessDatabaseName"].ToString());
         }
     }
 }
