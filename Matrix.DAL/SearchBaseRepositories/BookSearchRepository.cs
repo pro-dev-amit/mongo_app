@@ -16,8 +16,7 @@ namespace Matrix.DAL.SearchBaseRepositories
 {
     /// <summary>
     /// In most cases for "Search", a single repository class is more than enough for a single index. 
-    /// Please create similar search repositories for other indices.
-    /// But you can design it in whatever you like.
+    /// Please create similar search repositories for other indices.    
     /// </summary>
     public class BookSearchRepository : MXSearchRepository, IBookSearchRepository
     {
@@ -25,7 +24,7 @@ namespace Matrix.DAL.SearchBaseRepositories
         public BookSearchRepository()
         {
             connectionString = new Lazy<string>(() => ConfigurationManager.AppSettings["elasticSearchConnectionString"]);
-            indexName = new Lazy<string>(() => ConfigurationManager.AppSettings["bookIndex"]);
+            indexName = new Lazy<string>(() => ConfigurationManager.AppSettings["bookIndex"]);            
         }
 
         public bool IndexSampleDocuments(IList<BookSearchDocument> documents)

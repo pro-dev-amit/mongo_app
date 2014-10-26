@@ -55,8 +55,9 @@
     <Reference Include="Microsoft.Practices.Unity.Configuration">
       <HintPath>..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -290,9 +291,9 @@
       <Project>{8c07b53d-5bf1-44fb-a3da-8805f43229d7}</Project>
       <Name>Matrix.Entities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Matrix.Models\Matrix.Models.csproj">
+    <ProjectReference Include="..\Matrix.Business\Matrix.Business.csproj">
       <Project>{4c57ffa7-cad4-4f4f-a8d3-ea028d6bc6d5}</Project>
-      <Name>Matrix.Models</Name>
+      <Name>Matrix.Business</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

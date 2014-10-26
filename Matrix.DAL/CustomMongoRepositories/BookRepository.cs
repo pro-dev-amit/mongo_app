@@ -15,7 +15,7 @@ using Matrix.Core.SearchCore;
 using Matrix.DAL.SearchBaseRepositories;
 using Matrix.DAL.CustomMongoRepositories;
 using Matrix.Entities.QueueRequestResponseObjects;
-using Matrix.Models.ViewModels;
+using Matrix.Business.ViewModels;
 using Matrix.DAL.MongoBaseRepositories;
 
 namespace Matrix.DAL.CustomMongoRepositories
@@ -36,6 +36,7 @@ namespace Matrix.DAL.CustomMongoRepositories
 
             //getting the mongoEntityID first, then queue to Search engine. RPC based queuing
             var task = _queueClient.Bus.RequestAsync<IMXEntity, BookQueueResponse>(mongoEntity);
+
             task.ContinueWith(response => {
                 var searchDoc = new BookSearchDocument
                 {
@@ -107,7 +108,7 @@ namespace Matrix.DAL.CustomMongoRepositories
             if (term == string.Empty)
                 books = base.GetMany<Book>(take: 30);
             else
-                books = base.GetManyByTextSearch<Book>(term);
+                books = base.GetManyByTextSearch<Book>(term, 30);
 
             var results = new List<BookSearchDocument>();
 
@@ -159,6 +160,11 @@ namespace Matrix.DAL.CustomMongoRepositories
 
                 this.Insert<Book>(books);
             }
+        }
+
+        public long GetCount()
+        {
+            return base.GetCount<Book>();
         }
 
         #region "Private helpers"

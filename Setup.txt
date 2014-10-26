@@ -1,4 +1,4 @@
-The mongoDB version used here is 2.7.7(dev Windows 64 bit).
+The mongoDB version used here is 2.6.5(Windows 64 bit).
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -29,7 +29,7 @@ C:\mongodb_server\bin\mongod.exe --remove
 6) Also a good GUI tool for MongoDB is robomongo, it's opensource and free of cost; http://robomongo.org
 
 -----------------------------------------------------------------------------------------------------------------
-For RabbitMQ installation(version is 3.3.5):
+For RabbitMQ installation(version is 3.4.0):
 
 	1) First, install erlang compiler; http://erlang.org
 

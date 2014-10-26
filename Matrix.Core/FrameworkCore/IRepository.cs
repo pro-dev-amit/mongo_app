@@ -44,10 +44,10 @@ namespace Matrix.Core.FrameworkCore
         /// <typeparam name="T">type</typeparam>
         /// <param name="predicate">predicate</param>
         /// <param name="bIsActive"></param>
-        /// <param name="take">use value as 1 if you want to retrieve only a sinle document</param>
+        /// <param name="take">"-1" here basically means take All documents</param>
         /// <param name="skip">skip count</param>
         /// <returns>IList<T></returns>
-        IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : IMXEntity;
+        IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = -1, int skip = 0) where T : IMXEntity;
 
         bool Update<T>(T entity, bool bMaintainHistory = false) where T : IMXEntity;
                 
@@ -69,8 +69,8 @@ namespace Matrix.Core.FrameworkCore
                 
         //other important ones
         string GetNameById<T>(string Id) where T : IMXEntity;
-                
-        bool AlterStatus<T>(string id, bool statusValue) where T : IMXEntity;
+
+        bool AlterStatus<T>(string id, bool statusValue, bool bMaintainHistory = false) where T : IMXEntity;
 
         /// <summary>
         /// Returns the count of records in a collection
@@ -99,7 +99,7 @@ namespace Matrix.Core.FrameworkCore
         /// <param name="predicate"></param>
         /// <param name="take"></param>
         /// <returns></returns>
-        IList<TDenormalizedReference> GetOptionSet<TEntity, TDenormalizedReference>(Expression<Func<TEntity, bool>> predicate = null, int take = 15)
+        IList<TDenormalizedReference> GetOptionSet<TEntity, TDenormalizedReference>(Expression<Func<TEntity, bool>> predicate = null, int take = -1, int skip = 0)
             where TEntity : IMXEntity
             where TDenormalizedReference : IDenormalizedReference, new();
 

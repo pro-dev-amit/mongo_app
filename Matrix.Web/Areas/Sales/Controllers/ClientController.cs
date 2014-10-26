@@ -1,5 +1,5 @@
 ﻿using Matrix.Entities.MongoEntities;
-using Matrix.Models.ViewModels;
+using Matrix.Business.ViewModels;
 using Matrix.Core.FrameworkCore;
 using Matrix.Core.MongoCore;
 using Matrix.Web.Controllers;

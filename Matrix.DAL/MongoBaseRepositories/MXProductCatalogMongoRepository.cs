@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Matrix.DAL.MongoBaseRepositories
 {
     /// <summary>
-    /// This is specific for "MXProductCatalog" database/dataset. For a newer database; create a new class on similar lines.
+    /// This is specific for "MXProductCatalog" database. For a new database; create a new class on similar lines.
     /// </summary>
     public class MXProductCatalogMongoRepository : MXMongoRepository, IMXProductCatalogMongoRepository
     {        

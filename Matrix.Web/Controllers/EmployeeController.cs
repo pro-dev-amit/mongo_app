@@ -1,6 +1,6 @@
-﻿using Matrix.Models.CommonHelpers;
+﻿using Matrix.Business.CommonHelpers;
 using Matrix.Entities.MongoEntities;
-using Matrix.Models.ViewModels;
+using Matrix.Business.ViewModels;
 using Matrix.Core.FrameworkCore;
 using Matrix.Core.MongoCore;
 using System;

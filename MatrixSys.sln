@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Express 2012 for Web
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.Core", "Matrix.Core\Matrix.Core.csproj", "{509D843C-2F26-4BDE-AE24-646A7C0F1C63}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.DAL", "Matrix.DAL\Matrix.DAL.csproj", "{46197D44-B816-4BCB-961C-D77039245EE0}"
@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.Web", "Matrix.Web\Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.Entities", "Matrix.Entities\Matrix.Entities.csproj", "{8C07B53D-5BF1-44FB-A3DA-8805F43229D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.Models", "Matrix.Models\Matrix.Models.csproj", "{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.Processor", "Matrix.Processor\Matrix.Processor.csproj", "{F11E03E2-E1BD-4D48-9F98-1B7ACFF1EC16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matrix.Business", "Matrix.Business\Matrix.Business.csproj", "{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,14 +35,14 @@ Global
 		{8C07B53D-5BF1-44FB-A3DA-8805F43229D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C07B53D-5BF1-44FB-A3DA-8805F43229D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C07B53D-5BF1-44FB-A3DA-8805F43229D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F11E03E2-E1BD-4D48-9F98-1B7ACFF1EC16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F11E03E2-E1BD-4D48-9F98-1B7ACFF1EC16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F11E03E2-E1BD-4D48-9F98-1B7ACFF1EC16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F11E03E2-E1BD-4D48-9F98-1B7ACFF1EC16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C57FFA7-CAD4-4F4F-A8D3-EA028D6BC6D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

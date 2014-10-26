@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 using MongoDB.Driver.Linq;
 using System.Linq.Expressions;
 using Matrix.Core.MongoCore;
+using Matrix.Core.UserProfile;
 
 namespace Matrix.Core.FrameworkCore
 {
     /// <summary>
     /// Generic repository class for Mongo operations. This is intentionlly marked abstract so that it cannot be instantiated 
-    /// without a concrete context(connectionUrl and databseName).
+    /// without a concrete context(connectionUrl and databaseName).
     /// Please take a look at the "MXBusinessMongoRepository" class for having a separate context per database.
     /// </summary>
     public abstract class MXMongoRepository : MXMongoContext, IMXMongoRepository
@@ -23,6 +24,16 @@ namespace Matrix.Core.FrameworkCore
         #region "Initialization and attributes"
         
         public MXMongoRepository(){ }
+
+        public string CurrentUser
+        {
+            get { return UserProfileHelper.CurrentUser; }
+        }
+
+        public DateTime CreatedDate
+        {
+            get { return DateTime.Now; }
+        }
 
         #endregion
 
@@ -32,10 +43,14 @@ namespace Matrix.Core.FrameworkCore
 
         public virtual string Insert<T>(T entity, bool isActive = true) where T : IMXEntity
         {
-            entity.IsActive = true;
+            entity.IsActive = isActive;
+            entity.CreatedDate = CreatedDate;
+            entity.CreatedBy = CurrentUser;
 
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
+            //The default WriteConcern here is "Acknowledged". Go ahead and override this method in particular repositories if you need other ways of writing to
+            //a mongo collection.
             collection.Insert(entity, WriteConcern.Acknowledged);
 
             return entity.Id;
@@ -49,13 +64,20 @@ namespace Matrix.Core.FrameworkCore
         /// <returns>List of IDs of the generated documents</returns>
         public virtual IList<string> Insert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity
         {
-            foreach (var entity in entities) entity.IsActive = true;
+            var createdDate = CreatedDate;
+            var currentUser = CurrentUser;
+
+            foreach (var entity in entities)
+            {
+                entity.IsActive = isActive;
+                entity.CreatedDate = createdDate;
+                entity.CreatedBy = currentUser;
+            }
 
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
             
             var result = collection.InsertBatch(entities, WriteConcern.Acknowledged);
-            
-            //return result.All(c => c.Ok == true);
+                        
             return entities.Select(c => c.Id).ToList();
         }
 
@@ -67,7 +89,15 @@ namespace Matrix.Core.FrameworkCore
         /// <returns>List of IDs of the generated documents</returns>
         public virtual IList<string> BulkInsert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity
         {
-            foreach (var entity in entities) entity.IsActive = isActive;
+            var createdDate = CreatedDate;
+            var currentUser = CurrentUser;
+
+            foreach (var entity in entities)
+            {
+                entity.IsActive = isActive;
+                entity.CreatedDate = createdDate;
+                entity.CreatedBy = currentUser;
+            }
 
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
@@ -75,8 +105,7 @@ namespace Matrix.Core.FrameworkCore
             
             foreach (var entity in entities)
                 bulk.Insert<T>(entity);
-
-            //bulk.Execute(WriteConcern.Acknowledged).InsertedCount;
+                        
             bulk.Execute(WriteConcern.Acknowledged);
 
             return entities.Select(c => c.Id).ToList();
@@ -98,24 +127,33 @@ namespace Matrix.Core.FrameworkCore
             
             return collection.FindOneById(new ObjectId(id));
         }
-
-        /// <summary>
+                
+       /// <summary>
         /// Load records based on predicates
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
+       /// </summary>
+       /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Use the MXPredicate object to build predicates</param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
-        public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = 128, int skip = 0) where T : IMXEntity
+       /// <param name="bIsActive"></param>
+       /// <param name="take"></param>
+       /// <param name="skip"></param>
+       /// <returns></returns>
+        public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = -1, int skip = 0) where T : IMXEntity
         {   
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             if (predicate == null)
-                return collection.AsQueryable().Where(c => c.IsActive == bIsActive).Skip(skip).Take(take).ToList();
+                if(take == -1)
+                    return collection.AsQueryable().Where(c => c.IsActive == bIsActive).Skip(skip).ToList();
+                else
+                    return collection.AsQueryable().Where(c => c.IsActive == bIsActive).Skip(skip).Take(take).ToList();
             else
             {
                 predicate = predicate.And(p => p.IsActive == bIsActive);
-                return collection.AsQueryable().Where(predicate).Skip(skip).Take(take).ToList();
+
+                if (take == -1)                
+                    return collection.AsQueryable().Where(predicate).Skip(skip).ToList();
+                else
+                    return collection.AsQueryable().Where(predicate).Skip(skip).Take(take).ToList();
             }
         }
 
@@ -141,7 +179,10 @@ namespace Matrix.Core.FrameworkCore
                 Task.Run(() =>
                     InsertDocumentIntoHistory<T>(historyDoc)
                 );
-            }            
+            }
+
+            entity.CreatedDate = CreatedDate;
+            entity.CreatedBy = CurrentUser;
 
             var t = collection.Save<T>(entity, WriteConcern.Acknowledged);
 
@@ -175,7 +216,7 @@ namespace Matrix.Core.FrameworkCore
         #region "Delete"
 
         /// <summary>
-        /// Delete by Id
+        /// Delete by Id. This is a permanent delete.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id">Document Id</param>
@@ -254,13 +295,16 @@ namespace Matrix.Core.FrameworkCore
         /// <param name="take"></param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        public virtual IList<T> GetManyByTextSearch<T>(string term, int skip = 0, int take = 30) where T : IMXEntity
+        public virtual IList<T> GetManyByTextSearch<T>(string term,  int take = -1, int skip = 0) where T : IMXEntity
         {
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
-
+                        
             var query = Query.And(Query.Text(term), Query<T>.EQ(e => e.IsActive, true));
 
-            return collection.FindAs<T>(query).Skip(skip).Take(take).ToList();
+            if(take == -1)
+                return collection.FindAs<T>(query).Skip(skip).ToList();
+            else
+                return collection.FindAs<T>(query).Skip(skip).Take(take).ToList();
         }
 
         #endregion
@@ -298,37 +342,66 @@ namespace Matrix.Core.FrameworkCore
         /// <typeparam name="TDenormalizedReference"></typeparam>
         /// <param name="predicate">the default predicate considered is the IsActive field to be true; (p => p.IsActive == true)</param>
         /// <param name="take"></param>
+        /// <param name="skip"></param>
         /// <returns></returns>
-        public virtual IList<TDenormalizedReference> GetOptionSet<TEntity, TDenormalizedReference>(Expression<Func<TEntity, bool>> predicate = null, int take = 15)
+        public virtual IList<TDenormalizedReference> GetOptionSet<TEntity, TDenormalizedReference>(Expression<Func<TEntity, bool>> predicate = null, int take = -1, int skip = 0)
             where TEntity : IMXEntity
             where TDenormalizedReference : IDenormalizedReference, new()
         {
             var collection = DbContext.GetCollection<TEntity>(typeof(TEntity).Name);
 
             if (predicate == null)
-                return collection.AsQueryable()
-                    .Where(c => c.IsActive == true)
-                    .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
-                    .OrderBy(c => c.DenormalizedName)
-                    .ToList();
+            {
+                if (take == -1)
+                    return collection.AsQueryable().Where(c => c.IsActive == true)
+                        .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
+                        .OrderBy(c => c.DenormalizedName)
+                        .Skip(skip)
+                        .ToList();
+                else
+                    return collection.AsQueryable().Where(c => c.IsActive == true)
+                        .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
+                        .OrderBy(c => c.DenormalizedName)
+                        .Skip(skip).Take(take)                        
+                        .ToList();
+            }
             else
             {
                 predicate = predicate.And(p => p.IsActive == true);
-                return collection.AsQueryable().Where(predicate)
-                    .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
-                    .OrderBy(c => c.DenormalizedName).Take(take)
-                    .ToList();
+
+                if (take == -1)
+                    return collection.AsQueryable().Where(predicate)
+                        .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
+                        .OrderBy(c => c.DenormalizedName).Skip(skip)
+                        .ToList();
+                else
+                    return collection.AsQueryable().Where(predicate)
+                        .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
+                        .OrderBy(c => c.DenormalizedName).Skip(skip).Take(take)
+                        .ToList();
             }
         }
 
-        public virtual bool AlterStatus<T>(string id, bool statusValue) where T : IMXEntity
+        public virtual bool AlterStatus<T>(string id, bool status, bool bMaintainHistory = false) where T : IMXEntity
         {
+            if (bMaintainHistory)
+            {
+                var historyDoc = GetOne<T>(id);
+
+                Task.Run(() =>
+                    InsertDocumentIntoHistory<T>(historyDoc)
+                );
+            }
+
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.EQ(e => e.Id, id);
                         
-            var update = MongoDB.Driver.Builders.Update<T>.Set(c => c.IsActive, statusValue);
-
+            var update = MongoDB.Driver.Builders.Update<T>
+                .Set(c => c.IsActive, status)
+                .Set(c => c.CreatedDate, CreatedDate)
+                .Set(c => c.CreatedBy, CurrentUser);
+            
             var result = collection.Update(query, update, WriteConcern.Acknowledged);
 
             return result.Ok;
@@ -366,7 +439,7 @@ namespace Matrix.Core.FrameworkCore
         }
 
         /// <summary>
-        /// Insert into history. Call this before updating the document.
+        /// Insert into history. For a synchronous update, call this before updating the document.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>

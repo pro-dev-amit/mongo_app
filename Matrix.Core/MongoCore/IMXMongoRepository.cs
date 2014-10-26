@@ -40,9 +40,9 @@ namespace Matrix.Core.MongoCore
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="term"></param>
-        /// <param name="take"></param>
+        /// <param name="take">"-1" here basically means take All</param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        IList<T> GetManyByTextSearch<T>(string term, int skip = 0, int take = 30) where T : IMXEntity;        
+        IList<T> GetManyByTextSearch<T>(string term, int take = -1, int skip = 0) where T : IMXEntity;        
     }
 }

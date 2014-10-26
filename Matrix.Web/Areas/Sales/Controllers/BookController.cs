@@ -5,7 +5,7 @@ using Matrix.DAL.CustomMongoRepositories;
 using Matrix.DAL.SearchBaseRepositories;
 using Matrix.Entities.MongoEntities;
 using Matrix.Entities.SearchDocuments;
-using Matrix.Models.ViewModels;
+using Matrix.Business.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +16,13 @@ namespace Matrix.Web.Areas.Sales.Controllers
 {
     public class BookController : Controller
     {
-        IBookRepository _mongoRepository;
+        IBookRepository _bookMongoRepository;
 
         IBookSearchRepository _bookSearchRepository;
 
-        public BookController(IBookRepository mongoRepository, IBookSearchRepository bookSearchRepository)
+        public BookController(IBookRepository bookMongoRepository, IBookSearchRepository bookSearchRepository)
         {
-            this._mongoRepository = mongoRepository;
+            this._bookMongoRepository = bookMongoRepository;
             this._bookSearchRepository = bookSearchRepository;            
         }
 
@@ -32,7 +32,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
             else ViewBag.IsUsingElasticSearch = false;
 
             //This is being used for checking if sample data is there. No need to do this in real scenarios.
-            var count = _mongoRepository.GetCount<Book>();
+            var count = _bookMongoRepository.GetCount();
 
             if (count < 1)
             {
@@ -66,7 +66,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
             {
                 MXTimer timing = new MXTimer();
 
-                results = _mongoRepository.Search(term);
+                results = _bookMongoRepository.Search(term);
 
                 ViewBag.QueryTime = timing.Finish();
             }
@@ -78,7 +78,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         {
             MXTimer timing = new MXTimer();
 
-            var model = _mongoRepository.GetBookViewModel();
+            var model = _bookMongoRepository.GetBookViewModel();
             
             ViewBag.QueryTime = timing.Finish();
 
@@ -90,7 +90,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         {
             if (ModelState.IsValid)
             {
-                _mongoRepository.CreateBook(model);
+                _bookMongoRepository.CreateBook(model);
 
                 return RedirectToAction("Index");
             }
@@ -105,7 +105,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         [HttpPost]
         public ActionResult AddSampleData()
         {
-            _mongoRepository.CreateSampleData();
+            _bookMongoRepository.CreateSampleData();
 
             return RedirectToAction("Index");
         }

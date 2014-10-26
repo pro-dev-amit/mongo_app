@@ -16,112 +16,88 @@ namespace Matrix.Core.SearchCore
     {
         #region "SearchDoc ops"
 
-        public virtual string Index<T>(T document, string index = "") where T : MXSearchDocument
+        public virtual string Index<T>(T document) where T : MXSearchDocument
         {
             document.IsActive = true;
 
             IIndexResponse response;
 
-            if (string.IsNullOrEmpty(index))
-                response = Client.Index<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create));
-            else
-                response = Client.Index<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(index));
+            response = Client.Index<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(indexName.Value));
 
             return response.Id;
         }
 
-        public virtual bool IndexAsync<T>(T document, string index = "") where T : MXSearchDocument
+        public virtual bool IndexAsync<T>(T document) where T : MXSearchDocument
         {
             document.IsActive = true;
 
             Task<IIndexResponse> response;
-
-            if (string.IsNullOrEmpty(index))
-                response = Client.IndexAsync<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create));
-            else
-                response = Client.IndexAsync<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(index));
+            
+            response = Client.IndexAsync<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(indexName.Value));
 
             return true;
         }
 
-        public virtual bool Index<T>(IList<T> documents, string index = null) where T : MXSearchDocument
+        public virtual bool Index<T>(IList<T> documents) where T : MXSearchDocument
         {
             foreach (var doc in documents) doc.IsActive = true;
                         
-            Client.IndexMany<T>(documents, index);
+            Client.IndexMany<T>(documents, indexName.Value);
 
             return true;
         }
 
-        public virtual bool IndexAsync<T>(IList<T> documents, string index = null) where T : MXSearchDocument
+        public virtual bool IndexAsync<T>(IList<T> documents) where T : MXSearchDocument
         {
             foreach (var doc in documents) doc.IsActive = true;
 
-            Client.IndexManyAsync<T>(documents, index);
+            Client.IndexManyAsync<T>(documents, indexName.Value);
 
             return true;
         }
 
-        public virtual bool BulkIndex<T>(IList<T> documents, string index = "") where T : MXSearchDocument
+        public virtual bool BulkIndex<T>(IList<T> documents) where T : MXSearchDocument
         {
             //first set the status for all docs to be active
             foreach (var doc in documents) doc.IsActive = true;
 
             var descriptor = new BulkDescriptor();
-
-            if (string.IsNullOrEmpty(index))
-            {
-                foreach (var doc in documents)
-                    descriptor.Index<T>(op => op.Document(doc));
-            }
-            else
-            {
-                foreach (var doc in documents)
-                    descriptor.Index<T>(op => op.Document(doc).Index(index));
-            }
+           
+            foreach (var doc in documents) descriptor.Index<T>(op => op.Document(doc).Index(indexName.Value));           
 
             var result = this.Client.Bulk(d => descriptor);
 
             return true;
         }
 
-        public virtual bool BulkIndexAsync<T>(IList<T> documents, string index = "") where T : MXSearchDocument
+        public virtual bool BulkIndexAsync<T>(IList<T> documents) where T : MXSearchDocument
         {
             //first set the status for all docs to be active
             foreach (var doc in documents) doc.IsActive = true;
 
             var descriptor = new BulkDescriptor();
-
-            if (string.IsNullOrEmpty(index))
-            {
-                foreach (var doc in documents)
-                    descriptor.Index<T>(op => op.Document(doc));
-            }
-            else
-            {
-                foreach (var doc in documents)
-                    descriptor.Index<T>(op => op.Document(doc).Index(index));
-            }
+            
+            foreach (var doc in documents) descriptor.Index<T>(op => op.Document(doc).Index(indexName.Value));
 
             var result = this.Client.BulkAsync(descriptor);
 
             return true;
         }
 
-        public virtual T GetOne<T>(string id, string index = null, string documentType = null) where T : MXSearchDocument
+        public virtual T GetOne<T>(string id, string documentType = null) where T : MXSearchDocument
         {
             T response;
 
-            response = Client.Source<T>(id, index, documentType);
+            response = Client.Source<T>(id, indexName.Value, documentType);
 
             return response;
         }
 
-        public virtual IList<T> GetMany<T>(IEnumerable<string> ids, string index = null, string documentType = null) where T : MXSearchDocument
+        public virtual IList<T> GetMany<T>(IEnumerable<string> ids, string documentType = null) where T : MXSearchDocument
         {
             IList<T> response;
 
-            response = Client.SourceMany<T>(ids, index, documentType).ToList();
+            response = Client.SourceMany<T>(ids, indexName.Value, documentType).ToList();
 
             return response;
         }
@@ -137,6 +113,7 @@ namespace Matrix.Core.SearchCore
         public virtual IList<T> GenericSearch<T>(string term, int skip = 0, int take = 30) where T : MXSearchDocument
         {
             var results = Client.Search<T>(s => s
+                .Index(indexName.Value)
                 .From(skip)
                 .Take(take)
                 .Query(q => q
@@ -148,12 +125,10 @@ namespace Matrix.Core.SearchCore
             return results.Documents.ToList();
         }
 
-        public virtual bool Update<T>(T document, string index = "") where T : MXSearchDocument
+        public virtual bool Update<T>(T document) where T : MXSearchDocument
         {
-            if (index == string.Empty)
-                Client.Update<T>(c => c.Doc(document));
-            else
-                Client.Update<T>(c => c.Doc(document).Index(index));
+            
+            Client.Update<T>(c => c.Doc(document).Index(indexName.Value));
 
             return true;
         }
