@@ -16,14 +16,20 @@ namespace Matrix.Core.MongoCore
     public interface IMXMongoRepository : IRepository
     {
         /// <summary>
+        /// Set this property to true, when any DML operation is to be called from the QueueProcessor.
+        /// </summary>
+        bool IsProcessedByQueue { get; set; }
+
+        MongoDatabase DbContext { get; }
+
+        /// <summary>
         /// Bulk update based on the Query and Update commands.         
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
-        /// <param name="update"></param>
-        /// <param name="bMaintainHistory"></param>
+        /// <param name="update"></param>        
         /// <returns></returns>
-        long BulkUpdate<T>(IMongoQuery query, IMongoUpdate update, bool bMaintainHistory = false) where T : IMXEntity;
+        long BulkUpdate<T>(IMongoQuery query, IMongoUpdate update) where T : IMXEntity;
 
         /// <summary>
         /// Bulk delete. Though IMongoQuery can be generalized using an adapter inteface, but it's fine for now.
@@ -43,6 +49,16 @@ namespace Matrix.Core.MongoCore
         /// <param name="take">"-1" here basically means take All</param>
         /// <param name="skip"></param>
         /// <returns></returns>
-        IList<T> GetManyByTextSearch<T>(string term, int take = -1, int skip = 0) where T : IMXEntity;        
+        IList<T> GetManyByTextSearch<T>(string term, int take = -1, int skip = 0) where T : IMXEntity;
+
+        IList<T> GetHistory<T>(string id, int take = -1, int skip = 0) where T : IMXEntity;
+
+        void InsertOneIntoHistory<T>(T entity) where T : IMXEntity;
+
+        void InsertManyIntoHistory<T>(IList<T> entities) where T : IMXEntity;
+
+        void SetDocumentDefaults(IMXEntity entity);
+
+        void SetDocumentDefaults<T>(IList<T> entities) where T : IMXEntity;
     }
 }

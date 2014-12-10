@@ -1,0 +1,67 @@
+﻿@model IList<Matrix.Core.ConfigurationsCore.FlagSetting>
+
+@{    
+    Layout = null;
+}
+@Html.Partial("_QueryTime")
+
+<h2>Matrix flag settings</h2>
+
+@Ajax.ActionLink("Add a new setting", "Create", null,
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading"
+            }, new { @class="nav" })<br /><br />
+
+
+@if (Model != null && Model.Count > 0)
+{
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Value</th>     
+            <th>Description</th>  
+            <th>IsPermanent</th>                     
+        </tr>
+
+        @foreach (var item in Model)
+    {                  
+        <tr>           
+            <td>
+                @Ajax.ActionLink(item.Name, "Edit", "FlagSetting", 
+            new { 
+                    id = item.Id,
+            },
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading"
+            })</td>            
+            <td>@item.FlagValue</td>
+            <td>@item.Description</td>
+            <td>@item.IsPermanent</td>
+            <td>
+                @Ajax.ActionLink("Delete", "Delete", "FlagSetting", new { id = item.Id },
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading",
+                Confirm = string.Format("Please note that you've got to remove this setting '{0}' your code first. Are you sure, you want to delete it now?", item.Name),
+            })</td>         
+        </tr>
+        }
+    
+    </table>
+}
+else
+{    
+    <br />
+    @Html.Label("NO DATA FOUND")
+}

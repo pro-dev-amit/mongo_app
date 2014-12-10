@@ -1,0 +1,74 @@
+﻿@model IList<Matrix.Entities.MongoEntities.Employee>
+
+@{
+    ViewBag.Title = "History";
+}
+
+@{    
+    Layout = null; 
+}
+
+@Html.Partial("_QueryTime")
+
+<h2>Employee History</h2>
+
+
+
+@Ajax.ActionLink("<< Back", "Index", "Employee",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace
+            })
+
+<br /><br />
+
+@if (Model != null && Model.Count > 0)
+{
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Programming Rating</th>
+            <th>Email</th>
+            <th>Salary</th>
+            <th>Gender</th>
+            <th>DateOfBirth</th>
+            <th>Skills</th>
+            <th>IsGraduate</th>
+            <th>Created Date</th>
+            <th>Created By</th>
+            <th>Version</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            var skills = string.Empty;
+
+            if (@item.Skills != null)
+            {
+                skills = string.Join(", ", @item.Skills.Select(c => c.DenormalizedName).ToArray());
+            }
+            
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.ProgrammingRating.DenormalizedName</td>
+                <td>@item.Email</td>
+                <td>@item.Salary</td>
+                <td>@item.Gender.DenormalizedName</td>
+                <td>@item.DateOfBirth</td>
+                <td>@skills </td>
+                <td>@item.IsGraduate</td>
+                <td>@item.CreatedDate</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.Version</td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{    
+    <br />
+    @Html.Label("NO DATA FOUND")
+}

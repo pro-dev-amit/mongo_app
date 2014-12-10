@@ -12,7 +12,7 @@ namespace Matrix.Core.FrameworkCore
 
         string Name { get; set; }
 
-        bool IsActive { get; set; }
+        long Version { get; set; }
 
         string CreatedBy { get; set; }
 

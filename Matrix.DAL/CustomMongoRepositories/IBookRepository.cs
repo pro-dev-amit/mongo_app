@@ -1,5 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 using Matrix.Entities.MongoEntities;
 using Matrix.Entities.SearchDocuments;
 using Matrix.Business.ViewModels;
@@ -18,15 +18,15 @@ namespace Matrix.DAL.CustomMongoRepositories
     //Inject this custom repository into your web controller.
     public interface IBookRepository
     {
-        void CreateSampleData();
+        bool IsAnyBookFound { get; }
+
+        string Insert(BookViewModel model);
+
+        void InsertSampleData();
 
         BookViewModel GetBookViewModel();
 
-        string CreateBook(BookViewModel model);
-
         //just mapping to the same SearchDoc object so that the same view could be reused.
-        IList<BookSearchDocument> Search(string term);
-
-        long GetCount();
+        IList<BookSearchDocument> Search(string term);                
     }
 }

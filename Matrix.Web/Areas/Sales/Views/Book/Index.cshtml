@@ -40,40 +40,15 @@ search button again with a search criteria.
     <b>Searh Term : </b>
     <input type="text" id="txtSearchTerm" />
     <input type="button" id="btnSearch" value="Search" />
+    <br />        
+    if (ViewBag.IsUsingElasticSearch) 
+    { <b style="color:green">Using ElasticSearch engine now</b> }
+    else{ <b style="color:green">Using Mongo free text search now</b> }
     <br />
-        if (ViewBag.IsUsingElasticSearch == true)
-        {
-            <span style="font-size: 14px; color: brown;">Term Query: Search by author name, category or title. Eg. for a search term could be "coelho", "Paulo Coelho", "alchemist", "java", 
-                    "rails", "java, rails" etc. A minimum of 3 charaters is required to search. Wild card searches on title are permitted, i.e. you can search for 
-                "rail" instead of "rails".
-            </span>
-        <br />
-        @Ajax.ActionLink("Switch To Mongo free text search", "Index", new { isUsingElasticSearch = false },
-            new AjaxOptions
-            {
-                UpdateTargetId = "divContent",
-                HttpMethod = "Get",
-                InsertionMode = InsertionMode.Replace,
-                LoadingElementId = "divLoading"
-            }, new { @class = "nav" })
-        }
-        else
-        {
-            <span style="font-size: 14px; color: brown;">Search by author name, category or title. Eg. for a search term could be "coelho", "Paulo Coelho", "alchemist", "java", 
-                    "rails", "java, rails" etc. Please note that MongoDB's new feature, free text search, is quite a basic one and really handy in simple term searches.
-                 Comparing it with a full blown search engine would not be fair.
-            </span>
-        <br />
-        @Ajax.ActionLink("Switch To ElasticSearch", "Index", new { isUsingElasticSearch = true },
-            new AjaxOptions
-            {
-                UpdateTargetId = "divContent",
-                HttpMethod = "Get",
-                InsertionMode = InsertionMode.Replace,
-                LoadingElementId = "divLoading"
-            }, new { @class = "nav" })
-        }
-
+    <span style="font-size: 14px; color: brown;">Term Query: Search by author name, category or title. Eg. for a search term could be "coelho", "Paulo Coelho", "alchemist", "java", 
+                    "rails", "java, rails" etc. A minimum of 3 charaters is required to search.
+    </span>
+    <br />
     }
 }
 
@@ -87,16 +62,13 @@ search button again with a search criteria.
 
         $("#btnSearch").click(function () {
             //alert("Search term: " + $("#txtSearchTerm").val().trim());
-            $("#divSearchResults").load("/Sales/Book/IndexSub/?term=" + escape($("#txtSearchTerm").val().trim())
-                + "&isUsingElasticSearch=" + '@ViewBag.IsUsingElasticSearch');
-
+            $("#divSearchResults").load("/Sales/Book/IndexSub/?term=" + escape($("#txtSearchTerm").val().trim()));
         });
 
         //Preventing the form to post back.
         $("#txtSearchTerm").keydown(function (event) {
             if (event.keyCode == 13) {
-                $("#divSearchResults").load("/Sales/Book/IndexSub/?term=" + escape($("#txtSearchTerm").val().trim())
-                    + "&isUsingElasticSearch=" + '@ViewBag.IsUsingElasticSearch');
+                $("#divSearchResults").load("/Sales/Book/IndexSub/?term=" + escape($("#txtSearchTerm").val().trim()));
                 event.preventDefault();
                 return false;
             }

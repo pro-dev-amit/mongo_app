@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Matrix.Core.MongoCore
 {
-    public class MXMongoEntityX<T>
+    public class MXMongoEntityX<T> where T : IMXEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
         [BsonElement]
-        public IMXEntity XDocument { get; set; }
+        public T XDocument { get; set; }
     }
 }

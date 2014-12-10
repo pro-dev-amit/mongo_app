@@ -10,7 +10,7 @@ using Matrix.Entities.MongoEntities;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver;
 using Matrix.Core.QueueCore;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 
 namespace Matrix.DAL.CustomMongoRepositories
 {
@@ -24,32 +24,67 @@ namespace Matrix.DAL.CustomMongoRepositories
         }
 
         //Storing client information is absolutely critical to me. Hence queuing it to RabbitMQ
-        public override string Insert<T>(T entity, bool isActive = true)
+        public override string Insert<T>(T entity)
         {
+            SetDocumentDefaults(entity);
+
             _queueClient.Bus.Publish<IMXEntity>(entity);
 
             return "queued";
         }
 
-        public override bool Update<T>(T entity, bool bMaintainHistory = false)
+        public override bool Update<T>(T entity)
         {
-            if (bMaintainHistory) base.InsertDocumentIntoHistory<Client>(entity.Id);
-
-            var collection = DbContext.GetCollection<Client>("Client");
+            var collection = DbContext.GetCollection<Client>(typeof(Client).Name);
 
             var input = entity as Client;
 
             var query = Query<Client>.EQ(e => e.Id, entity.Id);
 
-            var update = MongoDB.Driver.Builders.Update<Client>
-                .Set(c => c.Name, input.Name)
-                .Set(c => c.Address, input.Address)
-                .Set(c => c.ClientType, input.ClientType)
-                .Set(c => c.Code, input.Code)
-                .Set(c => c.PhoneNumber, input.PhoneNumber)
-                .Set(c => c.Website, input.Website);
-                
-            var result = collection.Update(query, update, WriteConcern.Acknowledged);
+            var doc = collection.FindOne(query);
+
+            WriteConcernResult result = null;
+
+            if (entity.Version == doc.Version)
+            {
+                //APPROACH - 1; looks clumsy though
+                //var update = MongoDB.Driver.Builders.Update<Client>                    
+                //    .Set(c => c.Name, input.Name)
+                //    .Set(c => c.Address, input.Address)
+                //    .Set(c => c.ClientType, input.ClientType)
+                //    .Set(c => c.Code, input.Code)
+                //    .Set(c => c.PhoneNumber, input.PhoneNumber)
+                //    .Set(c => c.Website, input.Website)
+                //    //set defaults explicitly as I'm not using the framework methods.                    
+                //    .Inc(c => c.Version, 1)
+                //    .Set(c => c.CreatedBy, CurrentUser)
+                //    .Set(c => c.CreatedDate, CurrentDate);
+
+                //result = collection.Update(query, update, WriteConcern.Acknowledged); //this updates the DB
+                                
+                //input = collection.FindOne(query);
+
+                //Task.Run(() =>
+                //    InsertOneIntoHistory<Client>(input)
+                //);
+
+                //APPROACH - 2; better one.
+                doc.Name = input.Name;
+                doc.Address = input.Address;
+                doc.ClientType = input.ClientType;
+                doc.Code = input.Code;
+                doc.PhoneNumber = input.PhoneNumber;
+                doc.Website = input.Website;
+                //set defaults explicitly as I'm not using the framework methods.                    
+                SetDocumentDefaults(doc);
+
+                result = collection.Save(doc, WriteConcern.Acknowledged);
+
+                //insert into History now
+                Task.Run(() =>
+                    InsertOneIntoHistory<Client>(doc)
+                );
+            }
 
             return result.Ok;
         }

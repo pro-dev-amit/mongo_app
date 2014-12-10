@@ -1,0 +1,60 @@
+﻿@model Matrix.Core.ConfigurationsCore.FlagSetting
+
+@{
+    Layout = "~/Views/Shared/_MXClientValidation.cshtml";
+}
+
+@Html.Partial("_QueryTime")
+
+<h2>Edit this setting</h2>
+
+@using (Ajax.BeginForm("Save", new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace
+            }))
+{   
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.Version)
+    
+    <table>
+        <tr>
+            <td>Setting Name:</td>
+            <td>@Html.TextBoxFor(x => x.Name, new { Style="background-color:lightgray", @readonly = "readonly" })
+            </td>            
+        </tr>
+
+        <tr>
+            <td>Setting Value:</td>
+            <td>@Html.EditorFor(x => x.FlagValue)
+            </td>            
+        </tr>
+
+        <tr>
+            <td>Description:</td>
+            <td>
+                @Html.TextAreaFor(model => model.Description)
+            </td>            
+        </tr>
+
+        <tr>
+            <td>Is Permanent:</td>
+            <td>@Html.EditorFor(x => x.IsPermanent)
+            </td>
+
+        </tr>
+    </table>
+        
+    <div>
+        <br />
+        <input id="btnSubmit" name="btnSubmit" value="Save" type="submit" />
+        @Ajax.ActionLink("<< Back", "Index", "FlagSetting",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace
+            })
+    </div>
+}

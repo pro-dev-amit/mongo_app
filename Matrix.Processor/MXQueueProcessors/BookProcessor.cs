@@ -1,6 +1,6 @@
 ﻿using Matrix.Core.FrameworkCore;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 using Matrix.DAL.SearchBaseRepositories;
 using Matrix.Entities.MongoEntities;
 using Matrix.Entities.QueueRequestResponseObjects;
@@ -84,7 +84,7 @@ namespace Matrix.Processor.MXQueueProcessors
 
             if (searchDocs != null)
             {
-                var result = _bookSearchRepository.BulkIndexAsync<BookSearchDocument>(searchDocs);
+                _bookSearchRepository.IndexAsync<BookSearchDocument>(searchDocs);
                 Console.WriteLine("Bulk of search docs being indexed asynchronously");
             }
 

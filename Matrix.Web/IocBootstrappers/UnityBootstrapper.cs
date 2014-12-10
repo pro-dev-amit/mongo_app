@@ -8,8 +8,9 @@ using Matrix.Core.QueueCore;
 using Matrix.DAL.CustomMongoRepositories;
 using Matrix.Core.SearchCore;
 using Matrix.DAL.SearchBaseRepositories;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 using System.Configuration;
+using Matrix.Core.ConfigurationsCore;
 
 namespace Matrix.Web
 {
@@ -41,14 +42,17 @@ namespace Matrix.Web
     {
         container.RegisterType<IMXBusinessMongoRepository, MXBusinessMongoRepository>();
         container.RegisterType<IMXProductCatalogMongoRepository, MXProductCatalogMongoRepository>();
+        container.RegisterType<IMXConfigurationMongoRepository, MXConfigurationMongoRepository>();        
 
         container.RegisterType<IMXBusinessMongoRepository, ClientRepository>("ClientRepository");
 
+        //-------------------------Named types(for my reference only, there are better ways though, look at the registrations abovea and below this block)------
         //inject specific implementation of IRepository Interface. A better approach though is to create a separate interface as it's done with Books and then inject.
         //I'll keep this for reference purpose though.
         container.RegisterType<ClientController>(
             new InjectionConstructor(new ResolvedParameter<IMXBusinessMongoRepository>("ClientRepository")
             ));
+        //-------------------------END - Named types----------------------------------------------------
 
         //register rabbitMQ client as a singleton
         container.RegisterType<IMXRabbitClient, MXRabbitClient>
@@ -58,6 +62,8 @@ namespace Matrix.Web
 
         //searh repos        
         container.RegisterType<IBookSearchRepository, BookSearchRepository>();
+        container.RegisterType<IDefaultConfigurationRepository, DefaultConfigurationRepository>();
+        container.RegisterType<IFlagSettingRepository, FlagSettingRepository>();
     }
   }
 }

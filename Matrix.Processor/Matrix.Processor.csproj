@@ -32,25 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EasyNetQ, Version=0.37.1.318, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EasyNetQ.0.37.1.318\lib\net40\EasyNetQ.dll</HintPath>
+    <Reference Include="EasyNetQ">
+      <HintPath>..\packages\EasyNetQ.0.39.2.334\lib\net40\EasyNetQ.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RabbitMQ.Client, Version=3.3.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\RabbitMQ.Client.3.3.2\lib\net30\RabbitMQ.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="ReadOnlyCollectionsInterfaces">
-      <HintPath>..\packages\ReadOnlyCollectionInterfaces.1.0.0\lib\NET45\ReadOnlyCollectionsInterfaces.dll</HintPath>
+    <Reference Include="RabbitMQ.Client">
+      <HintPath>..\packages\RabbitMQ.Client.3.4.0\lib\net35\RabbitMQ.Client.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable.Net40">
-      <HintPath>..\packages\System.Collections.Immutable.Net40.1.0.30.17\lib\net40\System.Collections.Immutable.Net40.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />

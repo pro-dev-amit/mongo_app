@@ -140,6 +140,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Sales\Controllers\BookController.cs" />
     <Compile Include="Areas\Sales\SalesAreaRegistration.cs" />
+    <Compile Include="Controllers\FlagSettingController.cs" />
     <Compile Include="IocBootstrappers\AutofacBootstrapper.cs" />
     <Compile Include="IocBootstrappers\UnityBootstrapper.cs" />
     <Compile Include="Areas\Sales\Controllers\ClientContactController.cs" />
@@ -247,7 +248,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Shared\_Employees.cshtml" />
+    <Content Include="Views\Employee\_Employees.cshtml" />
     <Content Include="Views\Shared\_MXClientValidation.cshtml" />
     <Content Include="Views\Shared\_QueryTime.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AutoComplete.cshtml" />
@@ -266,6 +267,10 @@
     <Content Include="Areas\Sales\Views\ClientContact\Index.cshtml" />
     <Content Include="Areas\Sales\Views\ClientContact\Create.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\FlagSetting\Index.cshtml" />
+    <Content Include="Views\FlagSetting\Create.cshtml" />
+    <Content Include="Views\FlagSetting\Edit.cshtml" />
+    <Content Include="Views\Employee\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

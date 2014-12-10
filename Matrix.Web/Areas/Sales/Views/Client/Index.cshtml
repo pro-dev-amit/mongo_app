@@ -40,7 +40,8 @@
             <th>Code</th>     
             <th>Type</th>         
             <th>Phone</th>            
-            <th>Website</th>            
+            <th>Website</th>
+            <th>Revision</th>
         </tr>
 
         @foreach (var item in Model)
@@ -62,6 +63,7 @@
             <td>@item.ClientType.DenormalizedName</td>
             <td>@item.PhoneNumber</td>
             <td>@item.Website</td>
+            <td>@item.Version</td>
         </tr>
         }
     

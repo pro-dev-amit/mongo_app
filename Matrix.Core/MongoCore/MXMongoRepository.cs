@@ -22,6 +22,8 @@ namespace Matrix.Core.FrameworkCore
     public abstract class MXMongoRepository : MXMongoContext, IMXMongoRepository
     {
         #region "Initialization and attributes"
+
+        protected readonly int takeCount = 256;
         
         public MXMongoRepository(){ }
 
@@ -30,10 +32,12 @@ namespace Matrix.Core.FrameworkCore
             get { return UserProfileHelper.CurrentUser; }
         }
 
-        public DateTime CreatedDate
+        public DateTime CurrentDate
         {
             get { return DateTime.Now; }
         }
+
+        public bool IsProcessedByQueue { get; set; }
 
         #endregion
 
@@ -41,17 +45,20 @@ namespace Matrix.Core.FrameworkCore
 
         #region "Insert"
 
-        public virtual string Insert<T>(T entity, bool isActive = true) where T : IMXEntity
+        public virtual string Insert<T>(T entity) where T : IMXEntity
         {
-            entity.IsActive = isActive;
-            entity.CreatedDate = CreatedDate;
-            entity.CreatedBy = CurrentUser;
+            if(!IsProcessedByQueue) SetDocumentDefaults(entity);
+
+            //Insert into history collection
+            Task.Run(() =>
+                    InsertOneIntoHistory<T>(entity)
+                );
 
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             //The default WriteConcern here is "Acknowledged". Go ahead and override this method in particular repositories if you need other ways of writing to
-            //a mongo collection.
-            collection.Insert(entity, WriteConcern.Acknowledged);
+            //a mongo collection.            
+            collection.Insert(entity, WriteConcern.Acknowledged);            
 
             return entity.Id;
         }
@@ -60,23 +67,20 @@ namespace Matrix.Core.FrameworkCore
         /// Batch insert
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
+        /// <param name="entities"></param>        
         /// <returns>List of IDs of the generated documents</returns>
-        public virtual IList<string> Insert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity
+        public virtual IList<string> Insert<T>(IList<T> entities) where T : IMXEntity
         {
-            var createdDate = CreatedDate;
-            var currentUser = CurrentUser;
+            if (!IsProcessedByQueue) SetDocumentDefaults(entities);
 
-            foreach (var entity in entities)
-            {
-                entity.IsActive = isActive;
-                entity.CreatedDate = createdDate;
-                entity.CreatedBy = currentUser;
-            }
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);            
 
-            var collection = DbContext.GetCollection<T>(typeof(T).Name);
-            
             var result = collection.InsertBatch(entities, WriteConcern.Acknowledged);
+
+            //Insert into history collection
+            Task.Run(() =>
+                    InsertManyIntoHistory<T>(entities)
+                );
                         
             return entities.Select(c => c.Id).ToList();
         }
@@ -85,19 +89,11 @@ namespace Matrix.Core.FrameworkCore
         /// Bulk insert, very useful in cases of data migration
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
+        /// <param name="entities"></param>        
         /// <returns>List of IDs of the generated documents</returns>
-        public virtual IList<string> BulkInsert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity
+        public virtual IList<string> BulkInsert<T>(IList<T> entities) where T : IMXEntity
         {
-            var createdDate = CreatedDate;
-            var currentUser = CurrentUser;
-
-            foreach (var entity in entities)
-            {
-                entity.IsActive = isActive;
-                entity.CreatedDate = createdDate;
-                entity.CreatedBy = currentUser;
-            }
+            if (!IsProcessedByQueue) SetDocumentDefaults(entities);
 
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
@@ -107,6 +103,11 @@ namespace Matrix.Core.FrameworkCore
                 bulk.Insert<T>(entity);
                         
             bulk.Execute(WriteConcern.Acknowledged);
+                        
+            //Insert into history collection
+            Task.Run(() =>
+                    InsertManyIntoHistory<T>(entities)
+                );
 
             return entities.Select(c => c.Id).ToList();
         }
@@ -137,111 +138,156 @@ namespace Matrix.Core.FrameworkCore
        /// <param name="take"></param>
        /// <param name="skip"></param>
        /// <returns></returns>
-        public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = -1, int skip = 0) where T : IMXEntity
-        {   
+        public virtual IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, int take = -1, int skip = 0) where T : IMXEntity
+        {
+            if (take == -1) take = takeCount;
+
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             if (predicate == null)
-                if(take == -1)
-                    return collection.AsQueryable().Where(c => c.IsActive == bIsActive).Skip(skip).ToList();
-                else
-                    return collection.AsQueryable().Where(c => c.IsActive == bIsActive).Skip(skip).Take(take).ToList();
-            else
-            {
-                predicate = predicate.And(p => p.IsActive == bIsActive);
-
-                if (take == -1)                
-                    return collection.AsQueryable().Where(predicate).Skip(skip).ToList();
-                else
-                    return collection.AsQueryable().Where(predicate).Skip(skip).Take(take).ToList();
-            }
+                return collection.AsQueryable().Skip(skip).Take(take).ToList();
+            else            
+                return collection.AsQueryable().Where(predicate).Skip(skip).Take(take).ToList();
+            
         }
 
         #endregion
 
         #region "Update"
         /// <summary>
-        /// Update while giving option for maintaining history
+        /// Update for complete object graph; when all fields are supplied. Else, do it the other way mentioned in "ClientRepository.Update() method"
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
+        /// <param name="entity"></param>        
         /// <returns></returns>
-        public virtual bool Update<T>(T entity, bool bMaintainHistory = false) where T : IMXEntity            
+        public virtual bool Update<T>(T entity) where T : IMXEntity            
         {
             var collectionName = typeof(T).Name;
 
             var collection = DbContext.GetCollection<T>(collectionName);
 
-            if (bMaintainHistory)
+            var currentVersion = collection.FindOneById(new ObjectId(entity.Id)).Version;
+
+            if (entity.Version == currentVersion) //handling concurrency; the request having the correct document version would win.
             {
-                var historyDoc = GetOne<T>(entity.Id);
+                if (!IsProcessedByQueue) SetDocumentDefaults(entity);
+
+                var result = collection.Save<T>(entity, WriteConcern.Acknowledged);
 
                 Task.Run(() =>
-                    InsertDocumentIntoHistory<T>(historyDoc)
+                    InsertOneIntoHistory<T>(entity)
                 );
+
+                return result.Ok;
             }
 
-            entity.CreatedDate = CreatedDate;
-            entity.CreatedBy = CurrentUser;
-
-            var t = collection.Save<T>(entity, WriteConcern.Acknowledged);
-
-            return t.Ok;            
+            return false;
         }
-
-        public virtual long BulkUpdate<T>(IMongoQuery query, IMongoUpdate update, bool bMaintainHistory = false) where T : IMXEntity
+                
+        /// <summary>
+        /// Bulk update based on MongoQuery and MongoUpdate(low level querying patterns).
+        /// To process by a queue please set IMongoQuery and IMongoUpdate queries yourself, as in all other Insert and update operations 
+        /// you set the particular Entity. Though I've never seen people updating in bulk in most business scenarios.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="update"></param>        
+        /// <returns></returns>
+        public virtual long BulkUpdate<T>(IMongoQuery query, IMongoUpdate update) where T : IMXEntity
         {
             var collectionName = typeof(T).Name;
 
             var collection = DbContext.GetCollection<T>(collectionName);
-
+                        
             var bulk = collection.InitializeOrderedBulkOperation();
 
-            if (bMaintainHistory)
+            var updateBuilder = (UpdateBuilder<T>)update;
+
+            if (!IsProcessedByQueue)
             {
-                var historyDocs = collection.FindAs<T>(query).ToList();
+                //set defaults
+                updateBuilder.Inc(c => c.Version, 1);
+                updateBuilder.Set(c => c.CreatedBy, CurrentUser);
+                updateBuilder.Set(c => c.CreatedDate, CurrentDate);
+            }
 
-                Task.Run(() =>
-                    InsertManyDocumentsIntoHistory<T>(historyDocs)
-                );
-            }       
+            bulk.Find(query).Update(updateBuilder);
 
-            bulk.Find(query).Update(update);
+            var modifiedCount = bulk.Execute(WriteConcern.Acknowledged).ModifiedCount;
 
-            return bulk.Execute(WriteConcern.Acknowledged).ModifiedCount;
-        }
+            var docs = collection.FindAs<T>(query).ToList();
+
+            //Insert into history
+            Task.Run(() =>
+                InsertManyIntoHistory<T>(docs)
+            );
+
+            return modifiedCount;
+        }        
 
         #endregion
 
         #region "Delete"
 
         /// <summary>
-        /// Delete by Id. This is a permanent delete.
+        /// Delete by Id. This is a permanent delete from the collection, but a document is inserted into history.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="id">Document Id</param>
-        /// <returns></returns>
+        /// <param name="id">Document Id</param>        
+        /// <returns></returns>        
         public virtual bool Delete<T>(string id) where T : IMXEntity
         {   
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
+            var doc = GetOne<T>(id);
+
+            if (!IsProcessedByQueue)
+            {
+                doc.Version = -1; // -1 means deleted here.
+                doc.CreatedBy = CurrentUser;
+                doc.CreatedDate = CurrentDate;
+            }
+
+            //Insert an entry into history first
+            Task.Run(() =>
+                    InsertOneIntoHistory<T>(doc)
+                );
+
             var query = Query<T>.EQ(e => e.Id, id);
+
             var result = collection.Remove(query);
 
             return result.Ok;
         }
 
         /// <summary>
-        /// Delete by Ids for a smaller batch size; 100 or so.
+        /// Delete by Ids for a smaller batch size; 500 or so.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="ids"></param>
+        /// <param name="ids"></param>        
         /// <returns></returns>
         public virtual bool Delete<T>(IList<string> ids) where T : IMXEntity
         {
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var query = Query<T>.In<string>(e => e.Id, ids);
+
+            var docs = collection.Find(query).ToList();
+
+            if (!IsProcessedByQueue)
+            {
+                foreach (var doc in docs)
+                {
+                    doc.Version = -1;
+                    doc.CreatedBy = CurrentUser;
+                    doc.CreatedDate = CurrentDate;
+                }
+            }
+
+            Task.Run(() =>
+                   InsertManyIntoHistory<T>(docs)
+               );
+
             var result = collection.Remove(query);
 
             return result.Ok;
@@ -252,20 +298,34 @@ namespace Matrix.Core.FrameworkCore
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query">MongoQuery: an example could be something like this; Query<T>.In<string>(e => e.Id, ids). 
-        /// To delete all documents, set Query as Query.Null</param>
+        /// To delete all documents, set Query as Query.Null</param>        
         /// <returns></returns>
         public virtual long BulkDelete<T>(IMongoQuery query) where T : IMXEntity
         {
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
 
             var bulk = collection.InitializeOrderedBulkOperation();
+
+            var docs = collection.FindAs<T>(query).ToList();
+
+            if (!IsProcessedByQueue)
+            {
+                foreach (var doc in docs)
+                {
+                    doc.Version = -1;
+                    doc.CreatedBy = CurrentUser;
+                    doc.CreatedDate = CurrentDate;
+                }
+            }
+
+            Task.Run(() =>
+                   InsertManyIntoHistory<T>(docs)
+               );
                         
             bulk.Find(query).Remove();
 
             return bulk.Execute(WriteConcern.Acknowledged).ModifiedCount;
         }
-
-        #endregion
 
         public virtual bool DropDatabase()
         {
@@ -284,6 +344,8 @@ namespace Matrix.Core.FrameworkCore
 
         #endregion
 
+        #endregion
+
         #region "Full text search"
 
         /// <summary>
@@ -299,7 +361,7 @@ namespace Matrix.Core.FrameworkCore
         {
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
                         
-            var query = Query.And(Query.Text(term), Query<T>.EQ(e => e.IsActive, true));
+            var query = Query.And(Query.Text(term));
 
             if(take == -1)
                 return collection.FindAs<T>(query).Skip(skip).ToList();
@@ -309,7 +371,7 @@ namespace Matrix.Core.FrameworkCore
 
         #endregion
 
-        #region "Other methods; AlterStatus() etc"
+        #region "Other methods; GetCount(), GetOptionSets()"
 
         public virtual string GetNameById<T>(string Id) where T : IMXEntity
         {
@@ -348,63 +410,25 @@ namespace Matrix.Core.FrameworkCore
             where TEntity : IMXEntity
             where TDenormalizedReference : IDenormalizedReference, new()
         {
+            if (take == -1) take = takeCount;
+
             var collection = DbContext.GetCollection<TEntity>(typeof(TEntity).Name);
 
             if (predicate == null)
-            {
-                if (take == -1)
-                    return collection.AsQueryable().Where(c => c.IsActive == true)
-                        .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
-                        .OrderBy(c => c.DenormalizedName)
-                        .Skip(skip)
-                        .ToList();
-                else
-                    return collection.AsQueryable().Where(c => c.IsActive == true)
+            {   
+                    return collection.AsQueryable()
                         .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
                         .OrderBy(c => c.DenormalizedName)
                         .Skip(skip).Take(take)                        
                         .ToList();
             }
             else
-            {
-                predicate = predicate.And(p => p.IsActive == true);
-
-                if (take == -1)
-                    return collection.AsQueryable().Where(predicate)
-                        .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
-                        .OrderBy(c => c.DenormalizedName).Skip(skip)
-                        .ToList();
-                else
+            {                
                     return collection.AsQueryable().Where(predicate)
                         .Select(c => new TDenormalizedReference { DenormalizedId = c.Id, DenormalizedName = c.Name })
                         .OrderBy(c => c.DenormalizedName).Skip(skip).Take(take)
                         .ToList();
             }
-        }
-
-        public virtual bool AlterStatus<T>(string id, bool status, bool bMaintainHistory = false) where T : IMXEntity
-        {
-            if (bMaintainHistory)
-            {
-                var historyDoc = GetOne<T>(id);
-
-                Task.Run(() =>
-                    InsertDocumentIntoHistory<T>(historyDoc)
-                );
-            }
-
-            var collection = DbContext.GetCollection<T>(typeof(T).Name);
-
-            var query = Query<T>.EQ(e => e.Id, id);
-                        
-            var update = MongoDB.Driver.Builders.Update<T>
-                .Set(c => c.IsActive, status)
-                .Set(c => c.CreatedDate, CreatedDate)
-                .Set(c => c.CreatedBy, CurrentUser);
-            
-            var result = collection.Update(query, update, WriteConcern.Acknowledged);
-
-            return result.Ok;
         }
 
         /// <summary>
@@ -418,57 +442,52 @@ namespace Matrix.Core.FrameworkCore
             var collection = DbContext.GetCollection<T>(typeof(T).Name);
                         
             if (predicate == null)
-                return collection.AsQueryable().Where(c => c.IsActive == true).Count();
+                return collection.AsQueryable().Count();
             else                            
                 return collection.AsQueryable().Where(predicate).Count();            
         }
 
         #endregion
 
-        #region "protected Helpers"
+        #region "History and defaults"
 
-        protected void InsertDocumentIntoHistory<T>(T entity) where T : IMXEntity
-        {            
-            MXMongoEntityX<T> tX = new MXMongoEntityX<T>
-            {
-                XDocument = entity,
-            };
-
-            var collectionX = DbContext.GetCollection<T>(typeof(T).Name + 'X');
-            collectionX.Insert(tX);
-        }
-
-        /// <summary>
-        /// Insert into history. For a synchronous update, call this before updating the document.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="id"></param>
-        protected void InsertDocumentIntoHistory<T>(string id) where T : IMXEntity
+        public IList<T> GetHistory<T>(string id, int take = -1, int skip = 0) where T : IMXEntity
         {
-            var entity = GetOne<T>(id);
+            if (take == -1) take = takeCount;
 
-            MXMongoEntityX<T> tX = new MXMongoEntityX<T>
+            var collectionX = DbContext.GetCollection<MXMongoEntityX<T>>(typeof(T).Name + 'X');
+
+            return collectionX.AsQueryable()
+                .Where(c => c.XDocument.Id == id)
+                .OrderByDescending(c => c.XDocument.Version)
+                .Skip(skip).Take(take)
+                .Select(c => c.XDocument).ToList();
+        }
+
+        public void InsertOneIntoHistory<T>(T entity) where T : IMXEntity
+        {            
+            MXMongoEntityX<T> xDoc = new MXMongoEntityX<T>
             {
                 XDocument = entity,
             };
 
-            var collectionX = DbContext.GetCollection<T>(typeof(T).Name + 'X');
-            collectionX.Insert(tX);
+            var collectionX = DbContext.GetCollection(typeof(T).Name + 'X');
+            collectionX.Insert(xDoc);
         }
 
-        protected void InsertManyDocumentsIntoHistory<T>(IList<T> entities) where T : IMXEntity
+        public void InsertManyIntoHistory<T>(IList<T> entities) where T : IMXEntity
         {
             List<MXMongoEntityX<T>> xDocs = new List<MXMongoEntityX<T>>();
 
             foreach (var doc in entities)
             {
-                MXMongoEntityX<T> xDoc = new MXMongoEntityX<T> 
+                xDocs.Add(new MXMongoEntityX<T>
                 {
                     XDocument = doc
-                };
+                });
             }
 
-            var collectionX = DbContext.GetCollection<T>(typeof(T).Name + 'X');
+            var collectionX = DbContext.GetCollection(typeof(T).Name + 'X');
 
             var bulk = collectionX.InitializeUnorderedBulkOperation();
 
@@ -476,6 +495,23 @@ namespace Matrix.Core.FrameworkCore
                 bulk.Insert(doc);
 
             bulk.Execute(WriteConcern.Acknowledged);
+        }
+
+        public void SetDocumentDefaults(IMXEntity entity)
+        {
+            entity.Version = entity.Version + 1;
+            entity.CreatedBy = CurrentUser;
+            entity.CreatedDate = CurrentDate;
+        }
+
+        public void SetDocumentDefaults<T>(IList<T> entities) where T : IMXEntity
+        {
+            foreach (var entity in entities)
+            {
+                entity.Version = entity.Version + 1;
+                entity.CreatedBy = CurrentUser;
+                entity.CreatedDate = CurrentDate;
+            }
         }
 
         #endregion

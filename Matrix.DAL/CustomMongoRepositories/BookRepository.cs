@@ -16,121 +16,88 @@ using Matrix.DAL.SearchBaseRepositories;
 using Matrix.DAL.CustomMongoRepositories;
 using Matrix.Entities.QueueRequestResponseObjects;
 using Matrix.Business.ViewModels;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
+using Matrix.Core.ConfigurationsCore;
 
 namespace Matrix.DAL.CustomMongoRepositories
 {
-    public class BookRepository : MXProductCatalogMongoRepository, IBookRepository
+    public class BookRepository : IBookRepository
     {
         IMXRabbitClient _queueClient;
-        
-        public BookRepository(IMXRabbitClient queueClient)
+        IMXProductCatalogMongoRepository _productCatalogMongoRepository;
+        IBookSearchRepository _bookSearchRepository;
+
+        public BookRepository(IMXRabbitClient queueClient, IMXProductCatalogMongoRepository productCatalogMongoRepository, IBookSearchRepository bookSearchRepository)
         {
-            _queueClient = queueClient;            
+            _queueClient = queueClient;
+            _productCatalogMongoRepository = productCatalogMongoRepository;
+            _bookSearchRepository = bookSearchRepository;
         }
 
-        //Storing book information and then flowing it to search engine is absolutely critical to me. Hence queuing this to RabbitMQ
-        public override string Insert<T>(T entity, bool isActive = true)
-        {
-            var mongoEntity = entity as Book;
-
-            //getting the mongoEntityID first, then queue to Search engine. RPC based queuing
-            var task = _queueClient.Bus.RequestAsync<IMXEntity, BookQueueResponse>(mongoEntity);
-
-            task.ContinueWith(response => {
-                var searchDoc = new BookSearchDocument
-                {
-                    Id = response.Result.Id,
-                    Title = mongoEntity.Name,
-                    Author = new MXSearchDenormalizedRefrence { DenormalizedId = mongoEntity.Author.DenormalizedId, DenormalizedName = mongoEntity.Author.DenormalizedName },
-                    Category = new MXSearchDenormalizedRefrence { DenormalizedId = mongoEntity.Category.DenormalizedId, DenormalizedName = mongoEntity.Category.DenormalizedName },
-                    AvaliableCopies = mongoEntity.AvaliableCopies,
-                };
-
-                _queueClient.Bus.Publish<ISearchDocument>(searchDoc);
-            });
-
-            return "queued";
-        }
-
-        public override IList<string> Insert<T>(IList<T> entities, bool isActive = true)
-        {
-            var mongoEntities = (IList<Book>)entities;
-
-            var searchDocs = new List<BookSearchDocument>();
-
-            var task = _queueClient.Bus.RequestAsync<IList<Book>, BooksQueueResponse>(mongoEntities);
-            task.ContinueWith(response =>
-            {
-                foreach (var entity in response.Result.Books)
-                {
-                    var searchDoc = new BookSearchDocument
-                    {
-                        Id = entity.Id,
-                        Title = entity.Name,
-                        Author = new MXSearchDenormalizedRefrence { DenormalizedId = entity.Author.DenormalizedId, DenormalizedName = entity.Author.DenormalizedName },
-                        Category = new MXSearchDenormalizedRefrence { DenormalizedId = entity.Category.DenormalizedId, DenormalizedName = entity.Category.DenormalizedName },
-                        AvaliableCopies = entity.AvaliableCopies,
-                    };
-
-                    searchDocs.Add(searchDoc);
-                }
-                                
-                _queueClient.Bus.Publish<IList<BookSearchDocument>>(searchDocs);
-            });
-
-            return entities.Select(c => c.Id).ToList();
+        public bool IsAnyBookFound 
+        { 
+            get 
+            { 
+                return isAnyBookFound(); 
+            } 
         }
 
         public BookViewModel GetBookViewModel()
         {
             return new BookViewModel
             {
-                LstAuthor = base.GetOptionSet<Author, DenormalizedReference>(),
-                LstCategory = base.GetOptionSet<BookCategory, DenormalizedReference>(),
+                LstAuthor = _productCatalogMongoRepository.GetOptionSet<Author, DenormalizedReference>(),
+                LstCategory = _productCatalogMongoRepository.GetOptionSet<BookCategory, DenormalizedReference>(),
             };
         }
 
-        public string CreateBook(BookViewModel model)
+        public string Insert(BookViewModel model)
         {
-            model.Book.Author = base.GetOptionById<Author, DenormalizedReference>(model.Book.Author.DenormalizedId);
-            model.Book.Category = base.GetOptionById<BookCategory, DenormalizedReference>(model.Book.Category.DenormalizedId);
+            model.Book.Author = _productCatalogMongoRepository.GetOptionById<Author, DenormalizedReference>(model.Book.Author.DenormalizedId);
+            model.Book.Category = _productCatalogMongoRepository.GetOptionById<BookCategory, DenormalizedReference>(model.Book.Category.DenormalizedId);
 
             //call the overriden Insert method as it uses queuing first into MongoDB and then to ElasticSearch
-            return this.Insert<Book>(model.Book);
+            return this.QueueInsert(model.Book);
         }
 
         //just mapping to the same SearchDoc objects so that the same view could be reused.
         public IList<BookSearchDocument> Search(string term)
         {
-            IList<Book> books;
-
-            if (term == string.Empty)
-                books = base.GetMany<Book>(take: 30);
-            else
-                books = base.GetManyByTextSearch<Book>(term, 30);
-
             var results = new List<BookSearchDocument>();
 
-            foreach (var book in books)
+            if (MXFlagSettingHelper.Get<bool>("bUseElasticSearchEngine"))
             {
-                results.Add(new BookSearchDocument
+                results = _bookSearchRepository.Search<BookSearchDocument>(term, take: 30).ToList();
+            }
+            else
+            {
+                IList<Book> books;
+
+                if (term == string.Empty)
+                    books = _productCatalogMongoRepository.GetMany<Book>(take: 20);
+                else
+                    books = _productCatalogMongoRepository.GetManyByTextSearch<Book>(term, 20);
+                
+                foreach (var book in books)
                 {
-                    Id = book.Id,
-                    Title = book.Name,
-                    Author = new MXSearchDenormalizedRefrence { DenormalizedId = book.Author.DenormalizedId, DenormalizedName = book.Author.DenormalizedName },
-                    Category = new MXSearchDenormalizedRefrence { DenormalizedId = book.Category.DenormalizedId, DenormalizedName = book.Category.DenormalizedName },
-                    AvaliableCopies = book.AvaliableCopies,
-                });
+                    results.Add(new BookSearchDocument
+                    {
+                        Id = book.Id,
+                        Title = book.Name,
+                        Author = new MXSearchDenormalizedRefrence { DenormalizedId = book.Author.DenormalizedId, DenormalizedName = book.Author.DenormalizedName },
+                        Category = new MXSearchDenormalizedRefrence { DenormalizedId = book.Category.DenormalizedId, DenormalizedName = book.Category.DenormalizedName },
+                        AvaliableCopies = book.AvaliableCopies,
+                    });
+                }
             }
 
             return results;
         }
 
-        public void CreateSampleData()
+        public void InsertSampleData()
         {
             //extra code for checking if sample data is already there. No need for this in real applications.
-            var countDocs = base.GetCount<Book>();
+            var countDocs = _productCatalogMongoRepository.GetCount<Book>();
 
             if (countDocs < 1)
             {
@@ -138,8 +105,8 @@ namespace Matrix.DAL.CustomMongoRepositories
                 //let's insert some meaningful data first
                 books.AddRange(getSampleBooks());
 
-                var authors = base.GetOptionSet<Author, DenormalizedReference>(); ;
-                var categories = base.GetOptionSet<BookCategory, DenormalizedReference>();
+                var authors = _productCatalogMongoRepository.GetOptionSet<Author, DenormalizedReference>(); ;
+                var categories = _productCatalogMongoRepository.GetOptionSet<BookCategory, DenormalizedReference>();
 
                 //now let's add some 20K more documents
                 var randomValue = new Random();
@@ -158,22 +125,24 @@ namespace Matrix.DAL.CustomMongoRepositories
                     books.Add(book);
                 }
 
-                this.Insert<Book>(books);
+                this.QueueInsert(books);
             }
-        }
-
-        public long GetCount()
-        {
-            return base.GetCount<Book>();
         }
 
         #region "Private helpers"
 
+        bool isAnyBookFound()
+        {
+            var count = _productCatalogMongoRepository.GetCount<Book>();
+
+            return count > 0 ? true : false;
+        }
+
         List<Book> getSampleBooks()
         {
-            var authors = base.GetOptionSet<Author, DenormalizedReference>();
+            var authors = _productCatalogMongoRepository.GetOptionSet<Author, DenormalizedReference>();
 
-            var bookCategories = base.GetOptionSet<BookCategory, DenormalizedReference>();
+            var bookCategories = _productCatalogMongoRepository.GetOptionSet<BookCategory, DenormalizedReference>();
 
             List<Book> lstBook = new List<Book>{
                 new Book
@@ -226,11 +195,11 @@ namespace Matrix.DAL.CustomMongoRepositories
                 },
                 new Book
                 {
-                    Name = "Gaining Ground In .Net",
+                    Name = "Gaining Ground In Pythin",
                     Description = "",
                     AvaliableCopies = 10,
                     Author = authors.FirstOrDefault(c => c.DenormalizedName == "Amit Kumar"),
-                    Category = bookCategories.FirstOrDefault(c => c.DenormalizedName == ".Net"),
+                    Category = bookCategories.FirstOrDefault(c => c.DenormalizedName == "Python"),
                 },
                 new Book
                 {
@@ -269,6 +238,64 @@ namespace Matrix.DAL.CustomMongoRepositories
 
             return lstBook;
         }
+
+        #region "Queued ops"
+
+        //Storing book information and then flowing it to search engine is absolutely critical to me. Hence queuing this to RabbitMQ
+        string QueueInsert(Book entity)
+        {
+            _productCatalogMongoRepository.SetDocumentDefaults(entity);
+
+            //getting the mongoEntityID first, then queue to Search engine. RPC based queuing
+            var task = _queueClient.Bus.RequestAsync<IMXEntity, BookQueueResponse>(entity);
+
+            task.ContinueWith(response =>
+            {
+                var searchDoc = new BookSearchDocument
+                {
+                    Id = response.Result.Id,
+                    Title = entity.Name,
+                    Author = new MXSearchDenormalizedRefrence { DenormalizedId = entity.Author.DenormalizedId, DenormalizedName = entity.Author.DenormalizedName },
+                    Category = new MXSearchDenormalizedRefrence { DenormalizedId = entity.Category.DenormalizedId, DenormalizedName = entity.Category.DenormalizedName },
+                    AvaliableCopies = entity.AvaliableCopies,
+                };
+
+                _queueClient.Bus.Publish<ISearchDocument>(searchDoc);
+            });
+
+            return "queued";
+        }
+
+        IList<string> QueueInsert(IList<Book> entities)
+        {
+            _productCatalogMongoRepository.SetDocumentDefaults<Book>(entities);
+
+            var searchDocs = new List<BookSearchDocument>();
+
+            var task = _queueClient.Bus.RequestAsync<IList<Book>, BooksQueueResponse>(entities);
+            task.ContinueWith(response =>
+            {
+                foreach (var entity in response.Result.Books)
+                {
+                    var searchDoc = new BookSearchDocument
+                    {
+                        Id = entity.Id,
+                        Title = entity.Name,
+                        Author = new MXSearchDenormalizedRefrence { DenormalizedId = entity.Author.DenormalizedId, DenormalizedName = entity.Author.DenormalizedName },
+                        Category = new MXSearchDenormalizedRefrence { DenormalizedId = entity.Category.DenormalizedId, DenormalizedName = entity.Category.DenormalizedName },
+                        AvaliableCopies = entity.AvaliableCopies,
+                    };
+
+                    searchDocs.Add(searchDoc);
+                }
+
+                _queueClient.Bus.Publish<IList<BookSearchDocument>>(searchDocs);
+            });
+
+            return entities.Select(c => c.Id).ToList();
+        }
+
+        #endregion
 
         #endregion
     }//End of Repository

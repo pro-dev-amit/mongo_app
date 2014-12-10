@@ -12,7 +12,7 @@ namespace Matrix.Core.FrameworkCore
     /// </summary>
     public interface IRepository
     {
-        string Insert<T>(T entity, bool isActive = true) where T : IMXEntity;
+        string Insert<T>(T entity) where T : IMXEntity;
 
         /// <summary>
         /// Batch Insert; suitable for a batch of 100 or less docs
@@ -20,7 +20,7 @@ namespace Matrix.Core.FrameworkCore
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
         /// <returns>List of IDs of the generated documents</returns>
-        IList<string> Insert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity;
+        IList<string> Insert<T>(IList<T> entities) where T : IMXEntity;
 
         /// <summary>
         /// Bulk insert
@@ -28,7 +28,7 @@ namespace Matrix.Core.FrameworkCore
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
         /// <returns>List of IDs of the generated documents</returns>
-        IList<string> BulkInsert<T>(IList<T> entities, bool isActive = true) where T : IMXEntity;
+        IList<string> BulkInsert<T>(IList<T> entities) where T : IMXEntity;
 
         /// <summary>
         /// Get one document by Id
@@ -42,14 +42,20 @@ namespace Matrix.Core.FrameworkCore
         /// Get many documents
         /// </summary>
         /// <typeparam name="T">type</typeparam>
-        /// <param name="predicate">predicate</param>
-        /// <param name="bIsActive"></param>
-        /// <param name="take">"-1" here basically means take All documents</param>
+        /// <param name="predicate">predicate</param>        
+        /// <param name="take">"-1" here would actually default ot 256 records</param>
         /// <param name="skip">skip count</param>
         /// <returns>IList<T></returns>
-        IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, bool bIsActive = true, int take = -1, int skip = 0) where T : IMXEntity;
+        IList<T> GetMany<T>(Expression<Func<T, bool>> predicate = null, int take = -1, int skip = 0) where T : IMXEntity;
 
-        bool Update<T>(T entity, bool bMaintainHistory = false) where T : IMXEntity;
+        /// <summary>
+        /// Updating a document. Please note that the version number is mandatory to be passed.
+        /// Check the implementation in MXMongoRepository.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        bool Update<T>(T entity) where T : IMXEntity;
                 
         /// <summary>
         /// Delete by Id
@@ -68,15 +74,13 @@ namespace Matrix.Core.FrameworkCore
         bool Delete<T>(IList<string> ids) where T : IMXEntity;
                 
         //other important ones
-        string GetNameById<T>(string Id) where T : IMXEntity;
-
-        bool AlterStatus<T>(string id, bool statusValue, bool bMaintainHistory = false) where T : IMXEntity;
+        string GetNameById<T>(string Id) where T : IMXEntity;        
 
         /// <summary>
         /// Returns the count of records in a collection
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="predicate">Optional value is null. If predicate is null, it counts only the active records</param>
+        /// <param name="predicate">Optional value is null.</param>
         /// <returns></returns>
         long GetCount<T>(Expression<Func<T, bool>> predicate = null) where T : IMXEntity;
 
@@ -97,7 +101,7 @@ namespace Matrix.Core.FrameworkCore
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TDenormalizedReference"></typeparam>
         /// <param name="predicate"></param>
-        /// <param name="take"></param>
+        /// <param name="take">"-1" here would actually default ot 256 records</param>
         /// <returns></returns>
         IList<TDenormalizedReference> GetOptionSet<TEntity, TDenormalizedReference>(Expression<Func<TEntity, bool>> predicate = null, int take = -1, int skip = 0)
             where TEntity : IMXEntity

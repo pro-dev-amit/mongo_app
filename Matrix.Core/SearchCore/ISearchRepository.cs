@@ -9,13 +9,14 @@ namespace Matrix.Core.SearchCore
 {
     public interface ISearchRepository
     {
+        #region "index"
         /// <summary>
         /// Index the searchDoc synchronously
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="document"></param>        
         /// <returns></returns>
-        string Index<T>(T document) where T : MXSearchDocument;
+        bool Index<T>(T document) where T : MXSearchDocument;
 
         /// <summary>
         /// Index the searchDoc asynchronously
@@ -23,7 +24,7 @@ namespace Matrix.Core.SearchCore
         /// <typeparam name="T"></typeparam>
         /// <param name="document"></param>        
         /// <returns></returns>
-        bool IndexAsync<T>(T document) where T : MXSearchDocument;
+        void IndexAsync<T>(T document) where T : MXSearchDocument;
 
         /// <summary>
         /// Batch Indexing the searchDocs synchronously; a smaller count is ideal such as 100 or so. For much larger count use Bulk Indexing methods.
@@ -39,24 +40,11 @@ namespace Matrix.Core.SearchCore
         /// <typeparam name="T"></typeparam>
         /// <param name="documents"></param>        
         /// <returns></returns>
-        bool IndexAsync<T>(IList<T> documents) where T : MXSearchDocument;
+        void IndexAsync<T>(IList<T> documents) where T : MXSearchDocument;
 
-        /// <summary>
-        /// Bulk Index the searchDocs synchronously
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="document"></param>        
-        /// <returns></returns>
-        bool BulkIndex<T>(IList<T> documents) where T : MXSearchDocument;
+        #endregion
 
-        /// <summary>
-        /// Bulk Indexing the searchDocs asynchronously
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="documents"></param>        
-        /// <returns></returns>
-        bool BulkIndexAsync<T>(IList<T> documents) where T : MXSearchDocument;
-        
+        #region "Get"
         /// <summary>
         /// Load a searchDoc by Id
         /// </summary>
@@ -83,7 +71,11 @@ namespace Matrix.Core.SearchCore
         /// <param name="skip">-1 here means take all</param>
         /// <param name="take"></param>
         /// <returns></returns>
-        IList<T> GenericSearch<T>(string term, int skip = 0, int take = -1) where T : MXSearchDocument;
+        IList<T> Search<T>(string term, int skip = 0, int take = -1) where T : MXSearchDocument;
+
+        #endregion
+
+        #region "Update"
 
         /// <summary>
         /// Update a searchDoc
@@ -94,8 +86,26 @@ namespace Matrix.Core.SearchCore
         /// <returns></returns>
         bool Update<T>(T document) where T : MXSearchDocument;
 
+        #endregion
+
+        #region "Delete"
+
+        bool Delete<T>(string id) where T : MXSearchDocument;
+
+        void DeleteAsync<T>(string id) where T : MXSearchDocument;
+
+        bool Delete<T>(IList<string> ids) where T : MXSearchDocument, new();
+
+        void DeleteAsync<T>(IList<string> ids) where T : MXSearchDocument, new();
+
+        #endregion
+
+        #region "Index Level ops"
+
         bool CreateIndex(string index, IndexSettings settings);
 
         bool DeleteIndex(string index = "");
+
+        #endregion
     }
 }

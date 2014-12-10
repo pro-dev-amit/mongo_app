@@ -1,5 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 using Matrix.Entities.MongoEntities;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace Matrix.Processor.MXQueueProcessors
         public ClientProcessor(IMXBusinessMongoRepository bRepository)
         {
             _bRepository = bRepository;
+            _bRepository.IsProcessedByQueue = true;
         }
 
         public void ProcessClient(IMXEntity message)

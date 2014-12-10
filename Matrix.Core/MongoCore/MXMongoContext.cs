@@ -11,7 +11,7 @@ using MongoDB.Bson.Serialization;
 
 namespace Matrix.Core.MongoCore
 {
-    public class MXMongoContext : IMXMongoContext
+    public class MXMongoContext
     {
         protected Lazy<string> connectionUrl, databaseName;
 

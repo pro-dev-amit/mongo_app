@@ -1,4 +1,4 @@
-The mongoDB version used here is 2.6.5(Windows 64 bit).
+The mongoDB version used here is dev version 2.8 RC2(Windows 64 bit).
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -29,7 +29,7 @@ C:\mongodb_server\bin\mongod.exe --remove
 6) Also a good GUI tool for MongoDB is robomongo, it's opensource and free of cost; http://robomongo.org
 
 -----------------------------------------------------------------------------------------------------------------
-For RabbitMQ installation(version is 3.4.0):
+For RabbitMQ installation(version is 3.4.2):
 
 	1) First, install erlang compiler; http://erlang.org
 
@@ -41,7 +41,7 @@ For RabbitMQ installation(version is 3.4.0):
 	4) Access the admin console at http://localhost:15672 with username and password both as "guest".
 
 -----------------------------------------------------------------------------------------------------------------
-For ElasticSearch installation(latest version 1.3.4) - 
+For ElasticSearch installation(latest version 1.4.1) - 
 	
 	1) ElasticSearch requires java runtime, so install latest JDK/JRE from Oracle website; http://www.oracle.com/technetwork/java/javase/downloads/index.html
 
@@ -58,7 +58,12 @@ net start elasticsearch-service-x64
 	
 	5) ElasticSearch server would be installed as a windows service. Confirm the set up by going to "http://localhost:9200".
 	
-	6) A good admin/monitoring tool for ElasticSearch is ElasticHQ; http://www.elastichq.org, also you can use sense plugin in Chrome; a developer console for ElasticSearch.
+	6) A good admin/monitoring tool for ElasticSearch is ElasticSearch-Head. Set it up as a plugin like this - 
+	
+C:\>elasticsearch_server\bin\plugin -install mobz/elasticsearch-head
+
+And navigate to it at "http://localhost:9200/_plugin/head/"
+
 	7) To remove ElasticSearch service; run these commands
 net stop elasticsearch-service-x64
 sc delete elasticsearch-service-x64	

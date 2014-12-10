@@ -17,7 +17,8 @@ using Matrix.Core.QueueCore;
 using Matrix.DAL.CustomMongoRepositories;
 using Matrix.DAL.SearchBaseRepositories;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
+using Matrix.Core.ConfigurationsCore;
 
 
 namespace Matrix.Web
@@ -36,27 +37,30 @@ namespace Matrix.Web
             //Register MVC controllers first
             builder.RegisterControllers(Assembly.GetExecutingAssembly());
 
-            //then the types
+            //then the base repo types
             builder.RegisterType<MXBusinessMongoRepository>().As<IMXBusinessMongoRepository>();
             builder.RegisterType<MXProductCatalogMongoRepository>().As<IMXProductCatalogMongoRepository>();
+            builder.RegisterType<MXConfigurationMongoRepository>().As<IMXConfigurationMongoRepository>();
 
-            //Named types
+
+            //-------------------------Named types(for my reference only, there are better ways though, look at the registrations abovea and below this block)---------
             builder.RegisterType<ClientRepository>().Named<IMXBusinessMongoRepository>("ClientRepository");
-
-
             //inject specific implementation of IRepository Interface. A better approach though is to create a separate interface as it's done with Books and then inject.
             //I'll keep this for reference purpose though.
             builder.Register(c => new ClientController(c.ResolveNamed<IMXBusinessMongoRepository>("ClientRepository")));
+            //-------------------------END - Named types----------------------------------------------------
 
             //register rabbitMQ client as a singleton
             builder.RegisterType<MXRabbitClient>().As<IMXRabbitClient>()
                 .WithParameter(new NamedParameter("connectionString", ConfigurationManager.AppSettings["rabbitMQConnectionString"]))
                 .SingleInstance();
-            
+                        
+            //Custom repos            
             builder.RegisterType<BookRepository>().As<IBookRepository>();
-
-            //searh repos            
             builder.RegisterType<BookSearchRepository>().As<IBookSearchRepository>();
+            builder.RegisterType<DefaultConfigurationRepository>().As<IDefaultConfigurationRepository>();
+            builder.RegisterType<FlagSettingRepository>().As<IFlagSettingRepository>();
+
 
             
             var container = builder.Build();

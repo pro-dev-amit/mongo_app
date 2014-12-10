@@ -1,5 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 using Matrix.Core.QueueCore;
 using Matrix.Core.SearchCore;
 using Matrix.DAL.SearchBaseRepositories;

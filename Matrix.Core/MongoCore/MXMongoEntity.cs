@@ -23,13 +23,13 @@ namespace Matrix.Core.MongoCore
         [Required]
         public virtual string Name { get; set; }
 
-        [BsonElement("iA")]
-        public virtual bool IsActive { get; set; }
+        [BsonElement("v")]
+        public virtual long Version { get; set; }
 
-        [BsonElement("cBy")]
+        [BsonElement("cB")]
         public virtual string CreatedBy { get; set; }
 
-        [BsonElement("cDt")]
+        [BsonElement("cD")]
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public virtual DateTime CreatedDate { get; set; }
     }

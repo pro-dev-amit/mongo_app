@@ -1,1 +1,1 @@
-"C:\mongodb_server\bin\mongod.exe"
+"C:\mongodb_server\bin\mongod.exe --storageEngine --wiredTiger"

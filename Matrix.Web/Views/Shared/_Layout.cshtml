@@ -52,6 +52,17 @@
                 LoadingElementId = "divLoading",
             })
                 <br />
+                <br />
+                <br />
+
+            @Ajax.ActionLink("Flag Settings", "Index", "FlagSetting",
+            new AjaxOptions
+            {
+                UpdateTargetId = "divContent",
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                LoadingElementId = "divLoading",
+            })
                 <div id="divLoading" style="display: none;">
                         @*@Html.JQueryUI().Progressbar(null)*@
                         <img src="~/Content/themes/base/images/wait.gif" />

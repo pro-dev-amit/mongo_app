@@ -9,13 +9,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 
 namespace Matrix.Web.Controllers
 {
     public class EmployeeController : Controller
     {
-        const int takeCount = 40;
+        readonly int takeCount = 40;
 
         IMXBusinessMongoRepository _repository;
 
@@ -53,6 +53,8 @@ namespace Matrix.Web.Controllers
 
         private IList<Employee> GetPaginatedItems(int page = 1)
         {
+            MXMongoEntityX<Employee> t = new MXMongoEntityX<Employee>();            
+
             var skipRecords = page * takeCount;
 
             MXTimer timing = new MXTimer();
@@ -150,17 +152,27 @@ namespace Matrix.Web.Controllers
 
             model.Employee.Skills = model.LstSkill.Where(c => c.IsSelected == true).Select(c => c.DenormalizedReference).ToList();
 
-            _repository.Update<Employee>(model.Employee, true);
+            _repository.Update<Employee>(model.Employee);
+
+            return RedirectToAction("Index");
+        }
+        
+        public ActionResult Delete(string id) //id - employeeID
+        {
+            _repository.Delete<Employee>(id);
 
             return RedirectToAction("Index");
         }
 
-        
-        public ActionResult Delete(string id) //id - employeeID
+        public ActionResult History(string id) //id - employeeID
         {
-            _repository.AlterStatus<Employee>(id, false);
+            MXTimer timing = new MXTimer();
 
-            return RedirectToAction("Index");
+            var model = _repository.GetHistory<Employee>(id);
+
+            ViewBag.QueryTime = timing.Finish();
+
+            return View(model);
         }
 
         [HttpPost]
@@ -176,16 +188,16 @@ namespace Matrix.Web.Controllers
             {
                 var employee = new Employee
                 {
-                    Name = string.Format("Max Paynee{0}", count.ToString()),
+                    Name = string.Format("Max Payne{0}", count.ToString()),
                     Gender = count % 2 == 0 ? genders[0] : genders[1],
                     ProgrammingRating = rating,
-                    Email = string.Format("MaxPaynee{0}@matrixInc99.com", count.ToString()),
+                    Email = string.Format("MaxPaynee{0}@matrixInc.com", count.ToString()),
                 };
 
                 lstEmployee.Add(employee);
             }
 
-            _repository.Insert<Employee>(lstEmployee);
+            _repository.BulkInsert<Employee>(lstEmployee);
 
             return RedirectToAction("Index");
         }

@@ -11,30 +11,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Matrix.Core.ConfigurationsCore;
 
 namespace Matrix.Web.Areas.Sales.Controllers
 {
     public class BookController : Controller
     {
-        IBookRepository _bookMongoRepository;
+        IBookRepository _bookRepository;
 
-        IBookSearchRepository _bookSearchRepository;
-
-        public BookController(IBookRepository bookMongoRepository, IBookSearchRepository bookSearchRepository)
+        public BookController(IBookRepository bookRepository)
         {
-            this._bookMongoRepository = bookMongoRepository;
-            this._bookSearchRepository = bookSearchRepository;            
+            this._bookRepository = bookRepository;            
         }
 
-        public ActionResult Index(bool isUsingElasticSearch = true)
+        public ActionResult Index()
         {
-            if (isUsingElasticSearch) ViewBag.IsUsingElasticSearch = true;
+            if (MXFlagSettingHelper.Get<bool>("bUseElasticSearchEngine")) ViewBag.IsUsingElasticSearch = true;
             else ViewBag.IsUsingElasticSearch = false;
 
             //This is being used for checking if sample data is there. No need to do this in real scenarios.
-            var count = _bookMongoRepository.GetCount();
-
-            if (count < 1)
+            if (!_bookRepository.IsAnyBookFound)
             {
                 ViewBag.ShowDummyButton = true;
             }
@@ -47,30 +43,14 @@ namespace Matrix.Web.Areas.Sales.Controllers
         /// </summary>
         /// <param name="term"></param>
         /// <returns></returns>
-        public ActionResult IndexSub(string term = "", bool isUsingElasticSearch = true)
+        public ActionResult IndexSub(string term = "")
         {
-            if (isUsingElasticSearch) ViewBag.IsUsingElasticSearch = true;
-            else ViewBag.IsUsingElasticSearch = false;
+            MXTimer timing = new MXTimer();
 
-            IList<BookSearchDocument> results;
+            var results = _bookRepository.Search(term);
 
-            if (isUsingElasticSearch)
-            {
-                MXTimer timing = new MXTimer();
+            ViewBag.QueryTime = timing.Finish();
 
-                results = _bookSearchRepository.Search(term);
-
-                ViewBag.QueryTime = timing.Finish();
-            }
-            else
-            {
-                MXTimer timing = new MXTimer();
-
-                results = _bookMongoRepository.Search(term);
-
-                ViewBag.QueryTime = timing.Finish();
-            }
-                        
             return View(results);
         }
 
@@ -78,7 +58,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         {
             MXTimer timing = new MXTimer();
 
-            var model = _bookMongoRepository.GetBookViewModel();
+            var model = _bookRepository.GetBookViewModel();
             
             ViewBag.QueryTime = timing.Finish();
 
@@ -90,7 +70,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         {
             if (ModelState.IsValid)
             {
-                _bookMongoRepository.CreateBook(model);
+                _bookRepository.Insert(model);
 
                 return RedirectToAction("Index");
             }
@@ -105,7 +85,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         [HttpPost]
         public ActionResult AddSampleData()
         {
-            _bookMongoRepository.CreateSampleData();
+            _bookRepository.InsertSampleData();
 
             return RedirectToAction("Index");
         }

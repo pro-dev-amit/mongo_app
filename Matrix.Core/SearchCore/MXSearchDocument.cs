@@ -11,8 +11,5 @@ namespace Matrix.Core.SearchCore
     {
         [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.No, Store = true)]
         public string Id { get; set; }
-
-        [ElasticProperty(OmitNorms = true, Index = FieldIndexOption.NotAnalyzed)]
-        public bool IsActive { get; set; }
     }
 }

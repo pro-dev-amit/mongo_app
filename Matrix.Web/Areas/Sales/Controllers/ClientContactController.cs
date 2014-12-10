@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 
 namespace Matrix.Web.Areas.Sales.Controllers
 {
@@ -49,7 +49,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
 
             client.Contacts.Add(model.Client.Contacts[0]);
 
-            _repository.Update<Client>(client, true);
+            _repository.Update<Client>(client);
 
             return RedirectToAction("Index", new { id = model.Client.Id });
         }

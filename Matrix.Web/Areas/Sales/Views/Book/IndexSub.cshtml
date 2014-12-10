@@ -6,15 +6,6 @@
 }
 @Html.Partial("_QueryTime")
 
-@if (ViewBag.IsUsingElasticSearch == true)
-{
-    <h4 style="color:green;">Search Results(Coming from ElasticSearch server)</h4>
-}
-else
-{
-    <h4 style="color:green;">Search Results(Coming from mongoDB free text search)</h4>
-}
-
 @if (Model != null && Model.Count > 0)
 {    
     foreach (var item in Model)

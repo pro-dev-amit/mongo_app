@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Matrix.DAL.MongoBaseRepositories;
+using Matrix.DAL.BaseMongoRepositories;
 
 namespace Matrix.Web.Areas.Sales.Controllers
 {
@@ -115,7 +115,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
             }
             catch (Exception ex)
             {
-                return Json("Error Occurred", JsonRequestBehavior.AllowGet);
+                return Json("Error Occurred: " + ex.Message, JsonRequestBehavior.AllowGet);
             }
         }
         #endregion

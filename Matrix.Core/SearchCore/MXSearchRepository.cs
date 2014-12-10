@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nest.Resolvers;
+using Elasticsearch;
 
 namespace Matrix.Core.SearchCore
 {
@@ -16,72 +17,30 @@ namespace Matrix.Core.SearchCore
     {
         #region "SearchDoc ops"
 
-        public virtual string Index<T>(T document) where T : MXSearchDocument
+        protected readonly int takeCount = 256;
+
+        public virtual bool Index<T>(T document) where T : MXSearchDocument
         {
-            document.IsActive = true;
+            var response = Client.Index<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(indexName.Value));
 
-            IIndexResponse response;
-
-            response = Client.Index<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(indexName.Value));
-
-            return response.Id;
+            return string.IsNullOrEmpty(response.ServerError.Error);
         }
 
-        public virtual bool IndexAsync<T>(T document) where T : MXSearchDocument
+        public virtual void IndexAsync<T>(T document) where T : MXSearchDocument
         {
-            document.IsActive = true;
-
-            Task<IIndexResponse> response;
-            
-            response = Client.IndexAsync<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(indexName.Value));
-
-            return true;
+            Client.IndexAsync<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(indexName.Value));
         }
 
         public virtual bool Index<T>(IList<T> documents) where T : MXSearchDocument
         {
-            foreach (var doc in documents) doc.IsActive = true;
-                        
-            Client.IndexMany<T>(documents, indexName.Value);
+            var response = Client.IndexMany<T>(documents, indexName.Value);
 
-            return true;
+            return !response.Errors;
         }
 
-        public virtual bool IndexAsync<T>(IList<T> documents) where T : MXSearchDocument
+        public virtual void IndexAsync<T>(IList<T> documents) where T : MXSearchDocument
         {
-            foreach (var doc in documents) doc.IsActive = true;
-
             Client.IndexManyAsync<T>(documents, indexName.Value);
-
-            return true;
-        }
-
-        public virtual bool BulkIndex<T>(IList<T> documents) where T : MXSearchDocument
-        {
-            //first set the status for all docs to be active
-            foreach (var doc in documents) doc.IsActive = true;
-
-            var descriptor = new BulkDescriptor();
-           
-            foreach (var doc in documents) descriptor.Index<T>(op => op.Document(doc).Index(indexName.Value));           
-
-            var result = this.Client.Bulk(d => descriptor);
-
-            return true;
-        }
-
-        public virtual bool BulkIndexAsync<T>(IList<T> documents) where T : MXSearchDocument
-        {
-            //first set the status for all docs to be active
-            foreach (var doc in documents) doc.IsActive = true;
-
-            var descriptor = new BulkDescriptor();
-            
-            foreach (var doc in documents) descriptor.Index<T>(op => op.Document(doc).Index(indexName.Value));
-
-            var result = this.Client.BulkAsync(descriptor);
-
-            return true;
         }
 
         public virtual T GetOne<T>(string id, string documentType = null) where T : MXSearchDocument
@@ -110,16 +69,15 @@ namespace Matrix.Core.SearchCore
         /// <param name="skip"></param>
         /// <param name="take"></param>
         /// <returns></returns>
-        public virtual IList<T> GenericSearch<T>(string term, int skip = 0, int take = 30) where T : MXSearchDocument
+        public virtual IList<T> Search<T>(string term, int skip = 0, int take = -1) where T : MXSearchDocument
         {
+            if (take == -1) take = takeCount;
+
             var results = Client.Search<T>(s => s
                 .Index(indexName.Value)
                 .From(skip)
                 .Take(take)
-                .Query(q => q
-                    .QueryString(qs => qs.Query(term))
-                    &&
-                    q.Term(c => c.IsActive, true)
+                .Query(q => q.QueryString(qs => qs.Query(term))
                 ));
 
             return results.Documents.ToList();
@@ -127,10 +85,62 @@ namespace Matrix.Core.SearchCore
 
         public virtual bool Update<T>(T document) where T : MXSearchDocument
         {
-            
-            Client.Update<T>(c => c.Doc(document).Index(indexName.Value));
+            var response = Client.Update<T>(c => c.Doc(document).IdFrom(document).Index(indexName.Value));
 
-            return true;
+            return string.IsNullOrEmpty(response.ServerError.Error);
+        }
+
+        public virtual void UpdateAsync<T>(T document) where T : MXSearchDocument
+        {
+            Client.UpdateAsync<T>(c => c.Doc(document).Index(indexName.Value));
+        }
+
+        public virtual bool Update<T>(IList<T> documents) where T : MXSearchDocument
+        {
+            var descriptor = new BulkDescriptor().FixedPath(indexName.Value);
+            foreach (var doc in documents)
+            {
+                descriptor.Update<T>(op => op
+                    .IdFrom(doc)
+                    .Doc(doc)
+                );
+            }
+
+            var result = Client.Bulk(d => descriptor);
+
+            return !result.Errors;
+        }
+
+        public virtual bool Delete<T>(string id) where T : MXSearchDocument
+        {
+            var response = Client.Delete<T>(id, d => d.Index(indexName.Value));
+
+            return response.Found;
+        }
+
+        public virtual void DeleteAsync<T>(string id) where T : MXSearchDocument
+        {
+            Client.DeleteAsync<T>(id, d => d.Index(indexName.Value));
+        }
+
+        public virtual bool Delete<T>(IList<string> ids) where T : MXSearchDocument, new()
+        {
+            var documents = new List<T>();
+
+            foreach (var id in ids) documents.Add(new T { Id = id });
+
+            var response = Client.DeleteMany<T>(documents, indexName.Value);
+
+            return !response.Errors;
+        }
+
+        public virtual void DeleteAsync<T>(IList<string> ids) where T : MXSearchDocument, new()
+        {
+            var documents = new List<T>();
+
+            foreach (var id in ids) documents.Add(new T { Id = id });
+
+            Client.DeleteManyAsync<T>(documents, indexName.Value);
         }
 
         #endregion
