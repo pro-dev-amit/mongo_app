@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Matrix.DAL.BaseMongoRepositories;
+using Matrix.Core.MongoCore;
 
 namespace Matrix.Web.Areas.Sales.Controllers
 {
@@ -46,6 +47,8 @@ namespace Matrix.Web.Areas.Sales.Controllers
             {
                 client.Contacts = new List<Contact>();
             }
+
+            model.Client.Contacts[0].Id = MXMongoIdGenerator.NewId;
 
             client.Contacts.Add(model.Client.Contacts[0]);
 

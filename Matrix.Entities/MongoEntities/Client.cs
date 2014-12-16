@@ -39,6 +39,9 @@ namespace Matrix.Entities.MongoEntities
     [BsonIgnoreExtraElements]
     public class Contact 
     {
+        [BsonElement("id")]        
+        public string Id { get; set; }
+
         [BsonElement("nm")]
         [Required]
         public string Name { get; set; }
