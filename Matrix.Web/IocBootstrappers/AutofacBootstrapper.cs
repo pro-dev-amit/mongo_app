@@ -19,6 +19,7 @@ using Matrix.DAL.SearchBaseRepositories;
 using Matrix.Core.SearchCore;
 using Matrix.DAL.BaseMongoRepositories;
 using Matrix.Core.ConfigurationsCore;
+using Matrix.Core.CacheCore;
 
 
 namespace Matrix.Web
@@ -54,7 +55,12 @@ namespace Matrix.Web
             builder.RegisterType<MXRabbitClient>().As<IMXRabbitClient>()
                 .WithParameter(new NamedParameter("connectionString", ConfigurationManager.AppSettings["rabbitMQConnectionString"]))
                 .SingleInstance();
-                        
+            
+            //register rediscache repository; well, no need for this as a single repo here can handle mutiple databases
+            //builder.RegisterType<MXRedisCacheRepository>().As<IMXCacheRepository>()
+            //    .WithParameter(new NamedParameter("connectionString", ConfigurationManager.AppSettings["redisConnectionString"]))
+            //    .WithParameter(new NamedParameter("dbName", MXRedisDatabaseName.FlagSettings));
+            
             //Custom repos            
             builder.RegisterType<BookRepository>().As<IBookRepository>();
             builder.RegisterType<BookSearchRepository>().As<IBookSearchRepository>();

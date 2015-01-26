@@ -1,4 +1,4 @@
-ASP.Net MVC app using MongoDB, ElasticSearch & RabbitMQ
+ASP.Net MVC app using MongoDB, ElasticSearch, RabbitMQ and Redis
 ===========================
 
 **NoSql** is absolutely awesome. The thing that I like the most, specially about document databases is they fit much closer to the object oriented design. Just store your domain structure flat into the database no matter how complex the hierarchy is; this also suits me personally as I'm a great fan of storing the data flat.
@@ -13,6 +13,7 @@ Some highlights of this app are
 - **Ioc containers** have been used for dependency injection. There is flexibility to switch between **Autofac** and **Microsoft Unity** though.
 - **ElasticSearch** engine has been used for search scenarios, such as implmenting search on product catalog.
 - Using **RabbitMQ** for queuing(polymorphic **pub/sub**, **RPC request/response** async patterns) certain operations such as saving critical data into MongoDB and pumping searchDocs into the Search Engine. The client used is **EasyNetQ** which runs on top of RabbitMQ .Net driver. A sample app about the basic usage of RabbitMQ with .Net can be found **[here](https://github.com/amitstefen/RabbitMQSample)**
+- Using **Redis** for distributed caching. All operations are defined in generic manner.
 - On front end, I've also added certain jQuery stuff; load data on scroll as it's done in facebook, some autocompletion, jQuery tabs layout loading on demand etc.
 
 Architecture and usage
@@ -28,4 +29,4 @@ Architecture and usage
 - Various settings such as database connection string, RabbitMQ port, ElasticSearch port etc. are defined in web.config file, please check out the appsettings section there.
 
 
-Note: I'll be adding more to this project as I move forward. Aim is to experiment with MongoDB, ElasticSearch & RabbitMQ keeping design paradigms such as extensibility and flexibility as top priorities.
+Note: I'll be adding more to this project as I move forward. Aim is to experiment with MongoDB, ElasticSearch, RabbitMQ and Redis keeping design paradigms such as extensibility and flexibility as top priorities.

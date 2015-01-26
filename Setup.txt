@@ -1,4 +1,4 @@
-The mongoDB version used here is version 2.6.6(Windows 64 bit).
+The mongoDB version used here is version 2.6.7(Windows 64 bit).
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -29,7 +29,7 @@ C:\mongodb_server\bin\mongod.exe --remove
 6) Also a good GUI tool for MongoDB is robomongo, it's opensource and free of cost; http://robomongo.org
 
 -----------------------------------------------------------------------------------------------------------------
-For RabbitMQ installation(version is 3.4.2):
+For RabbitMQ installation(version is 3.4.3):
 
 	1) First, install erlang compiler; http://erlang.org
 
@@ -41,7 +41,7 @@ For RabbitMQ installation(version is 3.4.2):
 	4) Access the admin console at http://localhost:15672 with username and password both as "guest".
 
 -----------------------------------------------------------------------------------------------------------------
-For ElasticSearch installation(latest version 1.4.1) - 
+For ElasticSearch installation(latest version 1.4.2) - 
 	
 	1) ElasticSearch requires java runtime, so install latest JDK/JRE from Oracle website; http://www.oracle.com/technetwork/java/javase/downloads/index.html
 
@@ -51,6 +51,11 @@ For ElasticSearch installation(latest version 1.4.1) -
 	3) Download the ElasticSearch package from http://elasticsearch.org/download, .zip one for windows.
 	
 	4) Unzip the file and go to the "elasticSearch_server\Bin" directory and say 
+
+elasticsearch
+
+	else, to install it as a service, say
+
 service.bat install 
 net start elasticsearch-service-x64
 
@@ -65,12 +70,37 @@ C:\>elasticsearch_server\bin\plugin -install mobz/elasticsearch-head
 And navigate to it at "http://localhost:9200/_plugin/head/"
 
 	7) To remove ElasticSearch service; run these commands
+
 net stop elasticsearch-service-x64
-sc delete elasticsearch-service-x64	
+sc delete elasticsearch-service-x64
+
+-----------------------------------------------------------------------------------------------------------------
+For Redis(version 2.8.17.3) - 
+
+	1) Download redis binaries from "https://github.com/MSOpenTech/redis/releases"
+
+	2) Unzip the files into "C:\redis_server" folder
+	
+	3) Just run the "redis-server.exe"
+
+	else
+	
+	to install as a service, run
+
+redis-server.exe --service-install
+net start redis
+
+	4) To uninstall, run the usual commands
+
+net stop redis
+sc delete redis
+
+
+
 	
 That's it. Happy coding.
 
-Note: Although I've been experimenting with MongoDB, ElasticSearch and RabbitMQ on my personal windows machine, but for production purposes it's linux that's the first choice for all these technologies.
+Note: Although I've been experimenting with MongoDB, ElasticSearch, RabbitMQ and Redis on my personal windows machine(in virtual box), but for production purposes it's linux that's the first class choice for all these technologies.
 
 
 

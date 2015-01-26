@@ -39,7 +39,8 @@ namespace Matrix.DAL.CustomMongoRepositories
             //insert these flags before hand for now.
             List<FlagSetting> lstFlagSetting = new List<FlagSetting>() 
             {
-                new FlagSetting { Name = "bUseElasticSearchEngine", Description = "enable product search on ElasticSearch engine", FlagValue = "true", IsPermanent = false },                
+                new FlagSetting { Name = "bUseElasticSearchEngine", Description = "enable product search on ElasticSearch engine", FlagValue = "true", IsPermanent = false },
+                new FlagSetting { Name = "bShowLoadTime", Description = "Show load timings. This is used for identifying the bottle necks", FlagValue = "true", IsPermanent = true },
             };
             _cRepository.Insert<FlagSetting>(lstFlagSetting);
 

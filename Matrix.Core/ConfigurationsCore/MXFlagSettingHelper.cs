@@ -5,19 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using MongoDB.Driver.Linq;
+using Matrix.Core.CacheCore;
+using System.Configuration;
 
 namespace Matrix.Core.ConfigurationsCore
 {
     //Well, such a flag setting can even be driven by an xml file. I'm using database here so that you actually avoid blasting that Xml file to all servers(in a web farm).
     public class MXFlagSettingHelper
     {
+        private MXFlagSettingHelper() { }
+
         public static T Get<T>(string key) where T : IConvertible
         {
-            //please note that the default .Net caching stuff would actually fail in a web farm environment. 
-            //Use distributed caching products such as Memcached or Redis then.
-            if (MemoryCache.Default.Contains(key))
-            {   
-                 return (T)Convert.ChangeType(MemoryCache.Default[key] as string, typeof(T));
+            MXRedisCacheRepository _redisCache = new MXRedisCacheRepository(ConfigurationManager.AppSettings["redisConnectionString"].ToString(), 
+                                                    MXRedisDatabaseName.FlagSettings);
+
+            //Using distributed caching products such as Redis
+            if (_redisCache.Exists(key))
+            {
+                return _redisCache.GetValue<T>(key);
             }
             else
             {
@@ -27,15 +33,10 @@ namespace Matrix.Core.ConfigurationsCore
 
                 var flagValue = collection.AsQueryable().FirstOrDefault(c => c.Name == key).FlagValue;
 
-                CacheItemPolicy cachePolicy = new CacheItemPolicy 
-                {
-                    Priority = CacheItemPriority.NotRemovable
-                };
+                //set the value into redis
+                _redisCache.SetValue(key, flagValue);
 
-
-                MemoryCache.Default.Set(key, flagValue, cachePolicy);
-
-                return (T)Convert.ChangeType(flagValue, typeof(T)); ;
+                return (T)Convert.ChangeType(flagValue, typeof(T));
             }
         }
 

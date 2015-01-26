@@ -2,6 +2,9 @@
 @{
     Layout = null;
 }
-<div style="border:1px solid green; margin-left:85%;font-size:smaller;">
-    Query Time : <b>@ViewBag.QueryTime</b>
-</div>
+@if (Matrix.Core.ConfigurationsCore.MXFlagSettingHelper.Get<bool>("bShowLoadTime"))
+{
+    <div style="border:1px solid green; margin-left:85%;font-size:smaller;">
+        Query Time : <b>@ViewBag.QueryTime</b>
+    </div>
+}

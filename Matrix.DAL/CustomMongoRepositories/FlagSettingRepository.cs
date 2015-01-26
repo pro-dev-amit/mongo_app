@@ -1,6 +1,8 @@
-﻿using Matrix.Core.ConfigurationsCore;
+﻿using Matrix.Core.CacheCore;
+using Matrix.Core.ConfigurationsCore;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
@@ -12,13 +14,14 @@ namespace Matrix.DAL.CustomMongoRepositories
     {
         IMXConfigurationMongoRepository _repository;
 
-        CacheItemPolicy _cachePolicy;
+        IMXCacheRepository _redisCache;
 
         public FlagSettingRepository(IMXConfigurationMongoRepository repository)
         {
             _repository = repository;
 
-            _cachePolicy = new CacheItemPolicy{ Priority = CacheItemPriority.NotRemovable };
+            _redisCache = new MXRedisCacheRepository(ConfigurationManager.AppSettings["redisConnectionString"].ToString(),
+                                                    MXRedisDatabaseName.FlagSettings); 
         }
 
         public IList<FlagSetting> Get(int skip = 0, int take = -1)
@@ -41,7 +44,7 @@ namespace Matrix.DAL.CustomMongoRepositories
 
                 isSuccess = !string.IsNullOrEmpty(entity.Id) ? true : false;
 
-                if (isSuccess) MemoryCache.Default.Set(entity.Name, entity.FlagValue, _cachePolicy); 
+                if (isSuccess) _redisCache.SetValue(entity.Name, entity.FlagValue); 
 
                 return isSuccess;
             }
@@ -49,7 +52,7 @@ namespace Matrix.DAL.CustomMongoRepositories
             {
                 isSuccess = _repository.Update<FlagSetting>(entity);
 
-                if (isSuccess) MemoryCache.Default.Set(entity.Name, entity.FlagValue, _cachePolicy);
+                if (isSuccess) _redisCache.SetValue(entity.Name, entity.FlagValue);
             }
 
             return isSuccess;
@@ -61,7 +64,7 @@ namespace Matrix.DAL.CustomMongoRepositories
                         
             var isSuccess = _repository.Delete<FlagSetting>(id);
 
-            if (isSuccess) MemoryCache.Default.Remove(flagDoc.Name);
+            if (isSuccess) _redisCache.Remove(flagDoc.Name);
 
             return isSuccess;
         }

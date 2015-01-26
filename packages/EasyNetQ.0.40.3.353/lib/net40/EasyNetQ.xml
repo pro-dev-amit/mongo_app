@@ -334,6 +334,12 @@
             <param name="expires">The value of the x-expires argument or expires policy describes the expiration period in milliseconds and is subject to the same constraints as x-message-ttl and cannot be zero. Thus a value of 1000 means a queue which is unused for 1 second will be deleted.</param>
             <returns></returns>
         </member>
+        <member name="M:EasyNetQ.FluentConfiguration.ISubscriptionConfiguration.AsExclusive">
+            <summary>
+            Configures the consumer's to be exclusive
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:EasyNetQ.IAdvancedBus">
             <summary>
             IAdvancedBus is a lower level API than IBus which gives you fined grained control
@@ -837,6 +843,19 @@
             A function to run when the request is received. It should return the response.
             </param>
         </member>
+        <member name="M:EasyNetQ.IBus.Respond``2(System.Func{``0,``1},System.Action{EasyNetQ.Producer.IResponderConfiguration})">
+            <summary>
+            Responds to an RPC request.
+            </summary>
+            <typeparam name="TRequest">The request type.</typeparam>
+            <typeparam name="TResponse">The response type.</typeparam>
+            <param name="responder">
+            A function to run when the request is received. It should return the response.
+            </param>
+            <param name="configure">
+            A function for responder configuration
+            </param>
+        </member>
         <member name="M:EasyNetQ.IBus.RespondAsync``2(System.Func{``0,System.Threading.Tasks.Task{``1}})">
             <summary>
             Responds to an RPC request asynchronously.
@@ -845,6 +864,19 @@
             <typeparam name="TResponse">The response type</typeparam>
             <param name="responder">
             A function to run when the request is received.
+            </param>
+        </member>
+        <member name="M:EasyNetQ.IBus.RespondAsync``2(System.Func{``0,System.Threading.Tasks.Task{``1}},System.Action{EasyNetQ.Producer.IResponderConfiguration})">
+            <summary>
+            Responds to an RPC request asynchronously.
+            </summary>
+            <typeparam name="TRequest">The request type.</typeparam>
+            <typeparam name="TResponse">The response type</typeparam>
+            <param name="responder">
+            A function to run when the request is received.
+            </param>
+            <param name="configure">
+            A function for responder configuration
             </param>
         </member>
         <member name="M:EasyNetQ.IBus.Send``1(System.String,``0)">
@@ -1197,6 +1229,15 @@
             <typeparam name="TResponse">The response type</typeparam>
             <param name="responder">A function that performs the response</param>
         </member>
+        <member name="M:EasyNetQ.Producer.IRpc.Respond``2(System.Func{``0,System.Threading.Tasks.Task{``1}},System.Action{EasyNetQ.Producer.IResponderConfiguration})">
+            <summary>
+            Set up a responder for an RPC service.
+            </summary>
+            <typeparam name="TRequest">The request type</typeparam>
+            <typeparam name="TResponse">The response type</typeparam>
+            <param name="responder">A function that performs the response</param>
+            <param name="configure">A function that performs the configuration</param>
+        </member>
         <member name="M:EasyNetQ.Producer.ISendReceive.Send``1(System.String,``0)">
             <summary>
             Send a message to the specified queue
@@ -1288,7 +1329,7 @@
             host=192.168.1.1;port=5672;virtualHost=MyVirtualHost;username=MyUsername;password=MyPassword;requestedHeartbeat=10
             
             The following default values will be used if not specified:
-            host=localhost;port=5672;virtualHost=/;username=guest;password=guest;requestedHeartbeat=0
+            host=localhost;port=5672;virtualHost=/;username=guest;password=guest;requestedHeartbeat=10
             </param>
             <returns>
             A new RabbitBus instance.
@@ -1303,11 +1344,11 @@
             host=192.168.1.1;port=5672;virtualHost=MyVirtualHost;username=MyUsername;password=MyPassword;requestedHeartbeat=10
             
             The following default values will be used if not specified:
-            host=localhost;port=5672;virtualHost=/;username=guest;password=guest;requestedHeartbeat=0
+            host=localhost;port=5672;virtualHost=/;username=guest;password=guest;requestedHeartbeat=10
             </param>
             <param name="registerServices">
             Override default services. For example, to override the default IEasyNetQLogger:
-            RabbitHutch.CreateBus("host=localhost", x => x.Register&lt;IEasyNetQLogger&gt;(_ => myLogger));
+            RabbitHutch.CreateBus("host=localhost", x => x.Register{IEasyNetQLogger}(_ => myLogger));
             </param>
             <returns>
             A new RabbitBus instance.
@@ -1337,7 +1378,7 @@
             </param>
             <param name="registerServices">
             Override default services. For example, to override the default IEasyNetQLogger:
-            RabbitHutch.CreateBus("host=localhost", x => x.Register&lt;IEasyNetQLogger&gt;(_ => myLogger));
+            RabbitHutch.CreateBus("host=localhost", x => x.Register{IEasyNetQLogger}(_ => myLogger));
             </param>
             <returns>
             A new RabbitBus instance.
@@ -1352,7 +1393,7 @@
             </param>
             <param name="registerServices">
             Override default services. For example, to override the default IEasyNetQLogger:
-            RabbitHutch.CreateBus("host=localhost", x => x.Register&lt;IEasyNetQLogger&gt;(_ => myLogger));
+            RabbitHutch.CreateBus("host=localhost", x => x.Register{IEasyNetQLogger}(_ => myLogger));
             </param>
             <returns></returns>
         </member>
