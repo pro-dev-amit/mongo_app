@@ -39,9 +39,18 @@ namespace Matrix.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(bool noDataHere = true) //the signature here is only to overload methods.
+        public ActionResult Index(FormCollection formCollection) //the signature here is only to overload methods.
         {
-            _repository.SetMasterData();
+            
+
+            if (formCollection["btnSetMasterData"] != null)
+            {
+                _repository.SetMasterData();
+            }
+            else if (formCollection["btnClearEverything"] != null)
+            {
+                _repository.ClearEverything();
+            }
 
             return RedirectToAction("Index");
         }

@@ -2,5 +2,5 @@
 
 cd\
 start /d "C:\redis_server" redis-server.exe
-start /d "C:\mongodb_server\bin" mongod.exe
+start /d "C:\mongodb_server\bin" mongod.exe --storageEngine wiredTiger --dbpath c:\data\db
 start /d "C:\elasticsearch_server\bin" elasticsearch

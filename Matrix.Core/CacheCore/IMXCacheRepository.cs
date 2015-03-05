@@ -39,6 +39,6 @@ namespace Matrix.Core.CacheCore
         /// <summary>
         /// clear the entire cached stuff; all DBs in case of redis
         /// </summary>
-        void Clear();
+        void Clear(MXRedisDatabaseName dbName);
     }
 }

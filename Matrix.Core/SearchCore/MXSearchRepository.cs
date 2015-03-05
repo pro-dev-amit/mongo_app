@@ -23,7 +23,7 @@ namespace Matrix.Core.SearchCore
         {
             var response = Client.Index<T>(document, c => c.OpType(Elasticsearch.Net.OpType.Create).Index(indexName.Value));
 
-            return string.IsNullOrEmpty(response.ServerError.Error);
+            return response.Created;
         }
 
         public virtual void IndexAsync<T>(T document) where T : MXSearchDocument
@@ -87,7 +87,7 @@ namespace Matrix.Core.SearchCore
         {
             var response = Client.Update<T>(c => c.Doc(document).IdFrom(document).Index(indexName.Value));
 
-            return string.IsNullOrEmpty(response.ServerError.Error);
+            return response.ServerError == null;
         }
 
         public virtual void UpdateAsync<T>(T document) where T : MXSearchDocument

@@ -8,12 +8,13 @@ Some highlights of this app are
 
 - Completely ajax based.
 - A generic repository pattern with **MongoDB**; having automatic support for parallel execution with the same context object.
-- Supporting the new features of MongoDB 2.6 in the framework such as **free text search**, bulk insert, bulk update and bulk delete.
+- Supporting the new features of MongoDB 2.6 series in the framework such as **free text search**, bulk insert, bulk update and bulk delete.
 - Full fledged dynamic predicate building, paging and a basic auditing support.
 - **Ioc containers** have been used for dependency injection. There is flexibility to switch between **Autofac** and **Microsoft Unity** though.
 - **ElasticSearch** engine has been used for search scenarios, such as implmenting search on product catalog.
 - Using **RabbitMQ** for queuing(polymorphic **pub/sub**, **RPC request/response** async patterns) certain operations such as saving critical data into MongoDB and pumping searchDocs into the Search Engine. The client used is **EasyNetQ** which runs on top of RabbitMQ .Net driver. A sample app about the basic usage of RabbitMQ with .Net can be found **[here](https://github.com/amitstefen/RabbitMQSample)**
 - Using **Redis** for distributed caching. All operations are defined in generic manner.
+- **Automatic failover** support for MongoDB and ElasticSearch is built into the core framework.
 - On front end, I've also added certain jQuery stuff; load data on scroll as it's done in facebook, some autocompletion, jQuery tabs layout loading on demand etc.
 
 Architecture and usage

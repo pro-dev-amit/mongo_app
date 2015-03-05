@@ -12,6 +12,12 @@
         <span>Master Data has not been set yet. This is important because I need some lookup data to be set prior to moving forward.</span><br /><br />
         <input id="btnSetMasterData" name="btnSetMasterData" value="Set Master Data" type="submit" /><br /><br />
     }
+    else
+    {
+        <div>
+            <input id="btnClearEverything" name="btnClearEverything" value="Clear Everything" type="submit" /><br /><br />
+        </div>
+    }
     
     <div>
         Ioc container in action right now is: <b>@ViewBag.IocContainer</b><span style="color:GrayText">(Well, you can switch the Ioc containers between Autofac and Unity by 

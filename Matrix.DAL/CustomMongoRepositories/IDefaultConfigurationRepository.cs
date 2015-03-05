@@ -11,5 +11,7 @@ namespace Matrix.DAL.CustomMongoRepositories
         bool IsMasterDataSet { get; }
 
         void SetMasterData();
+
+        void ClearEverything();
     }
 }

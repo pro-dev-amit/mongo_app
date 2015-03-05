@@ -111,7 +111,7 @@ namespace Matrix.DAL.CustomMongoRepositories
                 //now let's add some 20K more documents
                 var randomValue = new Random();
 
-                for (int count = 0; count < 20000; count++)
+                for (int count = 0; count < 2000; count++)
                 {
                     var book = new Book
                     {
@@ -268,6 +268,11 @@ namespace Matrix.DAL.CustomMongoRepositories
 
         IList<string> QueueInsert(IList<Book> entities)
         {
+            ////foreach (var entity in entities)
+            ////{
+            ////    QueueInsert(entity);
+            ////}
+
             _productCatalogMongoRepository.SetDocumentDefaults<Book>(entities);
 
             var searchDocs = new List<BookSearchDocument>();
@@ -275,6 +280,7 @@ namespace Matrix.DAL.CustomMongoRepositories
             var task = _queueClient.Bus.RequestAsync<IList<Book>, BooksQueueResponse>(entities);
             task.ContinueWith(response =>
             {
+
                 foreach (var entity in response.Result.Books)
                 {
                     var searchDoc = new BookSearchDocument
@@ -289,7 +295,7 @@ namespace Matrix.DAL.CustomMongoRepositories
                     searchDocs.Add(searchDoc);
                 }
 
-                _queueClient.Bus.Publish<IList<BookSearchDocument>>(searchDocs);
+                _queueClient.Bus.Publish<IList<BookSearchDocument>>(searchDocs);            
             });
 
             return entities.Select(c => c.Id).ToList();

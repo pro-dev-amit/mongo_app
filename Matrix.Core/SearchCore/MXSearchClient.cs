@@ -1,4 +1,7 @@
-﻿using Nest;
+﻿using Elasticsearch.Net;
+using Elasticsearch.Net.Connection;
+using Elasticsearch.Net.ConnectionPool;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -27,9 +30,20 @@ namespace Matrix.Core.SearchCore
             }
         }
 
+        /// <summary>
+        /// Providing automatic failover support
+        /// </summary>
+        /// <returns></returns>
         ElasticClient getSession()
         {
-            var setting = new ConnectionSettings(new Uri(connectionString.Value));
+            var nodes = new List<Uri>();
+
+            foreach (var uri in connectionString.Value.Split(',')) //write in web.config as "http://machine1:9200, http://machine2:9200, http://machine3:9200"
+            {
+                nodes.Add(new Uri(uri));
+            }
+            
+            var setting = new ConnectionSettings(new SniffingConnectionPool(nodes));//new Uri(connectionString.Value));
             
             return new ElasticClient(setting);  
         }

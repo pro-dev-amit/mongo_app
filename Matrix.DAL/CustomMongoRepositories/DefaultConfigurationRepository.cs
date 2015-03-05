@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Matrix.Core.MongoCore;
+using Matrix.Core.CacheCore;
+using System.Configuration;
+using Matrix.DAL.SearchBaseRepositories;
 
 namespace Matrix.DAL.CustomMongoRepositories
 {
@@ -19,12 +22,20 @@ namespace Matrix.DAL.CustomMongoRepositories
         IMXBusinessMongoRepository _bRepository;
         IMXProductCatalogMongoRepository _pcRepository;
         IMXConfigurationMongoRepository _cRepository;
+        IMXCacheRepository _redisCache;
+        IBookSearchRepository _bookSearchRepository;
 
-        public DefaultConfigurationRepository(IMXBusinessMongoRepository bRepository, IMXProductCatalogMongoRepository pcRepository, IMXConfigurationMongoRepository cRepository)
+        public DefaultConfigurationRepository(IMXBusinessMongoRepository bRepository, 
+            IMXProductCatalogMongoRepository pcRepository, 
+            IMXConfigurationMongoRepository cRepository,
+            IBookSearchRepository bookSearchRepository)
         {
             this._bRepository = bRepository;
             this._pcRepository = pcRepository;
             this._cRepository = cRepository;
+            _redisCache = new MXRedisCacheRepository(ConfigurationManager.AppSettings["redisConnectionString"].ToString(),
+                                                    MXRedisDatabaseName.FlagSettings);
+            _bookSearchRepository = bookSearchRepository;
         }
 
         #endregion
@@ -114,6 +125,17 @@ namespace Matrix.DAL.CustomMongoRepositories
             {
                 collection.CreateIndex(IndexKeys.Text("nm", "au.nm", "ct.nm"), IndexOptions.SetName("book_text").SetWeight("nm", 4).SetWeight("au.nm", 3));
             }
+        }
+
+        public void ClearEverything()
+        {
+            _bRepository.DropDatabase();
+            _cRepository.DropDatabase();
+            _pcRepository.DropDatabase();
+
+            _redisCache.Clear(MXRedisDatabaseName.FlagSettings);
+
+            _bookSearchRepository.DeleteIndex(ConfigurationManager.AppSettings["bookIndex"].ToString());
         }
 
         bool isMasterDataSet()

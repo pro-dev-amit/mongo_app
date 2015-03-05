@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Matrix.Core.CacheCore
 {    
-    public class MXRedisCacheRepository : IMXCacheRepository
+    public class MXRedisCacheRepository : IMXCacheRepository, IDisposable
     {
         static string _connectionString;
 
@@ -104,13 +104,13 @@ namespace Matrix.Core.CacheCore
             _database.KeyDeleteAsync(key);
         }
 
-        public void Clear()
+        public void Clear(MXRedisDatabaseName dbName)
         {
             var endpoints = _connectionMultiplexer.Value.GetEndPoints(true);
             foreach (var endpoint in endpoints)
             {
                 var server = _connectionMultiplexer.Value.GetServer(endpoint);
-                server.FlushAllDatabases();
+                server.FlushDatabase((int)dbName);
             }
         }
 
@@ -139,5 +139,11 @@ namespace Matrix.Core.CacheCore
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            if (_connectionMultiplexer.IsValueCreated)
+                _connectionMultiplexer.Value.Dispose();
+        }
     }
 }
