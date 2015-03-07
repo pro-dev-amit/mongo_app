@@ -1,6 +1,6 @@
 ﻿using Matrix.Core.ConfigurationsCore;
 using Matrix.Core.FrameworkCore;
-using Matrix.DAL.CustomMongoRepositories;
+using Matrix.DAL.MongoRepositoriesCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;

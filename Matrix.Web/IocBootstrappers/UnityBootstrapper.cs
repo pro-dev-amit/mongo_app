@@ -5,10 +5,10 @@ using Matrix.Core.FrameworkCore;
 using Matrix.Web.Controllers;
 using Matrix.Web.Areas.Sales.Controllers;
 using Matrix.Core.QueueCore;
-using Matrix.DAL.CustomMongoRepositories;
+using Matrix.DAL.MongoRepositoriesCustom;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.SearchBaseRepositories;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.SearchRepositoriesBase;
+using Matrix.DAL.MongoRepositoriesBase;
 using System.Configuration;
 using Matrix.Core.ConfigurationsCore;
 

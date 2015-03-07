@@ -1,5 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.MongoRepositoriesBase;
 using Matrix.Entities.MongoEntities;
 using System;
 using System.Collections.Generic;

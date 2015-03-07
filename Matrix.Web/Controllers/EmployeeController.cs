@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.MongoRepositoriesBase;
 
 namespace Matrix.Web.Controllers
 {

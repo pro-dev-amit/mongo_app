@@ -14,10 +14,10 @@ using Matrix.Web.Areas.Sales.Controllers;
 using Matrix.Core.MongoCore;
 using System.Configuration;
 using Matrix.Core.QueueCore;
-using Matrix.DAL.CustomMongoRepositories;
-using Matrix.DAL.SearchBaseRepositories;
+using Matrix.DAL.MongoRepositoriesCustom;
+using Matrix.DAL.SearchRepositoriesBase;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.MongoRepositoriesBase;
 using Matrix.Core.ConfigurationsCore;
 using Matrix.Core.CacheCore;
 

@@ -10,9 +10,9 @@ using Matrix.Entities.MongoEntities;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver;
 using Matrix.Core.QueueCore;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.MongoRepositoriesBase;
 
-namespace Matrix.DAL.CustomMongoRepositories
+namespace Matrix.DAL.MongoRepositoriesCustom
 {
     public class ClientRepository : MXBusinessMongoRepository
     {

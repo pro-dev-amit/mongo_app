@@ -1,5 +1,5 @@
 ﻿using Matrix.Core.ConfigurationsCore;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.MongoRepositoriesBase;
 using Matrix.Entities.MongoEntities;
 using MongoDB.Driver.Builders;
 using System;
@@ -11,9 +11,9 @@ using MongoDB.Driver;
 using Matrix.Core.MongoCore;
 using Matrix.Core.CacheCore;
 using System.Configuration;
-using Matrix.DAL.SearchBaseRepositories;
+using Matrix.DAL.SearchRepositoriesBase;
 
-namespace Matrix.DAL.CustomMongoRepositories
+namespace Matrix.DAL.MongoRepositoriesCustom
 {
     public class DefaultConfigurationRepository : IDefaultConfigurationRepository
     {

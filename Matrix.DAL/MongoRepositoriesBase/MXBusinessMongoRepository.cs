@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.DAL.BaseMongoRepositories
+namespace Matrix.DAL.MongoRepositoriesBase
 {
     /// <summary>
     /// This is specific for "MXBusiness" database. For a new database; create a new class on similar lines.    

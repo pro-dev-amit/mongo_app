@@ -12,7 +12,7 @@ using Nest.Resolvers;
 using System.Configuration;
 
 
-namespace Matrix.DAL.SearchBaseRepositories
+namespace Matrix.DAL.SearchRepositoriesBase
 {
     /// <summary>
     /// In most cases for "Search", a single repository class is more than enough for a single index. 

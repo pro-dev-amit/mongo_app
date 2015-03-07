@@ -114,6 +114,12 @@ namespace Matrix.Core.CacheCore
             }
         }
 
+        public void Dispose()
+        {
+            if (_connectionMultiplexer.IsValueCreated)
+                _connectionMultiplexer.Value.Dispose();
+        }
+
         #region "Binary serialization and deserialization Helpers"
 
         static byte[] ObjectToByteArray(Object obj)
@@ -138,12 +144,6 @@ namespace Matrix.Core.CacheCore
             return obj;
         }
 
-        #endregion
-
-        public void Dispose()
-        {
-            if (_connectionMultiplexer.IsValueCreated)
-                _connectionMultiplexer.Value.Dispose();
-        }
+        #endregion        
     }
 }

@@ -6,9 +6,9 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.MongoRepositoriesBase;
 using Matrix.Core.ConfigurationsCore;
-using Matrix.DAL.CustomMongoRepositories;
+using Matrix.DAL.MongoRepositoriesCustom;
 
 namespace Matrix.Web.Controllers
 {

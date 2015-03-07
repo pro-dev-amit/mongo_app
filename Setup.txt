@@ -1,3 +1,4 @@
+
 The mongoDB version used here is version 3.0(Windows 64 bit).
 
 Follow these steps and everything should turn out to be pretty smooth.
@@ -29,7 +30,7 @@ C:\mongodb_server\bin\mongod.exe --remove
 6) Also a good GUI tool for MongoDB is MMS(Mongo Mgmt Studio); http://www.litixsoft.de/english/mms/
 
 -----------------------------------------------------------------------------------------------------------------
-For RabbitMQ installation(version used is 3.4.4):
+For RabbitMQ installation(version 3.4.4):
 
 	1) First, install erlang compiler; http://erlang.org
 
@@ -41,7 +42,7 @@ For RabbitMQ installation(version used is 3.4.4):
 	4) Access the admin console at http://localhost:15672 with username and password both as "guest".
 
 -----------------------------------------------------------------------------------------------------------------
-For ElasticSearch installation(version used is 1.4.4) - 
+For ElasticSearch installation(version 1.4.4) - 
 	
 	1) ElasticSearch requires java runtime, so install latest JDK/JRE from Oracle website; http://www.oracle.com/technetwork/java/javase/downloads/index.html
 
@@ -75,7 +76,7 @@ net stop elasticsearch-service-x64
 sc delete elasticsearch-service-x64
 
 -----------------------------------------------------------------------------------------------------------------
-For Redis(version 2.8.19 series) - 
+For Redis(version 2.8.19) - 
 
 	1) Download redis binaries from "https://github.com/MSOpenTech/redis/releases"
 

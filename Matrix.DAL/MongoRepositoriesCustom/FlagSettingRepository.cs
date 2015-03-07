@@ -8,7 +8,7 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.DAL.CustomMongoRepositories
+namespace Matrix.DAL.MongoRepositoriesCustom
 {
     public class FlagSettingRepository : IFlagSettingRepository
     {

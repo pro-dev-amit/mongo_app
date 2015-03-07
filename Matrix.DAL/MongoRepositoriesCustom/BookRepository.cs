@@ -12,14 +12,14 @@ using MongoDB.Driver;
 using Matrix.Core.QueueCore;
 using Matrix.Entities.SearchDocuments;
 using Matrix.Core.SearchCore;
-using Matrix.DAL.SearchBaseRepositories;
-using Matrix.DAL.CustomMongoRepositories;
+using Matrix.DAL.SearchRepositoriesBase;
+using Matrix.DAL.MongoRepositoriesCustom;
 using Matrix.Entities.QueueRequestResponseObjects;
 using Matrix.Business.ViewModels;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.MongoRepositoriesBase;
 using Matrix.Core.ConfigurationsCore;
 
-namespace Matrix.DAL.CustomMongoRepositories
+namespace Matrix.DAL.MongoRepositoriesCustom
 {
     public class BookRepository : IBookRepository
     {
@@ -111,7 +111,7 @@ namespace Matrix.DAL.CustomMongoRepositories
                 //now let's add some 20K more documents
                 var randomValue = new Random();
 
-                for (int count = 0; count < 2000; count++)
+                for (int count = 0; count < 5000; count++)
                 {
                     var book = new Book
                     {

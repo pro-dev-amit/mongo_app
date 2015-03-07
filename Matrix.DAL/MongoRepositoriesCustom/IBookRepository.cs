@@ -1,5 +1,5 @@
 ﻿using Matrix.Core.FrameworkCore;
-using Matrix.DAL.BaseMongoRepositories;
+using Matrix.DAL.MongoRepositoriesBase;
 using Matrix.Entities.MongoEntities;
 using Matrix.Entities.SearchDocuments;
 using Matrix.Business.ViewModels;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix.DAL.CustomMongoRepositories
+namespace Matrix.DAL.MongoRepositoriesCustom
 {
     //this is the most suitable way to design a system; as this gives us flexibility to change the underlying database storage without affecting the business datamodel.
     //Currently I'm mapping the search results from both mongoDB and ElasticSearch to ElasticSearch's "BookSearchDocument" object. 
