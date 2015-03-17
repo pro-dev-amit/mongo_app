@@ -1,5 +1,5 @@
 
-The mongoDB version used here is version 3.0(Windows 64 bit).
+The mongoDB version used here is version 3.0.1(Windows 64 bit).
 
 Follow these steps and everything should turn out to be pretty smooth.
 
@@ -30,7 +30,7 @@ C:\mongodb_server\bin\mongod.exe --remove
 6) Also a good GUI tool for MongoDB is MMS(Mongo Mgmt Studio); http://www.litixsoft.de/english/mms/
 
 -----------------------------------------------------------------------------------------------------------------
-For RabbitMQ installation(version 3.4.4):
+For RabbitMQ installation(version 3.5.0):
 
 	1) First, install erlang compiler; http://erlang.org
 
@@ -96,7 +96,7 @@ net start redis
 net stop redis
 sc delete redis
 
-
+	5) Admin UI - Redis Manager; http://redisdesktop.com/download
 
 	
 That's it. Happy coding.

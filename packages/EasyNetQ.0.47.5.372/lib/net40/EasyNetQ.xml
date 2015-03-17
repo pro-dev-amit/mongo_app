@@ -1138,19 +1138,6 @@
             This will return the same underlying object than <see cref="M:EasyNetQ.IMessage.GetBody"/> but will be strongly typed.
             </summary>
         </member>
-        <member name="T:EasyNetQ.ISaga">
-            <summary>
-            A Saga should implement this interface.
-            </summary>
-        </member>
-        <member name="M:EasyNetQ.ISaga.Initialize(EasyNetQ.IBus)">
-            <summary>
-            Initialised is called by SagaHost after the Saga is detected.
-            Use this method to subscribe to messages and create the
-            Saga process.
-            </summary>
-            <param name="bus"></param>
-        </member>
         <member name="T:EasyNetQ.IScheduler">
             <summary>
             Provides a simple Publish API to schedule a message to be published at some time in the future.
