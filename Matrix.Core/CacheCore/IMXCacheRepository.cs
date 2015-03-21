@@ -37,8 +37,9 @@ namespace Matrix.Core.CacheCore
         void RemoveAsync(string key);
 
         /// <summary>
-        /// clear the entire cached stuff; all DBs in case of redis
+        /// clear the entire cached stuff for a particular DB.
+        /// Please note that Memcached doesn't have anything like Databases, hence this is made optional here
         /// </summary>
-        void Clear(MXRedisDatabaseName dbName);
+        void Clear(MXCacheDatabaseName dbName = MXCacheDatabaseName.FlagSettings);
     }
 }

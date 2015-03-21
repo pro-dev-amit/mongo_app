@@ -61,7 +61,7 @@ namespace Matrix.DAL.SearchRepositoriesBase
                     .Take(take)
                     .Query(q => 
                         //allow wild card searches on title only. Also, giving a higher boost to title
-                        q.QueryString(t => t.OnFields(f => f.Title).Query(term + "*").Boost(2.0d)) ||
+                        q.QueryString(t => t.OnFields(f => f.Title).Query(term).Boost(2.0d)) ||
                         q.QueryString(t => t.OnFields(f => f.Category.DenormalizedName).Query(term)) ||
                         q.QueryString(t => t.OnFields(f => f.Author.DenormalizedName).Query(term).Boost(1.5d))
                     ));                                

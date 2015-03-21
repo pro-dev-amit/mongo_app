@@ -17,9 +17,9 @@ namespace Matrix.Web.Controllers
         //
         // GET: /Home/
 
-        IDefaultConfigurationRepository _repository;
+        IInitialConfigurationRepository _repository;
 
-        public HomeController(IDefaultConfigurationRepository repository)
+        public HomeController(IInitialConfigurationRepository repository)
         {
             this._repository = repository;            
         }

@@ -10,7 +10,7 @@ namespace Matrix.Core.FrameworkCore
     /// <summary>
     /// Enables the efficient, dynamic composition of query predicates.
     /// </summary>
-    public static class MXPredicate
+    public static class MXPredicateBuilder
     {
         /// <summary>
         /// Creates a predicate that evaluates to true.

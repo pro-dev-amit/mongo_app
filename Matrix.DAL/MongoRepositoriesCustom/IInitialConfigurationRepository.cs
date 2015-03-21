@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Matrix.DAL.MongoRepositoriesCustom
 {
-    public interface IDefaultConfigurationRepository
+    public interface IInitialConfigurationRepository
     {
         bool IsMasterDataSet { get; }
 

@@ -15,7 +15,7 @@ using Matrix.DAL.SearchRepositoriesBase;
 
 namespace Matrix.DAL.MongoRepositoriesCustom
 {
-    public class DefaultConfigurationRepository : IDefaultConfigurationRepository
+    public class InitialConfigurationRepository : IInitialConfigurationRepository
     {
         #region "Initializatin and Attributes"
 
@@ -25,7 +25,7 @@ namespace Matrix.DAL.MongoRepositoriesCustom
         IMXCacheRepository _redisCache;
         IBookSearchRepository _bookSearchRepository;
 
-        public DefaultConfigurationRepository(IMXBusinessMongoRepository bRepository, 
+        public InitialConfigurationRepository(IMXBusinessMongoRepository bRepository, 
             IMXProductCatalogMongoRepository pcRepository, 
             IMXConfigurationMongoRepository cRepository,
             IBookSearchRepository bookSearchRepository)
@@ -34,7 +34,7 @@ namespace Matrix.DAL.MongoRepositoriesCustom
             this._pcRepository = pcRepository;
             this._cRepository = cRepository;
             _redisCache = new MXRedisCacheRepository(ConfigurationManager.AppSettings["redisConnectionString"].ToString(),
-                                                    MXRedisDatabaseName.FlagSettings);
+                                                    MXCacheDatabaseName.FlagSettings);
             _bookSearchRepository = bookSearchRepository;
         }
 
@@ -50,7 +50,7 @@ namespace Matrix.DAL.MongoRepositoriesCustom
             //insert these flags before hand for now.
             List<FlagSetting> lstFlagSetting = new List<FlagSetting>() 
             {
-                new FlagSetting { Name = "bUseElasticSearchEngine", Description = "enable product search on ElasticSearch engine", FlagValue = "true", IsPermanent = false },
+                new FlagSetting { Name = "bUseElasticSearchEngine", Description = "enable product search on ElasticSearch engine", FlagValue = "false", IsPermanent = false },
                 new FlagSetting { Name = "bShowLoadTime", Description = "Show load timings. This is used for identifying the bottle necks", FlagValue = "true", IsPermanent = true },
             };
             _cRepository.Insert<FlagSetting>(lstFlagSetting);
@@ -133,7 +133,7 @@ namespace Matrix.DAL.MongoRepositoriesCustom
             _cRepository.DropDatabase();
             _pcRepository.DropDatabase();
 
-            _redisCache.Clear(MXRedisDatabaseName.FlagSettings);
+            _redisCache.Clear(MXCacheDatabaseName.FlagSettings);
 
             _bookSearchRepository.DeleteIndex(ConfigurationManager.AppSettings["bookIndex"].ToString());
         }

@@ -29,7 +29,7 @@ namespace Matrix.Core.CacheCore
             }
         }
 
-        public MXRedisCacheRepository(string connectionString, MXRedisDatabaseName dbName)
+        public MXRedisCacheRepository(string connectionString, MXCacheDatabaseName dbName)
         {
             _connectionString = connectionString;
             _database = _connectionMultiplexer.Value.GetDatabase((int)dbName);
@@ -104,7 +104,7 @@ namespace Matrix.Core.CacheCore
             _database.KeyDeleteAsync(key);
         }
 
-        public void Clear(MXRedisDatabaseName dbName)
+        public void Clear(MXCacheDatabaseName dbName = MXCacheDatabaseName.FlagSettings)
         {
             var endpoints = _connectionMultiplexer.Value.GetEndPoints(true);
             foreach (var endpoint in endpoints)

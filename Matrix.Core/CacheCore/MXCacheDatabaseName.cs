@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Matrix.Core.CacheCore
 {
-    public enum MXRedisDatabaseName
+    public enum MXCacheDatabaseName
     {
         FlagSettings = 0,
     }

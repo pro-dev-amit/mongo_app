@@ -21,7 +21,7 @@ namespace Matrix.DAL.MongoRepositoriesCustom
             _repository = repository;
 
             _redisCache = new MXRedisCacheRepository(ConfigurationManager.AppSettings["redisConnectionString"].ToString(),
-                                                    MXRedisDatabaseName.FlagSettings); 
+                                                    MXCacheDatabaseName.FlagSettings); 
         }
 
         public IList<FlagSetting> Get(int skip = 0, int take = -1)

@@ -64,7 +64,7 @@ namespace Matrix.Web
             //Custom repos            
             builder.RegisterType<BookRepository>().As<IBookRepository>();
             builder.RegisterType<BookSearchRepository>().As<IBookSearchRepository>();
-            builder.RegisterType<DefaultConfigurationRepository>().As<IDefaultConfigurationRepository>();
+            builder.RegisterType<InitialConfigurationRepository>().As<IInitialConfigurationRepository>();
             builder.RegisterType<FlagSettingRepository>().As<IFlagSettingRepository>();
 
 

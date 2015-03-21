@@ -48,17 +48,17 @@ namespace Matrix.Core.FrameworkCore
         public virtual string Insert<T>(T entity) where T : IMXEntity
         {
             if(!IsProcessedByQueue) SetDocumentDefaults(entity);
+            
+            var collection = DbContext.GetCollection<T>(typeof(T).Name);
+
+            //The default WriteConcern here is "Acknowledged". Go ahead and override this method in particular repositories if you need other ways of writing to
+            //a mongo collection.            
+            collection.Insert(entity, WriteConcern.Acknowledged);
 
             //Insert into history collection
             Task.Run(() =>
                     InsertOneIntoHistory<T>(entity)
                 );
-
-            var collection = DbContext.GetCollection<T>(typeof(T).Name);
-
-            //The default WriteConcern here is "Acknowledged". Go ahead and override this method in particular repositories if you need other ways of writing to
-            //a mongo collection.            
-            collection.Insert(entity, WriteConcern.Acknowledged);            
 
             return entity.Id;
         }

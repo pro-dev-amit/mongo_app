@@ -99,7 +99,7 @@ namespace Matrix.Web.Areas.Sales.Controllers
         {
             try
             {
-                var predicate = MXPredicate.True<ClientType>();
+                var predicate = MXPredicateBuilder.True<ClientType>();
 
                 predicate = predicate.And(p => p.Name.ToLower().Contains(term));
 

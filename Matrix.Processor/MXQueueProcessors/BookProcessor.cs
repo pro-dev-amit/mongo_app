@@ -47,7 +47,7 @@ namespace Matrix.Processor.MXQueueProcessors
 
             var ids = _pcRepository.BulkInsert<Book>(message);
 
-            var predicate = MXPredicate.True<Book>();
+            var predicate = MXPredicateBuilder.True<Book>();
             predicate = predicate.And(p => ids.Contains(p.Id));
 
             var entities = _pcRepository.GetMany<Book>(predicate, take: ids.Count);

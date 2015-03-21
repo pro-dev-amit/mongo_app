@@ -27,7 +27,7 @@ namespace Matrix.Core.SearchCore
         void IndexAsync<T>(T document) where T : MXSearchDocument;
 
         /// <summary>
-        /// Batch Indexing the searchDocs synchronously; a smaller count is ideal such as 100 or so. For much larger count use Bulk Indexing methods.
+        /// Batch Indexing the searchDocs synchronously
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="documents"></param>        
@@ -35,7 +35,7 @@ namespace Matrix.Core.SearchCore
         bool Index<T>(IList<T> documents) where T : MXSearchDocument;
 
         /// <summary>
-        /// Batch Indexing the searchDocs asynchronously; a smaller count is ideal such as 100 or so. For much larger count use Bulk Indexing methods.
+        /// Batch Indexing the searchDocs asynchronously
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="documents"></param>        

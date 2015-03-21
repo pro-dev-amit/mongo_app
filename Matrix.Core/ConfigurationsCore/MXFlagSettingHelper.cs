@@ -18,7 +18,7 @@ namespace Matrix.Core.ConfigurationsCore
         public static T Get<T>(string key) where T : IConvertible
         {
             MXRedisCacheRepository _redisCache = new MXRedisCacheRepository(ConfigurationManager.AppSettings["redisConnectionString"].ToString(), 
-                                                    MXRedisDatabaseName.FlagSettings);
+                                                    MXCacheDatabaseName.FlagSettings);
 
             //Using distributed caching products such as Redis
             if (_redisCache.Exists(key))

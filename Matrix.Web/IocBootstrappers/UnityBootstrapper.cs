@@ -62,7 +62,7 @@ namespace Matrix.Web
 
         //searh repos        
         container.RegisterType<IBookSearchRepository, BookSearchRepository>();
-        container.RegisterType<IDefaultConfigurationRepository, DefaultConfigurationRepository>();
+        container.RegisterType<IInitialConfigurationRepository, InitialConfigurationRepository>();
         container.RegisterType<IFlagSettingRepository, FlagSettingRepository>();
     }
   }
