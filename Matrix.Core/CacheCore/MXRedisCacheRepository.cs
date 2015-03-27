@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Matrix.Core.CacheCore
-{    
+{   
     public class MXRedisCacheRepository : IMXCacheRepository, IDisposable
     {
         static string _connectionString;

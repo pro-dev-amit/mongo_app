@@ -32,7 +32,7 @@ namespace Matrix.Core.MongoCore
             {
                 var nodes = new List<MongoServerAddress>();
 
-                foreach (var address in connectionUrl.Value.Split(',')) //give replicaset as "machine1:27017,machine2:27018"
+                foreach (var address in connectionUrl.Value.Split(',')) //give replicaset as "machine1:27017,machine2:27018,machine3:27017"
                     nodes.Add(new MongoServerAddress(address.Split(':')[0], int.Parse(address.Split(':')[1])));
 
                 _mongoClientSettings = new MongoClientSettings();

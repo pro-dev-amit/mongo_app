@@ -53,8 +53,6 @@ namespace Matrix.Web.Controllers
 
         private IList<Employee> GetPaginatedItems(int page = 1)
         {
-            MXMongoEntityX<Employee> t = new MXMongoEntityX<Employee>();            
-
             var skipRecords = page * takeCount;
 
             MXTimer timing = new MXTimer();

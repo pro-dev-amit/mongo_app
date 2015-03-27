@@ -20,7 +20,9 @@ namespace Matrix.Core.MongoCore
         public string Id { get; set; }
 
         [BsonElement("nm")]
-        [Required]
+        [Required] //well, you can create a separate biz object(a POCO, say MXBizEntity) in Matrix.Business and get rid of this MVC annotation in the core framework.
+            //And just use separate objects for all functionalities such as Employee, Client, Book etc and others and map them using automapper in the custom 
+            //repositories. That would give you the flexibility to even change the underlying datastore without affecting the business model and the core framework here.
         public virtual string Name { get; set; }
 
         [BsonElement("v")]
