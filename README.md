@@ -3,8 +3,7 @@ ASP.Net MVC app using MongoDB, ElasticSearch, Redis and RabbitMQ
 
 **NoSql** is absolutely awesome. The thing that I like the most, specially about document databases is they fit much closer to the object oriented design. Just store your domain structure flat into the database no matter how complex the hierarchy is; this also suits me personally as I'm a great fan of storing the data flat.
 
-Do take a look at my video series for this application on youtube -
-<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLj5fYy-TIvPfJIVFdHCTiqb4g2IKnl9KD" frameborder="0" allowfullscreen></iframe>
+Do take a look at my video series for this application on youtube **[HERE]**(https://www.youtube.com/playlist?list=PLj5fYy-TIvPfJIVFdHCTiqb4g2IKnl9KD)
 This will help you in gaining concepts for NoSQL as a whole, setting up the dev environment and running this application.
 
 Some highlights of this app are
